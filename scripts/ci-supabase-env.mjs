@@ -18,21 +18,30 @@ const status = JSON.parse(
   }),
 );
 const pick = (...keys) => keys.map((key) => status[key]).find(Boolean);
-const vars = {
+const required = {
   SUPABASE_DB_URL: pick('DB_URL'),
   NEXT_PUBLIC_SUPABASE_URL: pick('API_URL'),
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: pick('PUBLISHABLE_KEY', 'ANON_KEY'),
   SUPABASE_SECRET_KEY: pick('SECRET_KEY', 'SERVICE_ROLE_KEY'),
+};
+// Mailpit solo se levanta en el job de E2E; en el de base de datos se excluye.
+const optional = {
   E2E_MAILPIT_URL: pick('MAILPIT_URL', 'INBUCKET_URL'),
 };
+const PUBLIC_VALUES = new Set(['NEXT_PUBLIC_SUPABASE_URL', 'E2E_MAILPIT_URL']);
 
 const lines = [];
-for (const [name, value] of Object.entries(vars)) {
+for (const [name, value] of Object.entries(required)) {
   if (!value) {
     console.error(`Falta ${name} en supabase status`);
     process.exit(1);
   }
-  if (name !== 'NEXT_PUBLIC_SUPABASE_URL' && name !== 'E2E_MAILPIT_URL') console.log(`::add-mask::${value}`);
+}
+const vars = Object.fromEntries(
+  Object.entries({ ...required, ...optional }).filter(([, value]) => Boolean(value)),
+);
+for (const [name, value] of Object.entries(vars)) {
+  if (!PUBLIC_VALUES.has(name)) console.log(`::add-mask::${value}`);
   lines.push(`${name}=${value}`);
 }
 appendFileSync(process.env.GITHUB_ENV, `${lines.join('\n')}\n`);
