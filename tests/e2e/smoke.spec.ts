@@ -2,8 +2,12 @@ import { expect, test } from '@playwright/test';
 
 test('la página inicial informa el estado y no tiene botones sin acción', async ({ page }) => {
   await page.goto('/');
-  await expect(page).toHaveTitle('InmoGest');
-  await expect(page.getByRole('heading', { level: 1, name: 'InmoGest' })).toBeVisible();
+  await expect(page).toHaveTitle('InmoPanel by C&C');
+  await expect(page.getByRole('heading', { level: 1, name: 'InmoPanel' })).toBeVisible();
+  await expect(page.getByText('by C&C', { exact: true })).toBeVisible();
+  // Los nombres anteriores del proyecto no aparecen en nada visible (docs/BRAND.md).
+  await expect(page.locator('body')).not.toContainText(/InmoGest/i);
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /Gestión inmobiliaria inteligente/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'es-AR');
   await expect(page.getByRole('button')).toHaveCount(0);
   await expect(page.getByRole('link')).toHaveCount(0);

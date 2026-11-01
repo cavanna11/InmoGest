@@ -1,9 +1,9 @@
-# PRD — InmoGest (nombre provisorio)
+# PRD — InmoPanel by C&C
 
-- **Producto:** CRM inmobiliario SaaS multi-tenant de C&C.
-- **Estado:** borrador v0.3 — 31/10/2026. Lo marcado **[A CONFIRMAR]** necesita decisión del dueño.
+- **Producto:** InmoPanel, plataforma SaaS multi-tenant de gestión inmobiliaria desarrollada por C&C. Nombre comercial: **InmoPanel by C&C** (ver §11).
+- **Estado:** borrador v0.4 — 02/11/2026 (v0.3 + identidad del producto). Lo marcado **[A CONFIRMAR]** necesita decisión del dueño.
 - **Alcance de este documento:** MVP (Fase 1) en detalle; fases siguientes en resumen.
-- **Nombre:** "InmoGest" es provisional e interno; no es el nombre comercial definitivo (ver §11).
+- **Mercado:** comercialmente, inmobiliarias y profesionales del sector de Latinoamérica. El **MVP se enfoca en Argentina** (monedas ARS/USD, teléfonos +549, cobro por transferencia, Ley 25.326); la adaptación a otros países es **[A CONFIRMAR]**.
 
 ## 1. Objetivo
 
@@ -63,7 +63,7 @@ Una persona puede pertenecer a más de una inmobiliaria con roles distintos y el
 ## 4. Casos de uso
 
 ### CU-01 — Registro de una inmobiliaria
-1. El dueño entra a la web de InmoGest y elige "Probar gratis".
+1. El dueño entra a la web de InmoPanel y elige "Probar gratis".
 2. Carga nombre de la inmobiliaria, su nombre, email y contraseña, y acepta los términos y condiciones y la política de privacidad.
 3. Confirma el email.
 4. El sistema crea la inmobiliaria con **prueba gratis de 14 días** y lo deja como dueño.
@@ -462,9 +462,13 @@ Esta lista es un requisito funcional del producto, **no** asesoramiento legal. L
 
 ## 11. Nombre, marca y dominio
 
-- **InmoGest** es el nombre provisional e interno del proyecto; no es definitivo como nombre comercial.
-- La identidad visual no está cerrada.
-- Pendiente de validación: disponibilidad de dominio, disponibilidad de marca (INPI), posibles conflictos comerciales o marcarios, identidad visual definitiva.
+- **Nombre oficial (02/11/2026):** **InmoPanel**; nombre comercial completo **InmoPanel by C&C**. C&C es la empresa desarrolladora y aparece como respaldo, sin competir visualmente con el producto.
+- **Descriptor:** "Gestión inmobiliaria inteligente". **Frase complementaria:** "Todo tu negocio inmobiliario, en un solo lugar."
+- **Posicionamiento:** plataforma integral para centralizar y gestionar la operación de la inmobiliaria (contactos, conversaciones, propiedades, búsquedas, oportunidades, agenda, seguimiento y automatizaciones). No se presenta como una agenda de propiedades ni como un CRM genérico.
+- **Nombres anteriores:** "InmoGest" (y variantes como "InmoGestión") fueron nombres provisionales; son históricos y no se usan comercialmente. Persisten solo en identificadores técnicos internos (`docs/BRAND.md`).
+- **Dominio previsto:** `inmopanel.com.ar`, **todavía no comprado ni configurado**. A futuro, `inmopanel.com` o `inmopanel.ai` según disponibilidad.
+- La identidad visual (logo, paleta, tipografía) no está cerrada.
+- Pendiente de validación: compra del dominio, disponibilidad de marca (INPI) y posibles conflictos comerciales o marcarios del nombre InmoPanel.
 
 ## 12. Diferenciación
 
@@ -488,4 +492,5 @@ Esta lista es un requisito funcional del producto, **no** asesoramiento legal. L
 10. En solo lectura, si un mensaje entrante de un número nuevo crea el contacto.
 11. Si existen otros usuarios de C&C con acceso al panel de superadministrador y con qué permisos.
 12. Redacción legal definitiva de términos y condiciones y política de privacidad (revisión profesional).
-13. Nombre comercial, marca, dominio e identidad visual definitivos.
+13. ~~Nombre comercial~~ (resuelto: InmoPanel by C&C). Pendientes: compra del dominio `inmopanel.com.ar`, registro de marca (INPI) e identidad visual definitiva.
+14. Adaptación a otros países de Latinoamérica (monedas, teléfonos, medios de cobro, normativa de datos): alcance y momento.
