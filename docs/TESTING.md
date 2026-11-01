@@ -1,6 +1,6 @@
 # Estrategia de testing
 
-- **Versión:** 0.1 — 31/10/2026.
+- **Versión:** 0.2 — 31/10/2026 (comandos reales desde la Fase 0).
 - Regla general: una tarea no está terminada si alguna compuerta aplicable falla o no se ejecutó. Nunca se desactiva un test ni una validación para obtener un resultado verde.
 
 ## Compuertas
@@ -10,14 +10,16 @@
 | Typecheck / compile | TypeScript estricto (`strict`, `noUncheckedIndexedAccess`) + `next typegen` | `npm run typecheck` | Local antes de cada entrega y en CI. |
 | Lint | ESLint (config de Next.js + TypeScript) | `npm run lint` | Local y CI. |
 | Unit | Vitest | `npm test` | Local y CI. |
-| Integration | Vitest contra el proyecto Supabase de desarrollo (Server Actions, worker, webhooks) | `npm run test:integration` | Local y CI con base de pruebas. |
-| Base de datos | pgTAP en `backend/supabase/tests/`, dentro de una transacción que se revierte | `npm run test:db` | Toda migración que toque tablas, permisos o reglas. |
-| E2E | Playwright (locale es-AR, zona America/Argentina/Buenos_Aires, viewport escritorio y 360 px) | `npm run test:e2e` | Antes de cerrar cada fase y en CI sobre la rama principal. |
+| Integration | Vitest contra el proyecto Supabase de desarrollo (Server Actions, worker, webhooks), en `tests/integration/`. Sin `.env.local` falla (no se saltea) | `npm run test:integration` | Local y CI con base de pruebas. |
+| Base de datos | pgTAP en `backend/supabase/tests/`. `scripts/run-pgtap.mjs` se conecta con `pg` a `SUPABASE_DB_URL` (sin Docker), corre cada archivo junto con `_helpers.sql` en una transacción que siempre se revierte | `npm run test:db` (o `npm run test:db -- 02 06` para algunos archivos) | Toda migración que toque tablas, permisos o reglas. |
+| E2E | Playwright (locale es-AR, zona America/Argentina/Buenos_Aires, viewport escritorio y 360 px) contra el build de producción en el puerto 3100 (`E2E_PORT`), sin reutilizar servidores existentes | `npm run build` y `npm run test:e2e` (la primera vez, `npm run e2e:install`) | Antes de cerrar cada fase y en CI sobre la rama principal. |
 | Build | `next build` y compilación del worker | `npm run build` | Local y CI. |
-| Security | `npm audit --audit-level=high`; tests de aislamiento pgTAP; revisión de que ninguna variable secreta use prefijo `NEXT_PUBLIC_` | CI | Cada PR. |
+| Security | `npm audit --audit-level=high`; tests de aislamiento pgTAP; `npm run check:env` (ninguna variable secreta con prefijo `NEXT_PUBLIC_` ni claves `sb_secret_` en el código) | CI | Cada PR. |
 | QA específico | Prueba manual de WhatsApp con un número de prueba real (conexión QR, entrante, saliente, desconexión) | Lista de verificación | Antes de cerrar cada fase que toque WhatsApp. |
 
 Integraciones externas: los tests unitarios e integración usan un `WhatsAppProvider` falso que cumple el contrato. Que una integración "funciona" solo se afirma después de probarla contra el servicio real; si no se probó, se informa como no verificada.
+
+En CI (`.github/workflows/ci.yml`) la base es un Supabase local efímero levantado con `supabase start` en el runner (con Docker), que aplica migraciones y seed; `test:db` y `test:integration` corren contra esa base con `APP_ENV=ci`.
 
 ## Qué se testea en cada capa
 
@@ -28,9 +30,33 @@ Integraciones externas: los tests unitarios e integración usan un `WhatsAppProv
 | Integration | Webhook de Evolution idempotente; mensaje entrante crea o vincula contacto; worker respeta límites, reintenta como máximo 2 veces y pausa ante errores; matching genera y deja de generar coincidencias según estado; importación con filas inválidas; unificación y fusión conservan relaciones. |
 | E2E | Recorridos críticos (abajo). |
 
+### Resultados al cerrar la Fase 0 (01/11/2026)
+
+typecheck y lint OK · unit 96/96 · build OK · pgTAP 170 aserciones, 0 fallas (7 archivos) · integración 2/2 · E2E 8/8 · `npm audit --audit-level=high` OK. El workflow de CI no se ejecutó todavía en GitHub.
+
+### Cobertura actual (Fase 0)
+
+| Archivo | Cubre |
+|---|---|
+| `backend/shared/src/*.test.ts` | Teléfonos (+549, 0 y 15, característica de 4 dígitos), dinero (centavos, monedas, formato, conversión a `numeric(14,2)`), fechas (DD/MM/AAAA, hora de Argentina), traducción de errores de Postgres. |
+| `backend/worker/src/runner.test.ts` | Toma y completa jobs, tipos desconocidos, payload inválido, errores de handlers, bucle resistente a fallas y apagado. |
+| `frontend/lib/health.test.ts` | Health check con y sin configuración, base caída. |
+| `backend/supabase/tests/01_schema_security.sql` | RLS forzada en todas las tablas, permisos de `anon`/`authenticated`, `SECURITY DEFINER` con `search_path`, `BYPASSRLS` del dueño de las funciones, planes iniciales. |
+| `…/02_isolation.sql` | Aislamiento A/B en lectura, alta, modificación y borrado; acciones solo del dueño; plan y estado solo de C&C; cola y rate limit inaccesibles; claves inmutables; anónimos. |
+| `…/03_account_states.sql` | Estado efectivo por fechas (día 15, 45, 135, bordes), solo lectura, bloqueada, reactivación, suspensión, agente desactivado. |
+| `…/04_last_owner.sql` | Último dueño activo para todos los roles, cambio de dueño, borrado completo de la inmobiliaria. |
+| `…/05_plan_limits.sql` | Límite de usuarios (miembros + invitaciones abiertas), mensaje con límite y plan, cambio de límite sin desplegar, números de WhatsApp sin definir, sesión de soporte sin límites. |
+| `…/06_support_session.sql` | «Ingresar como»: sin sesión, con sesión, cambio de inmobiliaria, solo lectura y bloqueada, último dueño, salida, nadie más puede usarlo. |
+| `…/07_jobs_rate_limits.sql` | Idempotencia, toma única, reintentos con espera, lock vencido, rate limiting. |
+| `tests/integration/worker-queue.test.ts` | Worker real contra la cola de Supabase; la clave publicable no accede a la cola. |
+| `tests/e2e/smoke.spec.ts` | Página inicial (sin botones ni enlaces), sin desplazamiento horizontal a 360 px, cabeceras de seguridad, `/api/health`. |
+
+Pendiente de la Fase 1 (llega con las tablas del CRM): claves foráneas compuestas entre tablas de una inmobiliaria, agentes con acceso a todo sin importar la asignación, automatizaciones bloqueadas en plan Inicial y funciones públicas de propiedades.
+
 ## Datos de prueba
 
-- `backend/supabase/seed.sql` solo para desarrollo: dos inmobiliarias (una sirve como "intrusa" en los tests de aislamiento), dueños, agentes, un superadministrador principal, contactos, propiedades, búsquedas y conversaciones ficticias.
+- `backend/supabase/seed.sql` solo para desarrollo: dos inmobiliarias (una sirve como "intrusa" en los tests de aislamiento), dueños, agentes y un superadministrador principal. Desde la Fase 1 se suman contactos, propiedades, búsquedas y conversaciones ficticias.
+- Los tests pgTAP no dependen del seed: cada archivo crea sus propios datos dentro de la transacción que se revierte.
 - Sin datos personales reales ni credenciales reales. Emails en dominios `.test`; teléfonos de rangos ficticios.
 - Las contraseñas de los usuarios de prueba se documentan en el encabezado del seed y no valen en ningún otro ambiente.
 

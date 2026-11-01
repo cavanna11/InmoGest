@@ -1,0 +1,43 @@
+{
+  "name": "inmogest",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "backend/shared",
+    "backend/worker",
+    "frontend"
+  ],
+  "engines": {
+    "node": ">=22",
+    "npm": ">=10"
+  },
+  "scripts": {
+    "dev": "npm run dev -w @inmogest/web",
+    "dev:worker": "npm run dev -w @inmogest/worker",
+    "typecheck": "npm run typecheck --workspaces && tsc -p tests/tsconfig.json",
+    "lint": "eslint .",
+    "test": "vitest run --project shared --project worker --project web",
+    "test:watch": "vitest --project shared --project worker --project web",
+    "test:integration": "vitest run --project integration",
+    "test:e2e": "playwright test",
+    "test:db": "node scripts/run-pgtap.mjs",
+    "build": "npm run build -w @inmogest/shared && npm run build -w @inmogest/worker && npm run build -w @inmogest/web",
+    "db:push": "node scripts/db-push.mjs",
+    "db:types": "node scripts/db-types.mjs",
+    "check:env": "node scripts/check-public-env.mjs",
+    "e2e:install": "playwright install chromium"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.5",
+    "@playwright/test": "1.64.1",
+    "@types/node": "22.20.5",
+    "@types/pg": "8.23.1",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.3",
+    "pg": "8.23.1",
+    "supabase": "2.122.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.72.1",
+    "vitest": "5.0.5"
+  }
+}

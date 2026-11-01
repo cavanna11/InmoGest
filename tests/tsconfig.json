@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "lib": ["ES2023", "dom"],
+    "types": ["node"]
+  },
+  "include": ["integration", "e2e", "../playwright.config.ts"]
+}

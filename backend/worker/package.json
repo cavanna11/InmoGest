@@ -1,0 +1,19 @@
+{
+  "name": "@inmogest/worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch --conditions=development src/index.ts",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "dependencies": {
+    "@inmogest/shared": "*",
+    "@supabase/supabase-js": "2.118.0"
+  },
+  "devDependencies": {
+    "tsx": "4.23.15"
+  }
+}

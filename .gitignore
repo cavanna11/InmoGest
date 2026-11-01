@@ -9,3 +9,20 @@ coverage/
 *.log
 .DS_Store
 Thumbs.db
+
+# Next.js
+.next/
+next-env.d.ts
+*.tsbuildinfo
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Supabase CLI
+backend/supabase/.temp/
+backend/supabase/.branches/
+
+# Certificados CA locales (Supabase); se descargan del panel, no se versionan
+certs/

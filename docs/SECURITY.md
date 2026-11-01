@@ -10,6 +10,7 @@
 - Sesión en cookies httpOnly gestionadas por `@supabase/ssr`; en el servidor la identidad se valida con `getUser()` (nunca solo con la cookie decodificada).
 - Recuperación de contraseña e invitaciones con tokens de un solo uso y vencimiento (invitaciones: 7 días).
 - Segundo factor (MFA) para el superadministrador principal: **[A CONFIRMAR]** (recomendado por tener acceso a todas las cuentas).
+- `backend/supabase/config.toml` fija estas reglas (contraseña ≥ 10 con mayúsculas, minúsculas y números; confirmación de email) solo para Supabase local y CI. En los proyectos en la nube se configuran a mano en Authentication → Providers → Email y Policies, y hay que mantenerlas iguales.
 
 ### Autorización (RBAC + tenancy)
 

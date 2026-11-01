@@ -181,7 +181,7 @@ Endpoint de solo lectura por inmobiliaria, autenticado con un token generado por
 - Ningún error expone SQL, stack traces ni datos de otra inmobiliaria.
 
 ### Observabilidad
-Detalle en `docs/OBSERVABILITY.md` (pendiente). Mínimo: logs estructurados sin datos personales, registro de cada envío de WhatsApp, estado de las conexiones, health check de app y worker.
+Detalle en `docs/OBSERVABILITY.md`. Mínimo: logs estructurados sin datos personales, registro de cada envío de WhatsApp, estado de las conexiones, health check de app y worker.
 
 ### Escalabilidad
 - Una base compartida con `organization_id` en todas las tablas e índices compuestos.
@@ -195,10 +195,9 @@ Detalle en `docs/OBSERVABILITY.md` (pendiente). Mínimo: logs estructurados sin 
 | [0001](DECISIONS/0001-estructura-frontend-backend.md) | Next.js completo en `frontend/`; base, worker e integraciones en `backend/`. |
 | [0002](DECISIONS/0002-workspaces-y-codigo-compartido.md) | npm workspaces con paquete compartido `backend/shared`. |
 | [0003](DECISIONS/0003-acceso-de-soporte-ingresar-como.md) | «Ingresar como» mediante sesión de soporte reconocida por RLS. |
+| [0004](DECISIONS/0004-aislamiento-multi-tenant-en-la-base.md) | Aislamiento multi-tenant en la base: RLS forzada, funciones de permisos y claves foráneas compuestas. |
+| [0005](DECISIONS/0005-cola-de-jobs-en-postgres.md) | Cola de jobs en PostgreSQL (`claim_jobs` con `SKIP LOCKED`). |
+| [0006](DECISIONS/0006-dinero-telefonos-y-fechas.md) | Dinero en centavos con moneda, teléfonos E.164 (+549) y fechas en hora de Argentina. |
 
-Decisiones heredadas del diseño anterior (se documentarán como ADR al implementarlas):
-- Multi-tenancy con base compartida, `organization_id` en todas las tablas, claves foráneas compuestas `(organization_id, id)` y RLS forzada.
-- Cola de jobs en PostgreSQL en lugar de un servicio externo de colas.
-- Montos como `numeric(14,2)` en la base y enteros en centavos en TypeScript, siempre con moneda.
-- Teléfonos en E.164; los argentinos canonicalizados como móvil (+549…).
+Decisión heredada del diseño anterior que se documentará como ADR al implementarla:
 - Evolution API v2.3.7 compartido, una instancia lógica por número.

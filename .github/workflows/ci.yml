@@ -1,0 +1,106 @@
+# Compuertas de docs/TESTING.md. No despliega ni toca producción.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # El .npmrc apunta script-shell a Git Bash de Windows; en Linux se usa bash del sistema.
+  npm_config_script_shell: bash
+  APP_ENV: ci
+  NEXT_TELEMETRY_DISABLED: '1'
+
+jobs:
+  checks:
+    name: Typecheck, lint, unit, build, seguridad
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - name: Variables públicas sin secretos
+        run: npm run check:env
+      - name: Dependencias sin vulnerabilidades altas
+        run: npm audit --audit-level=high
+
+  database:
+    name: Migraciones, pgTAP e integración (Supabase local efímero)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Levantar Supabase local (aplica migraciones y seed)
+        run: >
+          node node_modules/supabase/dist/supabase.js start --workdir backend
+          -x studio,imgproxy,mailpit,edge-runtime,logflare,vector,supavisor,realtime,storage-api,postgres-meta
+      - name: Exportar credenciales locales (solo de este contenedor efímero)
+        run: |
+          node node_modules/supabase/dist/supabase.js status --workdir backend -o json > "$RUNNER_TEMP/supabase.json"
+          node -e '
+            const s = JSON.parse(require("fs").readFileSync(process.env.RUNNER_TEMP + "/supabase.json", "utf8"));
+            const pick = (...keys) => keys.map((k) => s[k]).find(Boolean);
+            const vars = {
+              SUPABASE_DB_URL: pick("DB_URL"),
+              NEXT_PUBLIC_SUPABASE_URL: pick("API_URL"),
+              NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: pick("PUBLISHABLE_KEY", "ANON_KEY"),
+              SUPABASE_SECRET_KEY: pick("SECRET_KEY", "SERVICE_ROLE_KEY"),
+            };
+            const lines = [];
+            for (const [name, value] of Object.entries(vars)) {
+              if (!value) { console.error("Falta " + name + " en supabase status"); process.exit(1); }
+              console.log("::add-mask::" + value);
+              lines.push(name + "=" + value);
+            }
+            require("fs").appendFileSync(process.env.GITHUB_ENV, lines.join("\n") + "\n");
+          '
+      - name: db:push no tiene migraciones pendientes
+        run: npm run db:push -- --dry-run
+      - run: npm run test:db
+      - run: npm run test:integration
+
+  e2e:
+    name: E2E (Playwright)
+    if: github.ref == 'refs/heads/main'
+    needs: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run e2e:install -- --with-deps
+      - run: npm run test:e2e
+        env:
+          CI: 'true'
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7

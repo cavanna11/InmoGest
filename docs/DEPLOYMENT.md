@@ -12,7 +12,7 @@ Local → CI → Staging → Production
 | Ambiente | App | Base | WhatsApp / worker | Uso |
 |---|---|---|---|---|
 | Local | `npm run dev` (localhost:3000) | Proyecto Supabase de **desarrollo** (nube) | Evolution local con Docker (opcional) o el del VPS con una instancia de prueba | Desarrollo y tests. |
-| CI | GitHub Actions | Base efímera o proyecto de desarrollo **[A CONFIRMAR]** | `WhatsAppProvider` falso | Compuertas de `docs/TESTING.md`. |
+| CI | GitHub Actions (`.github/workflows/ci.yml`) | Supabase local efímero en el runner (`supabase start`, con Docker), con migraciones y seed; sin secretos en GitHub | `WhatsAppProvider` falso | Compuertas de `docs/TESTING.md`. |
 | Staging | Vercel Preview (por rama/PR) | Proyecto Supabase de **staging** **[A CONFIRMAR: proyecto separado o reutilizar desarrollo, por costo]** | Instancia de Evolution de prueba con número de prueba | Validación antes de producción. |
 | Production | Vercel Production | Proyecto Supabase de **producción** (región São Paulo) | VPS de producción (Evolution + worker) | Clientes reales. |
 
@@ -22,7 +22,8 @@ Dominios: panel y páginas públicas en el dominio definitivo **[A CONFIRMAR]**;
 
 ```text
 PR abierto
-  → CI: install → typecheck → lint → unit → build → pgTAP (base de pruebas) → npm audit
+  → CI: install → typecheck → lint → unit → build → check:env → npm audit
+        en paralelo: Supabase local → db:push --dry-run → pgTAP → integración
   → Vercel Preview (staging)
   → revisión
 Merge a main

@@ -152,11 +152,43 @@ platform_settings, legal_documents (globales)
 - Outbox: `(connection_id, status, scheduled_for)` para que el worker tome lo próximo de cada número.
 - Jobs: `(status, run_after)`.
 
+## Implementado en la Fase 0 (31/10/2026)
+
+Migraciones en `backend/supabase/migrations/`:
+
+| Migración | Contenido |
+|---|---|
+| `20261031200000_base.sql` | Extensiones (`citext`, `pgcrypto`), esquema `app`, enums, `set_updated_at`, revocación de permisos por defecto de Supabase en `public`. |
+| `20261031200100_platform.sql` | `plans` (con los 3 planes del PRD), `platform_settings` (una fila versionada), `platform_admins`, `legal_documents`, `audit_logs`, `rate_limits`. |
+| `20261031200200_tenancy.sql` | `organizations`, `profiles` (trigger sobre `auth.users`), `memberships`, `invitations`, `legal_acceptances`, `support_sessions`. |
+| `20261031200300_permissions.sql` | `app.organization_state`, `is_member`, `is_owner`, `can_read`, `can_write`, `is_platform_admin`, `is_principal`; RPC `start_support_session`, `end_support_session`, `current_support_organization`, `my_organizations`. |
+| `20261031200400_rules.sql` | Último dueño, límite de usuarios del plan, columnas de plataforma protegidas, claves inmutables, auditoría de miembros, invitaciones, planes y configuración global. |
+| `20261031200500_rls.sql` | RLS habilitada y forzada en todas las tablas, grants explícitos y políticas. |
+| `20261031200600_jobs.sql` | `jobs` y RPC `enqueue_job`, `claim_jobs`, `complete_job`, `fail_job`; `hit_rate_limit`; `health()`. |
+| `20261101120000_fix_prevent_tenant_key_change.sql` | Corrección detectada por pgTAP: el trigger de claves inmutables fallaba en todo UPDATE de `invitations` (referenciaba `new.user_id`). |
+
+Aplicadas al proyecto de desarrollo el 01/11/2026 con `npm run db:push -- --seed`; `npm run test:db`: 170 aserciones, 0 fallas. Los tipos generados (`npm run db:types`) están en `backend/shared/src/database.types.ts` y tipan todos los clientes de Supabase. Regenerarlos después de cada migración.
+
+Lección de la corrección: en PL/pgSQL, `a and new.x …` no corta la evaluación; en triggers compartidos por varias tablas usar `to_jsonb(new) ->> 'x'` o un `if` anidado.
+
+Detalles que no estaban en la versión 0.1 de este documento:
+
+- **Códigos de error propios** (SQLSTATE clase `IG`), traducidos en `@inmogest/shared`: `IG001` límite del plan (con `detail` JSON `{resource, limit, plan}`), `IG003` último dueño, `IG004` operación reservada a C&C.
+- **Plan y estado de cuenta:** solo el superadministrador principal o un proceso del servidor puede cambiar `plan_code`, `trial_ends_at`, `paid_until`, `suspended_at`, `deleted_at`; cada cambio queda en `audit_logs` con `scope = 'platform'`.
+- **`audit_logs.scope`:** `organization` (visible para el dueño de esa inmobiliaria) o `platform` (solo C&C). Las acciones hechas con «Ingresar como» llevan `via_support_session = true`.
+- **Límite de usuarios:** cuenta membresías activas + invitaciones abiertas no vencidas. La aceptación de una invitación (Fase 1) debe cerrar la invitación antes de crear la membresía para no contar dos veces.
+- **«Ingresar como» sin límites de plan** (PRD §6: sin restricciones salvo el último dueño).
+- **`platform_settings`:** además de los límites de WhatsApp, `trial_plan_code` (plan durante la prueba, inicial Profesional, [A CONFIRMAR]), `wa_auto_window_start/end` (null = sin horario definido; no se envían automáticos) y `signup_max_organizations_per_user` / `signup_window_hours` (inicial 3 cada 24 h, [A CONFIRMAR]).
+- **Panel de C&C:** los administradores de la plataforma leen `organizations` (lista del panel), pero no miembros, invitaciones ni datos del CRM sin una sesión de soporte.
+- **Seed** (`backend/supabase/seed.sql`, solo desarrollo): inmobiliarias Demo (Profesional) e Intrusa (Inicial), dueños, dos agentes y el superadministrador principal; contraseña de desarrollo en el encabezado.
+
+Pendiente para la Fase 1: tablas del CRM con sus claves foráneas compuestas, `onboarding_progress`, `payment_reports`, RPC `create_organization` y aceptación de invitaciones, triggers de límite de propiedades y números de WhatsApp, y trigger de automatizaciones por plan.
+
 ## Migraciones, auditoría y retención
 
 ### Migraciones
 - Archivos SQL versionados `AAAAMMDDHHMMSS_descripcion.sql` en `backend/supabase/migrations/`; nunca se edita una migración ya aplicada en un ambiente compartido.
-- Se aplican con `npm run db:push` contra el proyecto de desarrollo; producción solo con aprobación explícita.
+- Se aplican con `npm run db:push` (`-- --seed` para cargar el seed) contra el proyecto de desarrollo. El script se niega a correr si `APP_ENV` no es `local` o `ci`; producción solo con aprobación explícita y un procedimiento aparte.
 - Cada migración que toca permisos va acompañada de tests pgTAP en `backend/supabase/tests/`.
 - Los tipos TypeScript se generan desde la base y se versionan en `backend/shared`.
 
