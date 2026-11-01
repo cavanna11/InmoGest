@@ -39,8 +39,8 @@ select results_eq(
   $$ select p.oid::regprocedure::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace
      where n.nspname = 'public' and has_function_privilege('anon', p.oid, 'execute')
      order by 1 $$,
-  $$ values ('health()') $$,
-  'anon solo puede ejecutar health()'
+  $$ values ('health()'), ('registration_legal_documents()'), ('resolve_organization_slug(text)') $$,
+  'anon solo puede ejecutar health() y las RPC públicas previstas'
 );
 
 select set_eq(
@@ -48,7 +48,7 @@ select set_eq(
      where n.nspname = 'public' and has_function_privilege('authenticated', p.oid, 'execute') $$,
   array[
     'current_support_organization()', 'end_support_session()', 'health()', 'my_organizations()',
-    'start_support_session(uuid)'
+    'registration_legal_documents()', 'resolve_organization_slug(text)', 'start_support_session(uuid)'
   ],
   'authenticated solo ejecuta las RPC previstas'
 );

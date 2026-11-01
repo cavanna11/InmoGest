@@ -25,7 +25,8 @@ Más adelante (fuera del MVP): Mercado Pago (cobros), API oficial de WhatsApp de
 | next · react · react-dom | 16.4.3 · 19.3.1 · 19.3.1 | frontend | App, con `cacheComponents` y `partialPrefetching`. |
 | @supabase/supabase-js · @supabase/ssr | 2.118.0 · 0.12.7 | frontend, worker | Clientes de Supabase; sesión en cookies refrescada en `proxy.ts`. |
 | zod | 4.6.7 | frontend, shared | Validación de entradas, variables de entorno y payloads de jobs. |
-| tailwindcss · @tailwindcss/postcss | 4.3.3 | frontend (dev) | Estilos. shadcn/ui se suma con el design system. |
+| tailwindcss · @tailwindcss/postcss | 4.3.3 | frontend (dev) | Estilos con tokens semánticos (`frontend/styles/tokens.css`). |
+| clsx · tailwind-merge | 2.1.1 · 3.7.0 | frontend | Utilidad `cn` de shadcn/ui. MIT, sin dependencias. Los paquetes de cada componente de shadcn/ui (Radix, íconos) se agregan cuando una pantalla los usa. |
 | server-only | 0.0.1 | frontend | Hace fallar el build si código con secretos llega al navegador. Paquete oficial de React, sin dependencias. |
 | libphonenumber-js | 1.13.15 | shared | Normalización de teléfonos (ADR 0006). MIT, mantenida; metadata `min` (~80 kB). |
 | typescript | 5.9.3 | raíz (dev) | Se mantiene 5.9 aunque existe 7.0: no está verificado con `next typegen` ni con typescript-eslint. |

@@ -6,7 +6,9 @@ Proyecto creado a partir del Estándar de Vibe Coding 1.0 (ver `STANDARD.md`).
 
 ## Estado (31/10/2026)
 
-**Fase 0 (fundamentos) implementada y verificada** (01/11/2026): monorepo, base de plataforma y tenancy con RLS (aplicada al proyecto de desarrollo), utilidades compartidas, worker mínimo y CI. Compuertas: typecheck, lint, 96 tests unitarios, build, 170 aserciones pgTAP, 2 tests de integración y 8 E2E en verde. El workflow de CI todavía no corrió en GitHub. Todavía no hay funcionalidades del CRM (Fase 1).
+**Fase 0 (fundamentos) implementada y verificada** (01/11/2026): monorepo, base de plataforma y tenancy con RLS (aplicada al proyecto de desarrollo), utilidades compartidas, worker mínimo y CI (los 3 jobs en verde en GitHub).
+
+**Decisiones previas a la Fase 1 aplicadas** (02/11/2026): identidad visual provisoria con tokens semánticos, emails e invitaciones (ADR 0007), slugs con historial reservado (ADR 0008), publicación explícita de documentos legales (ADR 0009) y E2E con autenticación en CI. Compuertas locales: 151 tests unitarios, 206 aserciones pgTAP, 2 de integración y 8 E2E públicos en verde. Todavía no hay funcionalidades del CRM: el próximo paso es el incremento 1.1 (cuentas, acceso y equipo).
 
 | Paso | Estado |
 |---|---|
@@ -67,7 +69,7 @@ Usuarios de prueba del seed: ver el encabezado de `backend/supabase/seed.sql` (d
 | `npm run build` | Compila `shared`, el worker y la app |
 | `npm run test:integration` | Worker contra la cola real (requiere `.env.local`) |
 | `npm run test:e2e` | Playwright contra el build (puerto 3100; antes `npm run build` y, la primera vez, `npm run e2e:install`) |
-| `npm run db:push` | Migraciones al proyecto de desarrollo (`-- --seed`, `-- --dry-run`) |
+| `npm run db:push` | Migraciones al proyecto de desarrollo (`-- --seed` vuelve a aplicar el seed idempotente; `-- --dry-run`) |
 | `npm run test:db` | Tests pgTAP (aislamiento, estados de cuenta, último dueño, límites de plan, «Ingresar como», jobs) |
 | `npm run db:types` | Tipos TypeScript de la base |
 | `npm run check:env` | Ninguna variable secreta con `NEXT_PUBLIC_` |
@@ -85,7 +87,8 @@ Usuarios de prueba del seed: ver el encabezado de `backend/supabase/seed.sql` (d
 | [Deploy](docs/DEPLOYMENT.md) | Ambientes, pipeline, rollback |
 | [Operación](docs/OPERATIONS.md) | Backups, actualizaciones, incidentes |
 | [Observabilidad](docs/OBSERVABILITY.md) | Logs, auditoría, métricas, alertas |
-| [Decisiones](docs/DECISIONS/) | ADRs 0001–0006 |
+| [Design System](docs/DESIGN-SYSTEM.md) | Tokens semánticos, accesibilidad, identidad provisoria |
+| [Decisiones](docs/DECISIONS/) | ADRs 0001–0009 |
 
 ## Árbol
 

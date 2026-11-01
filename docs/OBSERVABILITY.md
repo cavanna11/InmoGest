@@ -17,6 +17,7 @@ Formato JSON estructurado con: fecha, nivel, componente (`web`, `worker`, `webho
 **Se excluye siempre:**
 - Contenido de mensajes de WhatsApp, notas, nombres, teléfonos y emails de contactos.
 - Contraseñas, tokens, claves, cookies, cabeceras `Authorization`, secretos de webhook.
+- Enlaces de invitación, confirmación de email y recuperación de contraseña (completos o con su token), y URLs con parámetros `token`, `code` o `token_hash` (ADR 0007).
 - Contenido de archivos CSV.
 
 Cuando hace falta identificar un registro se usa su `id`, nunca el dato personal.

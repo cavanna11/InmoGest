@@ -1,0 +1,82 @@
+/*
+ * Tokens de diseño — ÚNICA fuente de la identidad visual (docs/DESIGN-SYSTEM.md).
+ *
+ * Identidad PROVISORIA, neutra y sobria, hasta definir la marca (docs/BRAND.md).
+ * Para cambiar la identidad se editan estos valores; los componentes solo usan los nombres
+ * semánticos (bg-primary, text-muted-foreground, border-input…), nunca colores sueltos.
+ *
+ * Nombres compatibles con shadcn/ui. Cada par fondo/texto cumple contraste WCAG AA (≥ 4,5:1),
+ * y bordes de campos y anillo de foco ≥ 3:1: lo verifica frontend/styles/tokens.test.ts.
+ * Los valores van en hex para que ese test pueda calcular el contraste.
+ */
+
+:root {
+  /* Superficies y texto */
+  --background: #ffffff;
+  --foreground: #18181b;
+  --surface: #ffffff;
+  --surface-foreground: #18181b;
+  --popover: #ffffff;
+  --popover-foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #52525b;
+
+  /* Acciones */
+  --primary: #18181b;
+  --primary-foreground: #fafafa;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #18181b;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+
+  /* Estados */
+  --destructive: #b91c1c;
+  --destructive-foreground: #ffffff;
+  --success: #15803d;
+  --success-foreground: #ffffff;
+  --warning: #a16207;
+  --warning-foreground: #ffffff;
+
+  /* Bordes y foco */
+  --border: #e4e4e7;
+  --input: #71717a;
+  --ring: #3f3f46;
+
+  /* Geometría */
+  --radius: 0.5rem;
+
+  /* Tipografía */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #09090b;
+    --foreground: #fafafa;
+    --surface: #18181b;
+    --surface-foreground: #fafafa;
+    --popover: #18181b;
+    --popover-foreground: #fafafa;
+    --muted: #27272a;
+    --muted-foreground: #a1a1aa;
+
+    --primary: #fafafa;
+    --primary-foreground: #18181b;
+    --secondary: #27272a;
+    --secondary-foreground: #fafafa;
+    --accent: #27272a;
+    --accent-foreground: #fafafa;
+
+    --destructive: #f87171;
+    --destructive-foreground: #18181b;
+    --success: #4ade80;
+    --success-foreground: #18181b;
+    --warning: #facc15;
+    --warning-foreground: #18181b;
+
+    --border: #27272a;
+    --input: #71717a;
+    --ring: #d4d4d8;
+  }
+}

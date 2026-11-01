@@ -95,6 +95,10 @@ Formulario → Server Action → Supabase Auth signUp (email + contraseña)
 ```
 La función de creación verifica que el usuario confirmó el email y limita cuántas inmobiliarias puede crear por usuario y por ventana de tiempo (anti-abuso) **[A CONFIRMAR valor]**.
 
+- El formulario de registro solo se muestra si `registration_legal_documents()` devuelve términos y privacidad vigentes (ADR 0009); si no, la página informa que el registro no está disponible.
+- El slug se genera del nombre con `slugify` y `available_organization_slug` (ADR 0008).
+- Confirmación y recuperación usan los emails de Supabase Auth (ADR 0007).
+
 ### 3. Estado de cuenta (prueba, activa, solo lectura, bloqueada)
 - La base calcula el **estado efectivo** a partir de fechas (`trial_ends_at`, `paid_until`) y de una suspensión manual; no depende de que un job corra a tiempo.
 - Las políticas de escritura de RLS exigen estado efectivo `trial` o `active`. En `read_only` solo pasan lecturas, exportaciones y la escritura de mensajes entrantes (que hace el servidor, no el usuario).
@@ -198,6 +202,9 @@ Detalle en `docs/OBSERVABILITY.md`. Mínimo: logs estructurados sin datos person
 | [0004](DECISIONS/0004-aislamiento-multi-tenant-en-la-base.md) | Aislamiento multi-tenant en la base: RLS forzada, funciones de permisos y claves foráneas compuestas. |
 | [0005](DECISIONS/0005-cola-de-jobs-en-postgres.md) | Cola de jobs en PostgreSQL (`claim_jobs` con `SKIP LOCKED`). |
 | [0006](DECISIONS/0006-dinero-telefonos-y-fechas.md) | Dinero en centavos con moneda, teléfonos E.164 (+549) y fechas en hora de Argentina. |
+| [0007](DECISIONS/0007-emails-y-enlaces-de-invitacion.md) | Emails de Auth por el SMTP de Supabase (proveedor transaccional antes de la beta); invitaciones con enlace copiable. |
+| [0008](DECISIONS/0008-slugs-de-inmobiliarias.md) | Slugs generados del nombre, modificables, con historial reservado y redirección. |
+| [0009](DECISIONS/0009-publicacion-de-documentos-legales.md) | Registro habilitado solo con términos y privacidad publicados explícitamente; borradores solo en desarrollo. |
 
 Decisión heredada del diseño anterior que se documentará como ADR al implementarla:
 - Evolution API v2.3.7 compartido, una instancia lógica por número.

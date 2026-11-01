@@ -166,6 +166,8 @@ Migraciones en `backend/supabase/migrations/`:
 | `20261031200500_rls.sql` | RLS habilitada y forzada en todas las tablas, grants explícitos y políticas. |
 | `20261031200600_jobs.sql` | `jobs` y RPC `enqueue_job`, `claim_jobs`, `complete_job`, `fail_job`; `hit_rate_limit`; `health()`. |
 | `20261101120000_fix_prevent_tenant_key_change.sql` | Corrección detectada por pgTAP: el trigger de claves inmutables fallaba en todo UPDATE de `invitations` (referenciaba `new.user_id`). |
+| `20261102100000_organization_slugs.sql` | `organization_slug_history` (slugs anteriores reservados para siempre), validación IG005, `app.available_organization_slug`, RPC pública `resolve_organization_slug` y auditoría del cambio (ADR 0008). |
+| `20261102100100_legal_publication.sql` | `legal_documents.is_draft`; `platform_settings.current_terms_id`, `current_privacy_id`, `allow_draft_legal_documents`; `legal_acceptances.document_is_draft`; validaciones IG006 y RPC pública `registration_legal_documents` (ADR 0009). |
 
 Aplicadas al proyecto de desarrollo el 01/11/2026 con `npm run db:push -- --seed`; `npm run test:db`: 170 aserciones, 0 fallas. Los tipos generados (`npm run db:types`) están en `backend/shared/src/database.types.ts` y tipan todos los clientes de Supabase. Regenerarlos después de cada migración.
 
@@ -173,7 +175,8 @@ Lección de la corrección: en PL/pgSQL, `a and new.x …` no corta la evaluaci�
 
 Detalles que no estaban en la versión 0.1 de este documento:
 
-- **Códigos de error propios** (SQLSTATE clase `IG`), traducidos en `@inmogest/shared`: `IG001` límite del plan (con `detail` JSON `{resource, limit, plan}`), `IG003` último dueño, `IG004` operación reservada a C&C.
+- **Códigos de error propios** (SQLSTATE clase `IG`), traducidos en `@inmogest/shared`: `IG001` límite del plan (con `detail` JSON `{resource, limit, plan}`), `IG003` último dueño, `IG004` operación reservada a C&C, `IG005` slug no disponible, `IG006` documento legal no vigente, borrador no habilitado o ya aceptado.
+- **Seed:** `npm run db:push -- --seed` aplica las migraciones con la CLI y después corre `seed.sql` con `pg`, en una transacción, cada vez (es idempotente). No se usa `--include-seed` de la CLI porque la CLI registra el seed como aplicado y no lo vuelve a ejecutar aunque cambie.
 - **Plan y estado de cuenta:** solo el superadministrador principal o un proceso del servidor puede cambiar `plan_code`, `trial_ends_at`, `paid_until`, `suspended_at`, `deleted_at`; cada cambio queda en `audit_logs` con `scope = 'platform'`.
 - **`audit_logs.scope`:** `organization` (visible para el dueño de esa inmobiliaria) o `platform` (solo C&C). Las acciones hechas con «Ingresar como» llevan `via_support_session = true`.
 - **Límite de usuarios:** cuenta membresías activas + invitaciones abiertas no vencidas. La aceptación de una invitación (Fase 1) debe cerrar la invitación antes de crear la membresía para no contar dos veces.

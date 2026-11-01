@@ -5,6 +5,7 @@ on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -56,36 +57,18 @@ jobs:
           node node_modules/supabase/dist/supabase.js start --workdir backend
           -x studio,imgproxy,mailpit,edge-runtime,logflare,vector,supavisor,realtime,storage-api,postgres-meta
       - name: Exportar credenciales locales (solo de este contenedor efímero)
-        run: |
-          node node_modules/supabase/dist/supabase.js status --workdir backend -o json > "$RUNNER_TEMP/supabase.json"
-          node -e '
-            const s = JSON.parse(require("fs").readFileSync(process.env.RUNNER_TEMP + "/supabase.json", "utf8"));
-            const pick = (...keys) => keys.map((k) => s[k]).find(Boolean);
-            const vars = {
-              SUPABASE_DB_URL: pick("DB_URL"),
-              NEXT_PUBLIC_SUPABASE_URL: pick("API_URL"),
-              NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: pick("PUBLISHABLE_KEY", "ANON_KEY"),
-              SUPABASE_SECRET_KEY: pick("SECRET_KEY", "SERVICE_ROLE_KEY"),
-            };
-            const lines = [];
-            for (const [name, value] of Object.entries(vars)) {
-              if (!value) { console.error("Falta " + name + " en supabase status"); process.exit(1); }
-              console.log("::add-mask::" + value);
-              lines.push(name + "=" + value);
-            }
-            require("fs").appendFileSync(process.env.GITHUB_ENV, lines.join("\n") + "\n");
-          '
+        run: node scripts/ci-supabase-env.mjs
       - name: db:push no tiene migraciones pendientes
         run: npm run db:push -- --dry-run
       - run: npm run test:db
       - run: npm run test:integration
 
   e2e:
-    name: E2E (Playwright)
-    if: github.ref == 'refs/heads/main'
+    name: E2E (Playwright, con autenticación sobre Supabase local)
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
     needs: checks
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -93,11 +76,19 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Levantar Supabase local con Auth y Mailpit (datos de prueba aislados)
+        run: >
+          node node_modules/supabase/dist/supabase.js start --workdir backend
+          -x studio,imgproxy,edge-runtime,logflare,vector,supavisor,realtime,storage-api,postgres-meta
+      - name: Exportar credenciales locales (solo de este contenedor efímero)
+        run: node scripts/ci-supabase-env.mjs
+      # El build incrusta las variables NEXT_PUBLIC_*: se hace después de exportarlas.
       - run: npm run build
       - run: npm run e2e:install -- --with-deps
       - run: npm run test:e2e
         env:
           CI: 'true'
+          E2E_AUTH: '1'
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

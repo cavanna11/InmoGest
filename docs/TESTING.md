@@ -21,6 +21,14 @@ Integraciones externas: los tests unitarios e integración usan un `WhatsAppProv
 
 En CI (`.github/workflows/ci.yml`) la base es un Supabase local efímero levantado con `supabase start` en el runner (con Docker), que aplica migraciones y seed; `test:db` y `test:integration` corren contra esa base con `APP_ENV=ci`.
 
+### E2E con autenticación
+
+- Los tests que registran usuarios, leen emails o inician sesión se etiquetan **`@auth`** y corren **solo en CI**, con `E2E_AUTH=1`, contra el Supabase local del runner (Auth + Mailpit para los emails). Nunca contra un proyecto en la nube: `playwright.config.ts` se niega a arrancar con `E2E_AUTH=1` si `NEXT_PUBLIC_SUPABASE_URL` no es `localhost`/`127.0.0.1`.
+- Datos aislados por corrida: emails únicos `e2e-<etiqueta>-<run>-…@inmogest.test` y contraseñas aleatorias que no se imprimen. Los enlaces de los emails se leen de Mailpit (`tests/e2e/support/mailpit.ts`) sin escribirlos en logs.
+- Sin `E2E_AUTH`, `npm run test:e2e` excluye los `@auth`: localmente corren solo los E2E públicos, sin Docker.
+- Correrlos localmente para depurar es una posibilidad futura (requiere Docker y `supabase start`), no una condición de desarrollo.
+- `tests/e2e/auth-infra.spec.ts` verifica la infraestructura: confirmación obligatoria por email, link de Mailpit, ingreso y política de contraseñas. Los recorridos de registro e invitación por la interfaz llegan con el incremento 1.1.
+
 ## Qué se testea en cada capa
 
 | Capa | Foco |
@@ -32,7 +40,11 @@ En CI (`.github/workflows/ci.yml`) la base es un Supabase local efímero levanta
 
 ### Resultados al cerrar la Fase 0 (01/11/2026)
 
-typecheck y lint OK · unit 96/96 · build OK · pgTAP 170 aserciones, 0 fallas (7 archivos) · integración 2/2 · E2E 8/8 · `npm audit --audit-level=high` OK. El workflow de CI no se ejecutó todavía en GitHub.
+typecheck y lint OK · unit 96/96 · build OK · pgTAP 170 aserciones, 0 fallas (7 archivos) · integración 2/2 · E2E 8/8 · `npm audit --audit-level=high` OK. CI en GitHub: los 3 jobs en verde (commit 5a6adb7).
+
+### Resultados tras las decisiones de diseño, slugs y documentos legales (02/11/2026)
+
+typecheck y lint OK · unit 151/151 (incluye contraste WCAG de los tokens) · build OK · pgTAP 206 aserciones, 0 fallas (8 archivos) · integración 2/2 · E2E públicos 8/8. Los E2E `@auth` todavía no corrieron: corren en CI en el próximo push a `main`.
 
 ### Cobertura actual (Fase 0)
 
@@ -47,6 +59,10 @@ typecheck y lint OK · unit 96/96 · build OK · pgTAP 170 aserciones, 0 fallas 
 | `…/04_last_owner.sql` | Último dueño activo para todos los roles, cambio de dueño, borrado completo de la inmobiliaria. |
 | `…/05_plan_limits.sql` | Límite de usuarios (miembros + invitaciones abiertas), mensaje con límite y plan, cambio de límite sin desplegar, números de WhatsApp sin definir, sesión de soporte sin límites. |
 | `…/06_support_session.sql` | «Ingresar como»: sin sesión, con sesión, cambio de inmobiliaria, solo lectura y bloqueada, último dueño, salida, nadie más puede usarlo. |
+| `…/08_slugs_legal.sql` | Slugs: sufijos, cambio por el dueño, historial reservado, redirección, vuelta al slug propio, inmobiliaria eliminada. Documentos legales: registro bloqueado sin configuración explícita, borradores solo con habilitación, aceptaciones solo de vigentes y marcadas, documentos aceptados inmutables. |
+| `frontend/styles/tokens.test.ts` | Contraste WCAG AA de los tokens de diseño (claro y oscuro). |
+| `backend/shared/src/slug.test.ts` | Generación y validación de slugs. |
+| `tests/e2e/auth-infra.spec.ts` (`@auth`, solo CI) | Confirmación de email por Mailpit, ingreso, política de contraseñas. |
 | `…/07_jobs_rate_limits.sql` | Idempotencia, toma única, reintentos con espera, lock vencido, rate limiting. |
 | `tests/integration/worker-queue.test.ts` | Worker real contra la cola de Supabase; la clave publicable no accede a la cola. |
 | `tests/e2e/smoke.spec.ts` | Página inicial (sin botones ni enlaces), sin desplazamiento horizontal a 360 px, cabeceras de seguridad, `/api/health`. |

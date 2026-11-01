@@ -61,13 +61,22 @@ insert into public.platform_admins (user_id, is_principal)
 values ('00000000-0000-4000-a000-000000000001', true)
 on conflict (user_id) do nothing;
 
-insert into public.legal_documents (kind, version, title, content, published_at)
+-- Documentos legales de DESARROLLO: borradores marcados como no válidos (ADR 0009).
+-- Solo este seed habilita borradores (allow_draft_legal_documents); en producción el registro queda
+-- bloqueado hasta publicar textos revisados y configurarlos como vigentes.
+insert into public.legal_documents (kind, version, title, content, published_at, is_draft)
 values
-  ('terms', 'dev-0', 'Términos y condiciones (borrador de desarrollo)',
-   'Texto de prueba. No es el documento legal definitivo.', now()),
-  ('privacy', 'dev-0', 'Política de privacidad (borrador de desarrollo)',
-   'Texto de prueba. No es el documento legal definitivo.', now())
+  ('terms', 'dev-1', 'Términos y condiciones — No válido — solo desarrollo',
+   'No válido — solo desarrollo. Texto de prueba; no es el documento legal definitivo.', now(), true),
+  ('privacy', 'dev-1', 'Política de privacidad — No válido — solo desarrollo',
+   'No válido — solo desarrollo. Texto de prueba; no es el documento legal definitivo.', now(), true)
 on conflict (kind, version) do nothing;
+
+update public.platform_settings
+set allow_draft_legal_documents = true,
+    current_terms_id = (select id from public.legal_documents where kind = 'terms' and version = 'dev-1'),
+    current_privacy_id = (select id from public.legal_documents where kind = 'privacy' and version = 'dev-1')
+where id;
 
 -- -----------------------------------------------------------------------------
 -- Inmobiliarias y membresías
@@ -92,6 +101,6 @@ insert into public.legal_acceptances (user_id, organization_id, legal_document_i
 select m.user_id, m.organization_id, d.id
 from public.memberships m
 cross join public.legal_documents d
-where m.role = 'owner' and d.version = 'dev-0'
+where m.role = 'owner' and d.version = 'dev-1'
   and m.organization_id in ('00000000-0000-4000-b000-000000000001', '00000000-0000-4000-b000-000000000002')
 on conflict (user_id, legal_document_id) do nothing;
