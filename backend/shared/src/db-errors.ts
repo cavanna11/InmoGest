@@ -8,6 +8,8 @@ import { err, type Err } from './result.ts';
  *   IG001 límite del plan alcanzado   (detail: JSON { resource, limit, plan })
  *   IG003 último dueño activo
  *   IG004 operación reservada a la plataforma
+ *   IG005 slug no disponible (en uso o reservado por el historial, ADR 0008)
+ *   IG006 documento legal no vigente, borrador no habilitado o ya aceptado (ADR 0009)
  */
 
 export type DbErrorCode =
@@ -19,6 +21,8 @@ export type DbErrorCode =
   | 'plan_limit_reached'
   | 'last_owner'
   | 'platform_only'
+  | 'slug_unavailable'
+  | 'legal_document_invalid'
   | 'unexpected';
 
 /** Forma común de PostgrestError (supabase-js) y de DatabaseError (pg). */
@@ -59,6 +63,13 @@ export function translateDbError(error: DbErrorLike | null | undefined): Err<DbE
       );
     case 'IG004':
       return err('platform_only', 'Solo C&C puede hacer este cambio.');
+    case 'IG005':
+      return err('slug_unavailable', 'Esa dirección ya está en uso o la usó otra inmobiliaria. Probá con otra.');
+    case 'IG006':
+      return err(
+        'legal_document_invalid',
+        'Los términos y condiciones cambiaron o no están disponibles. Recargá la página para ver la versión vigente.',
+      );
     default:
       return err('unexpected', 'Ocurrió un error inesperado. Intentá de nuevo en unos minutos.');
   }

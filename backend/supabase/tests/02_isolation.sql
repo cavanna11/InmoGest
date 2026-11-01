@@ -12,8 +12,9 @@ select tests.add_member('aaaaaaaa-0000-4000-b000-00000000000a', 'aaaaaaaa-0000-4
 select tests.add_member('bbbbbbbb-0000-4000-b000-00000000000b', 'bbbbbbbb-0000-4000-a000-000000000001', 'owner');
 insert into public.invitations (organization_id, email, token_hash)
 values ('bbbbbbbb-0000-4000-b000-00000000000b', 'pendiente@iso.test', extensions.digest('token-b', 'sha256'));
-insert into public.legal_documents (kind, version, title, content, published_at)
-values ('terms', 'test-1', 'Términos de prueba', '...', now());
+insert into public.legal_documents (kind, version, title, content, published_at, is_draft)
+values ('terms', 'test-1', 'Términos de prueba', '...', now(), false);
+update public.platform_settings set current_terms_id = (select id from public.legal_documents where version = 'test-1') where id;
 
 -- ---------------------------------------------------------------------------
 -- Agente de A

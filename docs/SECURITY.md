@@ -9,6 +9,9 @@
 - Contraseña de al menos 10 caracteres con mayúsculas, minúsculas y números.
 - Sesión en cookies httpOnly gestionadas por `@supabase/ssr`; en el servidor la identidad se valida con `getUser()` (nunca solo con la cookie decodificada).
 - Recuperación de contraseña e invitaciones con tokens de un solo uso y vencimiento (invitaciones: 7 días).
+- Los enlaces de invitación, confirmación y recuperación son **credenciales temporales** (ADR 0007): de las invitaciones se guarda solo el hash; el enlace se muestra únicamente al dueño (copiable) y se regenera si hace falta verlo de nuevo, invalidando el anterior. Nunca se escriben en logs, auditoría, analítica ni reportes de error.
+- Emails de Auth: SMTP por defecto de Supabase en desarrollo; proveedor transaccional con dominio verificado como SMTP de Supabase antes de la beta (`docs/DEPLOYMENT.md`).
+- Registro habilitado solo con términos y privacidad publicados explícitamente; un borrador nunca cuenta como aceptación legal válida (ADR 0009).
 - Segundo factor (MFA) para el superadministrador principal: **[A CONFIRMAR]** (recomendado por tener acceso a todas las cuentas).
 - `backend/supabase/config.toml` fija estas reglas (contraseña ≥ 10 con mayúsculas, minúsculas y números; confirmación de email) solo para Supabase local y CI. En los proyectos en la nube se configuran a mano en Authentication → Providers → Email y Policies, y hay que mantenerlas iguales.
 

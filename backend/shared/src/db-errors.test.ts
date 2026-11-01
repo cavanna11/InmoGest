@@ -12,6 +12,8 @@ describe('translateDbError', () => {
     ['P0002', 'not_found'],
     ['IG003', 'last_owner'],
     ['IG004', 'platform_only'],
+    ['IG005', 'slug_unavailable'],
+    ['IG006', 'legal_document_invalid'],
     ['XX000', 'unexpected'],
   ])('%s → %s', (code, expected) => {
     expect(translateDbError({ code }).error.code).toBe(expected);

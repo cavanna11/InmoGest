@@ -18,6 +18,14 @@ Local → CI → Staging → Production
 
 Dominios: panel y páginas públicas en el dominio definitivo **[A CONFIRMAR]**; mientras tanto, el dominio por defecto de Vercel.
 
+## Checklist antes de la beta
+
+- [ ] Dominio definitivo (PRD §11).
+- [ ] Proveedor de email transaccional (por ejemplo Resend) con el dominio verificado (SPF, DKIM, DMARC), configurado como **SMTP de Supabase Auth** en el proyecto de producción (ADR 0007).
+- [ ] Plantillas de email de Auth (confirmación, recuperación) en español rioplatense.
+- [ ] Authentication: contraseña mínima de 10 con mayúsculas, minúsculas y números; confirmación de email obligatoria; Site URL y Redirect URLs del dominio definitivo.
+- [ ] Términos y privacidad revisados profesionalmente, cargados como documentos no borrador y configurados como vigentes (`platform_settings.current_terms_id` / `current_privacy_id`, ADR 0009). Producción nunca corre el seed ni activa `allow_draft_legal_documents`.
+
 ## Pipeline
 
 ```text
@@ -26,8 +34,8 @@ PR abierto
         en paralelo: Supabase local → db:push --dry-run → pgTAP → integración
   → Vercel Preview (staging)
   → revisión
-Merge a main
-  → CI completo + E2E
+Merge a main (o ejecución manual del workflow)
+  → CI completo + E2E (incluidos los de autenticación @auth, sobre Supabase local con Mailpit)
   → (con aprobación) migraciones a producción: npm run db:push contra producción
   → (con aprobación) promoción del deploy de Vercel a producción
   → (si cambió) deploy del worker en el VPS: docker compose pull && up -d
