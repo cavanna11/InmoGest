@@ -3,7 +3,7 @@
 // un destino inventado (emails, teléfonos o URLs que nadie aprobó).
 
 export type LandingLinks = {
-  /** Ingreso al CRM. Ruta prevista por docs/ARCHITECTURE.md (grupo `(auth)`); llega con el login (F-02). */
+  /** Ingreso a la plataforma. Ruta prevista por docs/ARCHITECTURE.md (grupo `(auth)`); llega con el login (F-02). */
   platform: string | null;
   /** Canal para pedir una demo (formulario, WhatsApp comercial o agenda). PENDIENTE: lo define C&C. */
   demo: string | null;

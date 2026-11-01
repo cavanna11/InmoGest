@@ -115,7 +115,7 @@ export const plans: Plan[] = [
 export const faqs = [
   {
     q: '¿Tengo que instalar algo?',
-    a: 'No. InmoGest funciona en el navegador, en la computadora y en el celular.',
+    a: 'No. InmoPanel funciona en el navegador, en la computadora y en el celular.',
   },
   {
     q: '¿Cómo se conecta WhatsApp? ¿Es oficial?',

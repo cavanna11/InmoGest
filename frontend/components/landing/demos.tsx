@@ -49,7 +49,7 @@ export function NewContactDemo({ layout }: { layout?: 'split' | 'stacked' }) {
       title="Entra una consulta por WhatsApp"
       steps={[
         'Un número nuevo le escribe al WhatsApp de la inmobiliaria.',
-        'InmoGest crea el contacto con el teléfono en formato internacional.',
+        'InmoPanel crea el contacto con el teléfono en formato internacional.',
         'La conversación entra a la bandeja compartida, sin asignar.',
       ]}
       note="Si el número ya está en un contacto, la conversación se vincula a ese contacto y no se crea otro."

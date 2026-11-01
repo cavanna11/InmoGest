@@ -1,6 +1,6 @@
 # Landing comercial
 
-Página pública de promoción de InmoGest. Se desarrolló en la rama `feat/landing` (worktree aparte) en paralelo al incremento de auth.
+Página pública de promoción de InmoPanel by C&C. Se desarrolló en la rama `feat/landing` (worktree aparte) en paralelo al incremento de auth.
 
 | Archivo | Qué tiene |
 |---|---|
@@ -22,7 +22,7 @@ Página pública de promoción de InmoGest. Se desarrolló en la rama `feat/land
 - **Ruta de login** (`landingLinks.platform = '/login'`): ruta prevista por `docs/ARCHITECTURE.md`; confirmar al integrar F-02. Hoy el prefetch de `/login` da 404.
 - **Legales** (`terms`, `privacy`): según ADR 0009 los textos viven en la base y se publican explícitamente. El pie muestra los enlaces cuando haya una ruta pública que los renderice.
 - **Precios**: son valores de referencia en USD (PRD §6); el mecanismo en pesos está [A CONFIRMAR]. `SHOW_PRICES` los oculta si hace falta.
-- **Marca**: "InmoGest" es provisorio (PRD §11) y se muestra como texto, sin logo.
+- **Marca**: InmoPanel by C&C (`docs/BRAND.md`). Sin logo definitivo: se muestra como texto, con "InmoPanel" protagonista y "by C&C" en segundo plano. El dominio `inmopanel.com.ar` todavía no está comprado.
 
 ## Integración
 

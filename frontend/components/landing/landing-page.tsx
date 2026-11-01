@@ -1,4 +1,4 @@
-// Landing comercial de InmoGest. Usa solo tokens semánticos (styles/tokens.css): nada de colores sueltos.
+// Landing comercial de InmoPanel by C&C (docs/BRAND.md). Usa solo tokens semánticos (styles/tokens.css): nada de colores sueltos.
 // Destinos de los CTA en ./config.ts; textos en ./content.ts.
 
 import Link from 'next/link';
@@ -98,8 +98,10 @@ function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
-        <a href="#inicio" className="text-base font-semibold tracking-tight">
-          InmoGest
+        {/* InmoPanel es la marca protagonista; "by C&C" va en segundo plano (docs/BRAND.md). */}
+        <a href="#inicio" className="flex items-baseline gap-1.5" aria-label="InmoPanel by C&C, inicio">
+          <span className="text-base font-semibold tracking-tight">InmoPanel</span>
+          <span className="text-xs text-muted-foreground">by C&amp;C</span>
         </a>
         <nav aria-label="Secciones" className="hidden md:block">
           <ul className="flex items-center gap-6 text-sm text-muted-foreground">
@@ -135,7 +137,7 @@ function Hero() {
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-[1.05fr_1fr]">
         <div>
           <p className="mb-5 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-            <span>CRM para inmobiliarias argentinas</span>
+            <span>Gestión inmobiliaria inteligente</span>
             {PRODUCT_STATUS ? (
               <span className="rounded-full border border-border px-2 py-0.5 text-xs">{PRODUCT_STATUS}</span>
             ) : null}
@@ -144,7 +146,7 @@ function Hero() {
             Contactos, propiedades y WhatsApp de tu inmobiliaria, en un solo lugar.
           </h1>
           <p className="mt-5 max-w-xl text-lg text-muted-foreground text-pretty">
-            Cada consulta queda registrada, todo el equipo puede responder y, cuando entra una propiedad, InmoGest te
+            Cada consulta queda registrada, todo el equipo puede responder y, cuando entra una propiedad, InmoPanel te
             dice qué clientes la están buscando.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -177,7 +179,7 @@ function Problems() {
       <div className="overflow-hidden rounded-xl border border-border bg-background">
         <div className="hidden grid-cols-2 border-b border-border text-sm font-medium md:grid">
           <p className="px-5 py-3 text-muted-foreground">Hoy</p>
-          <p className="border-l border-border px-5 py-3">Con InmoGest</p>
+          <p className="border-l border-border px-5 py-3">Con InmoPanel</p>
         </div>
         <ul className="divide-y divide-border">
           {problems.map((item) => (
@@ -311,7 +313,7 @@ function DemoRequest() {
     <section id={DEMO_SECTION_ID} className="scroll-mt-20 px-4 py-16 sm:px-6 sm:py-24">
       <div className="mx-auto max-w-3xl rounded-2xl bg-primary px-6 py-12 text-center text-primary-foreground sm:px-12">
         <h2 className="text-2xl font-semibold tracking-tight text-balance sm:text-3xl">
-          Mirá InmoGest con los datos de tu inmobiliaria.
+          Mirá InmoPanel con los datos de tu inmobiliaria.
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-primary-foreground/80 text-pretty">
           Te mostramos cómo quedarían tus contactos, propiedades y conversaciones, y resolvemos tus dudas sobre WhatsApp
@@ -372,8 +374,10 @@ function Footer() {
     <footer className="border-t border-border px-4 py-10 sm:px-6">
       <div className="mx-auto flex max-w-6xl flex-col gap-6 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="font-semibold text-foreground">InmoGest</p>
-          <p className="mt-1">CRM para inmobiliarias. Un producto de C&amp;C.</p>
+          <p>
+            <span className="font-semibold text-foreground">InmoPanel</span> <span className="text-xs">by C&amp;C</span>
+          </p>
+          <p className="mt-1">Gestión inmobiliaria inteligente. Todo tu negocio inmobiliario, en un solo lugar.</p>
         </div>
         <nav aria-label="Pie de página">
           <ul className="flex flex-wrap gap-x-6 gap-y-2">
