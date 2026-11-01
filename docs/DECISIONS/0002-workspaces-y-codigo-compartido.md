@@ -23,7 +23,8 @@ La app Next.js (`frontend/`) y el worker (`backend/worker/`) necesitan el mismo 
 ## Consecuencias
 
 - `npm install` se corre una sola vez en la raíz.
-- En Windows, la ruta del proyecto contiene `&` (`C&C`), que rompe los atajos `.cmd` de npm: el `.npmrc` raíz debe configurar `script-shell` con Git Bash y se usa siempre `npm run`.
+- En Windows, la ruta del proyecto contiene `&` (`C&C`), que rompe los atajos `.cmd` de npm: se configura `script-shell` con Git Bash y se usa siempre `npm run`.
+- **Actualización 02/11/2026:** `script-shell` se configura en el npm **de usuario** de cada máquina Windows (`npm config set script-shell "C:/Program Files/Git/bin/bash.exe" --location=user`), no en el `.npmrc` del repo. Con la ruta de Windows en el repo, todo `npm run` fallaba en Linux (`spawn … ENOENT`) y rompía el build de Vercel. El `.npmrc` del repo solo lleva configuración portable.
 
 ## Referencias
 

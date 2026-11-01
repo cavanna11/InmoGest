@@ -15,8 +15,6 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  # El .npmrc apunta script-shell a Git Bash de Windows; en Linux se usa bash del sistema.
-  npm_config_script_shell: bash
   APP_ENV: ci
   NEXT_TELEMETRY_DISABLED: '1'
 

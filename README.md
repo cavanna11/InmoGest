@@ -23,7 +23,11 @@ Proyecto creado a partir del Estándar de Vibe Coding 1.0 (ver `STANDARD.md`).
 ## Requisitos
 
 - Node.js ≥ 22 y npm ≥ 10.
-- Git; en Windows, Git Bash. La ruta del proyecto contiene `&` (`C&C`), que rompe los atajos `.cmd` de npm: el `.npmrc` raíz configura Git Bash como shell de scripts y se usa siempre `npm run <script>`, nunca `npx`.
+- Git; en Windows, Git Bash. La ruta del proyecto contiene `&` (`C&C`), que rompe los atajos `.cmd` de npm. Una vez por máquina, configurar Git Bash como shell de scripts **en el npm de usuario** (no en el `.npmrc` del repo, que tiene que funcionar también en Linux para CI y Vercel), y usar siempre `npm run <script>`, nunca `npx`:
+
+  ```bash
+  npm config set script-shell "C:/Program Files/Git/bin/bash.exe" --location=user
+  ```
 - Un proyecto de Supabase de desarrollo (nube). No hace falta Docker para desarrollar: las migraciones y los tests de base corren contra ese proyecto.
 - Docker solo para Evolution API (VPS o pruebas locales).
 

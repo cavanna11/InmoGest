@@ -18,6 +18,19 @@ Local → CI → Staging → Production
 
 Dominios: panel y páginas públicas en el dominio definitivo **[A CONFIRMAR]**; mientras tanto, el dominio por defecto de Vercel.
 
+## Vercel (configuración del proyecto)
+
+El repositorio está conectado a Vercel desde el 01/11/2026.
+
+| Ajuste (Settings → Build and Deployment) | Valor |
+|---|---|
+| Root Directory | `frontend` (Vercel detecta el monorepo de npm workspaces e instala desde la raíz) |
+| Framework | Next.js (detección automática) |
+| Node.js Version | 22.x |
+| Variables | Ninguna obligatoria hoy. Al agregar las de Supabase: `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` por ambiente; `SUPABASE_SECRET_KEY` solo si alguna ruta del servidor la usa. |
+
+**[A CONFIRMAR]** Con la integración por defecto, cada push a `main` despliega a **Production**. Mientras no exista el ambiente de producción (base, dominio, textos legales), decidir: desactivar los deploys automáticos de producción, o tratar ese proyecto de Vercel como ambiente de desarrollo sin datos reales.
+
 ## Checklist antes de la beta
 
 - [ ] Dominio definitivo (PRD §11).
