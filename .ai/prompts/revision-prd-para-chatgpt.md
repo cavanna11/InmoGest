@@ -1,5 +1,7 @@
 # Revisión del PRD con ChatGPT
 
+> **Histórico.** Prompt usado antes del 02/11/2026, cuando el producto tenía nombre provisorio. El nombre oficial es **InmoPanel by C&C** (`docs/BRAND.md`); no reutilizar este texto sin actualizarlo.
+
 **Adjuntar:** `docs/PRD.md` (obligatorio). Opcional para contexto técnico: `docs/STACK.md` y `docs/DECISIONS/0001-estructura-frontend-backend.md`.
 
 Copiar desde "Prompt" hasta el final.

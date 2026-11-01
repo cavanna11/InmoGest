@@ -1,5 +1,7 @@
 # Prompt para iniciar el desarrollo (Fase 0) en una sesión nueva de Claude Code
 
+> **Histórico.** Prompt usado antes del 02/11/2026, cuando el producto tenía nombre provisorio. El nombre oficial es **InmoPanel by C&C** (`docs/BRAND.md`); no reutilizar este texto sin actualizarlo.
+
 Copiar desde "Prompt" hasta el final y pegarlo como primer mensaje de la sesión nueva, abierta en la carpeta `InmoGest`.
 
 ---

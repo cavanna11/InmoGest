@@ -1,14 +1,21 @@
-# InmoGest (nombre provisional)
+# InmoPanel by C&C
 
-CRM inmobiliario SaaS multi-tenant de **C&C** para inmobiliarias argentinas: contactos, propiedades, matching automático, embudo comercial, agenda y WhatsApp centralizado. Las inmobiliarias se registran solas y prueban gratis 14 días.
+**Gestión inmobiliaria inteligente.** Todo tu negocio inmobiliario, en un solo lugar.
 
-Proyecto creado a partir del Estándar de Vibe Coding 1.0 (ver `STANDARD.md`).
+InmoPanel es la plataforma SaaS multi-tenant de gestión inmobiliaria desarrollada por **C&C**. Centraliza la operación de la inmobiliaria: contactos, conversaciones de WhatsApp, propiedades, búsquedas y matching automático, oportunidades y embudo comercial, agenda, seguimiento de clientes y automatizaciones. Las inmobiliarias se registran solas y prueban gratis 14 días. Mercado: Latinoamérica; el MVP se enfoca en Argentina.
 
-## Estado (31/10/2026)
+- Dominio previsto: `inmopanel.com.ar` (**todavía no comprado ni configurado**).
+- "InmoGest" es el nombre histórico del proyecto: sobrevive solo en identificadores técnicos internos (nombre del repositorio y de la carpeta, paquetes `@inmogest/*`). Ver `docs/BRAND.md`.
+
+Proyecto creado a partir del Estándar de Vibe Coding 1.0 (ver `STANDARD.md`). Instrucciones para agentes de IA: `AGENTS.md` (Claude Code lo lee a través de `CLAUDE.md`).
+
+## Estado
 
 **Fase 0 (fundamentos) implementada y verificada** (01/11/2026): monorepo, base de plataforma y tenancy con RLS (aplicada al proyecto de desarrollo), utilidades compartidas, worker mínimo y CI (los 3 jobs en verde en GitHub).
 
-**Decisiones previas a la Fase 1 aplicadas** (02/11/2026): identidad visual provisoria con tokens semánticos, emails e invitaciones (ADR 0007), slugs con historial reservado (ADR 0008), publicación explícita de documentos legales (ADR 0009) y E2E con autenticación en CI. Compuertas locales: 151 tests unitarios, 206 aserciones pgTAP, 2 de integración y 8 E2E públicos en verde. Todavía no hay funcionalidades del CRM: el próximo paso es el incremento 1.1 (cuentas, acceso y equipo).
+**Decisiones previas a la Fase 1 aplicadas** (02/11/2026): identidad visual provisoria con tokens semánticos, emails e invitaciones (ADR 0007), slugs con historial reservado (ADR 0008), publicación explícita de documentos legales (ADR 0009) y E2E con autenticación en CI. Compuertas locales: 151 tests unitarios, 206 aserciones pgTAP, 2 de integración y 8 E2E públicos en verde. Todavía no hay funcionalidades de gestión para las inmobiliarias: el próximo paso es el incremento 1.1 (cuentas, acceso y equipo).
+
+**Identidad** (02/11/2026): el producto pasa a llamarse InmoPanel by C&C (`docs/BRAND.md`).
 
 | Paso | Estado |
 |---|---|
@@ -97,8 +104,8 @@ Usuarios de prueba del seed: ver el encabezado de `backend/supabase/seed.sql` (d
 ## Árbol
 
 ```text
-InmoGest/
-├── README.md · STANDARD.md · AGENTS.md · .env.example · .gitignore · .gitattributes · .npmrc
+InmoGest/                 (carpeta y repositorio conservan el nombre histórico)
+├── README.md · STANDARD.md · AGENTS.md · CLAUDE.md · .env.example · .gitignore · .gitattributes · .npmrc
 ├── package.json          workspaces: frontend, backend/worker, backend/shared
 ├── tsconfig.base.json · eslint.config.mjs · vitest.config.ts · playwright.config.ts
 ├── docs/                 documentación oficial

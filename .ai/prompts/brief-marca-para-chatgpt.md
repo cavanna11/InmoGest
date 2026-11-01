@@ -1,5 +1,7 @@
 # Brief para trabajar la marca con ChatGPT
 
+> **Histórico.** Prompt usado antes del 02/11/2026, cuando el producto tenía nombre provisorio. El nombre oficial es **InmoPanel by C&C** (`docs/BRAND.md`); no reutilizar este texto sin actualizarlo.
+
 Copiar desde "Contexto" hasta el final y pegarlo en ChatGPT. Lo que devuelva se vuelca en `docs/BRAND.md` (y los colores funcionales en `docs/DESIGN-SYSTEM.md`).
 
 ---

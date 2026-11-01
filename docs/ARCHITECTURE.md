@@ -161,7 +161,7 @@ Subida del CSV a Storage privado → job "import.parse" valida fila por fila
 ```
 
 ### 9. Página pública de propiedad (F-10)
-- URL: `https://<dominio>/p/<slug-inmobiliaria>/<slug-propiedad>` **[A CONFIRMAR dominio]**.
+- URL: `https://<dominio>/p/<slug-inmobiliaria>/<slug-propiedad>` (dominio previsto `inmopanel.com.ar`, todavía no comprado).
 - Se sirve con funciones públicas de la base que devuelven solo campos publicables (sin datos del propietario, dirección exacta solo si la inmobiliaria lo eligió).
 - Caché por propiedad, invalidada al editar la propiedad.
 - La web institucional por subdominio o dominio propio (Fase 3) reutiliza estas mismas funciones.

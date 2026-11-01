@@ -16,7 +16,7 @@ Local → CI → Staging → Production
 | Staging | Vercel Preview (por rama/PR) | Proyecto Supabase de **staging** **[A CONFIRMAR: proyecto separado o reutilizar desarrollo, por costo]** | Instancia de Evolution de prueba con número de prueba | Validación antes de producción. |
 | Production | Vercel Production | Proyecto Supabase de **producción** (región São Paulo) | VPS de producción (Evolution + worker) | Clientes reales. |
 
-Dominios: panel y páginas públicas en el dominio definitivo **[A CONFIRMAR]**; mientras tanto, el dominio por defecto de Vercel.
+Dominios: panel y páginas públicas en `inmopanel.com.ar` (previsto, **todavía no comprado**); mientras tanto, el dominio por defecto de Vercel.
 
 ## Vercel (configuración del proyecto)
 
@@ -31,9 +31,28 @@ El repositorio está conectado a Vercel desde el 01/11/2026.
 
 **[A CONFIRMAR]** Con la integración por defecto, cada push a `main` despliega a **Production**. Mientras no exista el ambiente de producción (base, dominio, textos legales), decidir: desactivar los deploys automáticos de producción, o tratar ese proyecto de Vercel como ambiente de desarrollo sin datos reales.
 
+## Al comprar el dominio `inmopanel.com.ar`
+
+Hoy el dominio **no está comprado ni configurado**: la app usa el dominio por defecto de Vercel y ninguna configuración apunta a `inmopanel.com.ar`. Relevamiento del 02/11/2026: no hay dominios propios cargados en el repo; las únicas URLs son técnicas (`localhost`, `127.0.0.1` del Supabase local, URLs de Supabase en `.env.local`, que no se tocan).
+
+Cambios a hacer cuando se compre (cada uno con aprobación, empezando por desarrollo o staging):
+
+1. **DNS:** apuntar el dominio a Vercel (registros que indique Vercel) y agregarlo en el proyecto (Settings → Domains). Decidir `inmopanel.com.ar` o `www.inmopanel.com.ar` como principal y redirigir el otro.
+2. **Vercel:** `NEXT_PUBLIC_APP_URL=https://inmopanel.com.ar` en Production (y la URL de preview en Preview).
+3. **App:** fijar `metadataBase` en `frontend/app/layout.tsx` con `NEXT_PUBLIC_APP_URL`, para las URLs absolutas de Open Graph; habilitar la indexación (`robots`) solo en producción y cuando haya contenido público.
+4. **Supabase Auth (producción):** Site URL `https://inmopanel.com.ar` y Redirect URLs (`/auth/confirm`, `/invitacion/*`), más las de preview si se usan.
+5. **Email (ADR 0007):** verificar el dominio en el proveedor transaccional (SPF, DKIM, DMARC), remitente del tipo `no-responder@inmopanel.com.ar`, y configurarlo como SMTP de Supabase Auth.
+6. **Páginas públicas:** las URLs `/p/<slug>/<propiedad>` quedan bajo el dominio. Si antes se compartieron links con el dominio de Vercel, mantener ese dominio redirigiendo al nuevo.
+7. **Landing:** `frontend/components/landing/config.ts` (destinos de demo y legales cuando existan) y textos legales con el dominio.
+8. **Evolution / webhooks:** si el webhook de Evolution apunta a la URL de la app, actualizarlo a `https://inmopanel.com.ar/api/webhooks/evolution/…`.
+9. **Monitoreo:** el monitor externo de `/api/health` (docs/OBSERVABILITY.md) sobre el dominio nuevo.
+10. **Documentación:** quitar las aclaraciones de "dominio no comprado" (`AGENTS.md`, `docs/BRAND.md`, `docs/PRD.md` §11, `README.md`, `.env.example`).
+
+A futuro, `inmopanel.com` o `inmopanel.ai` (según disponibilidad) para la expansión regional: mismo procedimiento y redirección al dominio principal que se elija.
+
 ## Checklist antes de la beta
 
-- [ ] Dominio definitivo (PRD §11).
+- [ ] Comprar y configurar `inmopanel.com.ar` (ver "Al comprar el dominio").
 - [ ] Proveedor de email transaccional (por ejemplo Resend) con el dominio verificado (SPF, DKIM, DMARC), configurado como **SMTP de Supabase Auth** en el proyecto de producción (ADR 0007).
 - [ ] Plantillas de email de Auth (confirmación, recuperación) en español rioplatense.
 - [ ] Authentication: contraseña mínima de 10 con mayúsculas, minúsculas y números; confirmación de email obligatoria; Site URL y Redirect URLs del dominio definitivo.
