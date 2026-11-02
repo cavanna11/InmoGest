@@ -1,0 +1,8 @@
+{
+  // Chequeo de tipos de los tests de la app (npm run typecheck). Van aparte de tsconfig.json porque
+  // `next build` usa ese archivo y en Vercel solo se instalan las dependencias de este workspace:
+  // vitest vive en la raíz del monorepo.
+  "extends": "./tsconfig.json",
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", "assets"]
+}

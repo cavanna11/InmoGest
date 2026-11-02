@@ -24,10 +24,12 @@ El repositorio está conectado a Vercel desde el 01/11/2026.
 
 | Ajuste (Settings → Build and Deployment) | Valor |
 |---|---|
-| Root Directory | `frontend` (Vercel detecta el monorepo de npm workspaces e instala desde la raíz) |
+| Root Directory | `frontend` |
 | Framework | Next.js (detección automática) |
 | Node.js Version | 22.x |
 | Variables | Ninguna obligatoria hoy. Al agregar las de Supabase: `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` por ambiente; `SUPABASE_SECRET_KEY` solo si alguna ruta del servidor la usa. |
+
+**Importante:** con Root Directory `frontend`, Vercel instala **solo las dependencias del workspace `@inmogest/web`** (no las `devDependencies` de la raíz). Por eso todo lo que `next build` necesita (`typescript`, `@types/node`, Tailwind) se declara en `frontend/package.json`, y los tests de la app (`*.test.ts`, que usan `vitest` de la raíz) quedan fuera de `frontend/tsconfig.json` y se chequean con `frontend/tsconfig.test.json` en `npm run typecheck`. Para reproducir el build de Vercel: clon limpio, `cd frontend && npm install && npm run build`.
 
 **[A CONFIRMAR]** Con la integración por defecto, cada push a `main` despliega a **Production**. Mientras no exista el ambiente de producción (base, dominio, textos legales), decidir: desactivar los deploys automáticos de producción, o tratar ese proyecto de Vercel como ambiente de desarrollo sin datos reales.
 
