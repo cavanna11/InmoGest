@@ -25,7 +25,7 @@ El repositorio está conectado a Vercel desde el 01/11/2026.
 | Ajuste (Settings → Build and Deployment) | Valor |
 |---|---|
 | Root Directory | `frontend` |
-| Framework | Next.js (detección automática) |
+| Framework | Next.js, fijado en `frontend/vercel.json` (`"framework": "nextjs"`). El proyecto se creó con Root Directory en la raíz, donde no hay Next.js, y el preset quedó en "Other": con "Other" el build compila pero falla al buscar una carpeta `public` estática. |
 | Node.js Version | 22.x |
 | Variables | Ninguna obligatoria hoy. Al agregar las de Supabase: `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` por ambiente; `SUPABASE_SECRET_KEY` solo si alguna ruta del servidor la usa. |
 
