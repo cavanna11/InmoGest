@@ -41,7 +41,7 @@ Cambios a hacer cuando se compre (cada uno con aprobación, empezando por desarr
 
 1. **DNS:** apuntar el dominio a Vercel (registros que indique Vercel) y agregarlo en el proyecto (Settings → Domains). Decidir `inmopanel.com.ar` o `www.inmopanel.com.ar` como principal y redirigir el otro.
 2. **Vercel:** `NEXT_PUBLIC_APP_URL=https://inmopanel.com.ar` en Production (y la URL de preview en Preview).
-3. **App:** fijar `metadataBase` en `frontend/app/layout.tsx` con `NEXT_PUBLIC_APP_URL`, para las URLs absolutas de Open Graph; habilitar la indexación (`robots`) solo en producción y cuando haya contenido público.
+3. **SEO / indexación:** en Production, `NEXT_PUBLIC_APP_URL=https://inmopanel.com.ar` (lo usa `metadataBase`, el canonical, `sitemap.xml` y `robots.txt`) y `NEXT_PUBLIC_SITE_INDEXABLE=true`. Sin esa variable el sitio declara `noindex` y `robots.txt` bloquea todo: así no se indexan dominios temporales de Vercel ni previews (`frontend/lib/site.ts`). Después, dar de alta el dominio en Google Search Console y enviar el sitemap.
 4. **Supabase Auth (producción):** Site URL `https://inmopanel.com.ar` y Redirect URLs (`/auth/confirm`, `/invitacion/*`), más las de preview si se usan.
 5. **Email (ADR 0007):** verificar el dominio en el proveedor transaccional (SPF, DKIM, DMARC), remitente del tipo `no-responder@inmopanel.com.ar`, y configurarlo como SMTP de Supabase Auth.
 6. **Páginas públicas:** las URLs `/p/<slug>/<propiedad>` quedan bajo el dominio. Si antes se compartieron links con el dominio de Vercel, mantener ese dominio redirigiendo al nuevo.

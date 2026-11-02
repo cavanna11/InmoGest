@@ -1,9 +1,11 @@
 /*
- * Tokens de diseño — ÚNICA fuente de la identidad visual (docs/DESIGN-SYSTEM.md).
+ * Tokens de diseño — ÚNICA fuente de la identidad visual (docs/DESIGN-SYSTEM.md, docs/BRAND.md).
  *
- * Identidad PROVISORIA, neutra y sobria, hasta definir la marca (docs/BRAND.md).
- * Para cambiar la identidad se editan estos valores; los componentes solo usan los nombres
- * semánticos (bg-primary, text-muted-foreground, border-input…), nunca colores sueltos.
+ * Identidad provisoria de InmoPanel (02/11/2026): verde petróleo como color de marca (confianza,
+ * diferenciado del azul corporativo habitual en los CRM), terracota como acento (remite a lo
+ * inmobiliario y marca la "coincidencia" en el logo) y neutros cálidos.
+ * Los componentes solo usan los nombres semánticos (bg-primary, text-muted-foreground, border-input…),
+ * nunca colores sueltos.
  *
  * Nombres compatibles con shadcn/ui. Cada par fondo/texto cumple contraste WCAG AA (≥ 4,5:1),
  * y bordes de campos y anillo de foco ≥ 3:1: lo verifica frontend/styles/tokens.test.ts.
@@ -12,71 +14,76 @@
 
 :root {
   /* Superficies y texto */
-  --background: #ffffff;
-  --foreground: #18181b;
+  --background: #fbfaf7;
+  --foreground: #14201f;
   --surface: #ffffff;
-  --surface-foreground: #18181b;
+  --surface-foreground: #14201f;
   --popover: #ffffff;
-  --popover-foreground: #18181b;
-  --muted: #f4f4f5;
-  --muted-foreground: #52525b;
+  --popover-foreground: #14201f;
+  --muted: #f1efe9;
+  --muted-foreground: #55605e;
 
-  /* Acciones */
-  --primary: #18181b;
-  --primary-foreground: #fafafa;
-  --secondary: #f4f4f5;
-  --secondary-foreground: #18181b;
-  --accent: #f4f4f5;
-  --accent-foreground: #18181b;
+  /* Marca y acciones */
+  --primary: #0e5550;
+  --primary-foreground: #f7fbfa;
+  --secondary: #e4efed;
+  --secondary-foreground: #0b3f3b;
+  --accent: #e9f2f0;
+  --accent-foreground: #0b3f3b;
+  /* Acento cálido: detalles, la "coincidencia" del logo y destacados. */
+  --highlight: #d9673a;
+  --highlight-foreground: #1c0f08;
 
   /* Estados */
-  --destructive: #b91c1c;
+  --destructive: #b42318;
   --destructive-foreground: #ffffff;
   --success: #15803d;
   --success-foreground: #ffffff;
-  --warning: #a16207;
+  --warning: #a15c07;
   --warning-foreground: #ffffff;
 
   /* Bordes y foco */
-  --border: #e4e4e7;
-  --input: #71717a;
-  --ring: #3f3f46;
+  --border: #e2ded5;
+  --input: #747f7d;
+  --ring: #0e5550;
 
   /* Geometría */
-  --radius: 0.5rem;
+  --radius: 0.625rem;
 
-  /* Tipografía */
-  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* Tipografía: Plus Jakarta Sans (next/font, servida por la propia app) con respaldo del sistema. */
+  --font-sans: var(--font-jakarta), system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #09090b;
-    --foreground: #fafafa;
-    --surface: #18181b;
-    --surface-foreground: #fafafa;
-    --popover: #18181b;
-    --popover-foreground: #fafafa;
-    --muted: #27272a;
-    --muted-foreground: #a1a1aa;
+    --background: #0b1413;
+    --foreground: #eef4f2;
+    --surface: #111d1c;
+    --surface-foreground: #eef4f2;
+    --popover: #111d1c;
+    --popover-foreground: #eef4f2;
+    --muted: #172523;
+    --muted-foreground: #9fb0ad;
 
-    --primary: #fafafa;
-    --primary-foreground: #18181b;
-    --secondary: #27272a;
-    --secondary-foreground: #fafafa;
-    --accent: #27272a;
-    --accent-foreground: #fafafa;
+    --primary: #5ec5b7;
+    --primary-foreground: #06201d;
+    --secondary: #1b2e2c;
+    --secondary-foreground: #d6ebe7;
+    --accent: #1b2e2c;
+    --accent-foreground: #d6ebe7;
+    --highlight: #f08a5d;
+    --highlight-foreground: #1c0f08;
 
     --destructive: #f87171;
-    --destructive-foreground: #18181b;
+    --destructive-foreground: #1c0f08;
     --success: #4ade80;
-    --success-foreground: #18181b;
-    --warning: #facc15;
-    --warning-foreground: #18181b;
+    --success-foreground: #052e16;
+    --warning: #fbbf24;
+    --warning-foreground: #1c1305;
 
-    --border: #27272a;
-    --input: #71717a;
-    --ring: #d4d4d8;
+    --border: #243533;
+    --input: #6f817e;
+    --ring: #5ec5b7;
   }
 }

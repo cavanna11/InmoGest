@@ -1,6 +1,6 @@
 # Design System
 
-- **Estado:** identidad **provisoria**, neutra y sobria (02/11/2026), hasta definir la marca (`docs/BRAND.md`).
+- **Estado:** identidad **provisoria de InmoPanel** (02/11/2026): verde petróleo, acento terracota y neutros cálidos; logo y tipografía en `docs/BRAND.md`.
 - **Base:** Tailwind CSS 4 + componentes de shadcn/ui (`frontend/components.json`), que se agregan a medida que se usan.
 
 ## Regla principal
@@ -15,10 +15,11 @@ Toda la identidad visual vive en **un solo archivo**: `frontend/styles/tokens.cs
 |---|---|---|
 | Superficies | `background`, `surface`, `popover`, `muted` (+ `-foreground`) | Fondo de página, tarjetas y paneles, menús, zonas atenuadas |
 | Acciones | `primary`, `secondary`, `accent` (+ `-foreground`) | Botón principal, secundario, hover/selección |
+| Acento de marca | `highlight` (+ `-foreground`) | Detalles cálidos, la "coincidencia" del logo, destacados (no para textos largos) |
 | Estados | `destructive`, `success`, `warning` (+ `-foreground`) | Errores y acciones destructivas, confirmaciones, advertencias |
 | Bordes y foco | `border`, `input`, `ring` | Separadores decorativos, borde de campos, anillo de foco |
 | Geometría | `radius` (→ `rounded-sm/md/lg/xl`) | Radios derivados de un solo valor |
-| Tipografía | `font-sans`, `font-mono` | Fuente del sistema mientras no haya marca |
+| Tipografía | `font-sans`, `font-mono` | Plus Jakarta Sans (next/font) con respaldo del sistema |
 
 Tema claro y oscuro (según `prefers-color-scheme`), con los mismos nombres. Los valores van en hex.
 
@@ -37,3 +38,10 @@ Se agregan desde shadcn/ui cuando una pantalla los necesita, siempre usando los 
 ## Pendiente
 
 Paleta, tipografía e iconografía definitivas (`docs/BRAND.md`); escala tipográfica y espaciado propios si la marca los requiere.
+
+## Movimiento
+
+- Animaciones solo con CSS (`frontend/components/landing/landing.css`), sin dependencias: opacidad y transform, sin saltos de contenido.
+- Las maquetas de la landing se reproducen solas en loop; sin botones para volver a reproducir.
+- Aparición al hacer scroll con `animation-timeline: view()` como mejora progresiva (sin soporte, el contenido se ve igual).
+- `prefers-reduced-motion: reduce` desactiva todas las animaciones y muestra el estado final completo (verificado en E2E).

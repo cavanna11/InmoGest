@@ -42,6 +42,10 @@ const TEXT_PAIRS: Array<[string, string]> = [
   ['success', 'success-foreground'],
   ['warning', 'warning-foreground'],
   ['background', 'destructive'],
+  // Enlaces y textos destacados con el color de marca, y el acento cálido con su texto.
+  ['background', 'primary'],
+  ['surface', 'primary'],
+  ['highlight', 'highlight-foreground'],
 ];
 
 const UI_PAIRS: Array<[string, string]> = [

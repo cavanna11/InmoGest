@@ -1,0 +1,103 @@
+/*
+ * Animaciones de la landing (solo CSS, sin dependencias).
+ * - Flujos en loop: cada paso aparece en su turno y el ciclo se reinicia con un fundido suave.
+ *   Solo cambian opacidad y transform: no hay saltos de contenido (el espacio de cada paso está
+ *   reservado desde el inicio).
+ * - Aparición al hacer scroll: con animation-timeline (mejora progresiva). Sin soporte, el contenido
+ *   se ve directamente.
+ * - prefers-reduced-motion: sin animaciones; se ve el estado final completo.
+ */
+
+.ip-flow {
+  --ip-loop: 13s;
+}
+
+.ip-step {
+  animation-duration: var(--ip-loop);
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-out;
+  animation-fill-mode: both;
+}
+
+.ip-step-1 { animation-name: ip-step-1; }
+.ip-step-2 { animation-name: ip-step-2; }
+.ip-step-3 { animation-name: ip-step-3; }
+.ip-step-4 { animation-name: ip-step-4; }
+
+@keyframes ip-step-1 {
+  0% { opacity: 0; transform: translateY(8px); }
+  5%, 88% { opacity: 1; transform: none; }
+  96%, 100% { opacity: 0; transform: translateY(-4px); }
+}
+@keyframes ip-step-2 {
+  0%, 20% { opacity: 0; transform: translateY(8px); }
+  25%, 88% { opacity: 1; transform: none; }
+  96%, 100% { opacity: 0; transform: translateY(-4px); }
+}
+@keyframes ip-step-3 {
+  0%, 40% { opacity: 0; transform: translateY(8px); }
+  45%, 88% { opacity: 1; transform: none; }
+  96%, 100% { opacity: 0; transform: translateY(-4px); }
+}
+@keyframes ip-step-4 {
+  0%, 60% { opacity: 0; transform: translateY(8px); }
+  65%, 88% { opacity: 1; transform: none; }
+  96%, 100% { opacity: 0; transform: translateY(-4px); }
+}
+
+/* Línea que conecta los pasos: crece a medida que avanza el flujo. */
+.ip-track {
+  transform-origin: top;
+  animation: ip-track var(--ip-loop) ease-in-out infinite both;
+}
+@keyframes ip-track {
+  0% { transform: scaleY(0); opacity: 1; }
+  65%, 88% { transform: scaleY(1); opacity: 1; }
+  96%, 100% { transform: scaleY(1); opacity: 0; }
+}
+
+/* Aviso que "late" cuando aparece la coincidencia. */
+.ip-ping {
+  animation: ip-ping var(--ip-loop) ease-out infinite both;
+}
+@keyframes ip-ping {
+  0%, 44% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--highlight) 0%, transparent); }
+  48% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--highlight) 45%, transparent); }
+  58%, 100% { box-shadow: 0 0 0 10px color-mix(in oklab, var(--highlight) 0%, transparent); }
+}
+
+/* Indicador de "escribiendo" en la conversación. */
+.ip-typing span {
+  animation: ip-typing 1.2s ease-in-out infinite;
+}
+.ip-typing span:nth-child(2) { animation-delay: 0.15s; }
+.ip-typing span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes ip-typing {
+  0%, 60%, 100% { opacity: 0.35; transform: none; }
+  30% { opacity: 1; transform: translateY(-2px); }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .ip-reveal {
+      animation: ip-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 22%;
+    }
+  }
+}
+@keyframes ip-reveal {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ip-step,
+  .ip-track,
+  .ip-ping,
+  .ip-typing span {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

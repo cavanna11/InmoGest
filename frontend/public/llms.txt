@@ -1,0 +1,23 @@
+# InmoPanel by C&C
+
+> InmoPanel es un software de gestión para inmobiliarias (SaaS) desarrollado por C&C. Reúne en un solo lugar los contactos, las propiedades, las conversaciones de WhatsApp, las búsquedas de los clientes, el embudo comercial y la agenda del equipo. Está en desarrollo: el registro todavía no está abierto.
+
+## Para quién es
+
+- Inmobiliarias chicas y medianas de Argentina (el mercado comercial previsto es Latinoamérica), con dueño y agentes.
+- Equipos que hoy trabajan con planillas y el WhatsApp de cada celular.
+
+## Qué incluye el primer lanzamiento
+
+- Bandeja de WhatsApp compartida por el equipo, conectada por QR. La conexión por QR no es un servicio oficial de WhatsApp.
+- Alta automática de contactos desde WhatsApp; varios teléfonos y emails por contacto, sin duplicados.
+- Propiedades con fotos, características, propietario, estado y página pública para compartir.
+- Búsquedas de clientes con criterios obligatorios y deseables, y coincidencias automáticas con puntaje y motivo.
+- Embudo comercial por etapas, agenda de visitas y tareas, importación y exportación CSV.
+- Próximamente: mensajes automáticos predefinidos y recordatorios por WhatsApp (planes Profesional y Empresa).
+
+## Datos
+
+- Planes de referencia: Inicial USD 19/mes, Profesional USD 39/mes, Empresa USD 69/mes. Prueba gratis de 14 días.
+- No publica en portales inmobiliarios.
+- Idioma: español. Empresa desarrolladora: C&C.

@@ -1,6 +1,6 @@
 # Identidad de marca — InmoPanel by C&C
 
-> **Estado (02/11/2026):** nombre y posicionamiento **definidos**. Identidad gráfica (logo, paleta, tipografía) **sin definir**: la app usa una identidad visual **provisoria** neutra (`docs/DESIGN-SYSTEM.md`). Al definirla, colores y tipografía se cargan en `frontend/styles/tokens.css` y deben pasar el test de contraste WCAG (`frontend/styles/tokens.test.ts`).
+> **Estado (02/11/2026):** nombre y posicionamiento **definidos**. Identidad gráfica **provisoria** implementada (logo, paleta y tipografía, abajo), a validar o reemplazar por un diseño profesional definitivo. Al definirla, colores y tipografía se cargan en `frontend/styles/tokens.css` y deben pasar el test de contraste WCAG (`frontend/styles/tokens.test.ts`).
 
 ## Nombre y escritura
 
@@ -20,7 +20,7 @@
 ## Presentación
 
 - **InmoPanel es la marca protagonista; C&C es el respaldo corporativo.** En encabezados, "InmoPanel" en el peso y tamaño principales y "by C&C" debajo o al costado, más chico y en color atenuado (`text-muted-foreground`), sin competir visualmente.
-- Mientras no exista logotipo, el nombre se muestra como **texto** con la tipografía de la app. No inventar isotipos, logos ni ilustraciones de marca.
+- Se usa el **logo provisorio** (abajo). No crear variantes nuevas ni ilustraciones de marca sin aprobación.
 
 ## Descriptor y mensajes
 
@@ -52,14 +52,28 @@ InmoPanel centraliza y organiza la operación comercial de una inmobiliaria: con
 - Previsto: `inmopanel.com.ar` — **todavía no comprado ni configurado**. A futuro, `inmopanel.com` o `inmopanel.ai` según disponibilidad.
 - No usarlo en configuraciones ni enlaces hasta que esté comprado y verificado. Cambios a hacer al comprarlo: `docs/DEPLOYMENT.md`, "Al comprar el dominio".
 
-## Logotipo / isotipo
-[Pendiente. Variantes, tamaños, fondos.]
+## Logotipo / isotipo (provisorio)
 
-## Paleta corporativa
-[Pendiente. Colores de marca, distintos de los tokens funcionales.]
+- **Concepto:** un panel (cuadrado redondeado) con una "P" de trazo continuo —el registro ordenado— y un nodo terracota conectado: la coincidencia entre una propiedad y un cliente. Evita la casa genérica de los logos inmobiliarios: identifica un software de gestión.
+- **Implementación:** SVG en código, `frontend/components/brand/logo.tsx` (`LogoMark` isotipo, `Logo` isotipo + "InmoPanel" + "by C&C"). Usa los tokens del tema (claro y oscuro).
+- **Copias con colores fijos** (mantenerlas sincronizadas con la geometría de `LOGO_PATHS`): favicon `frontend/app/icon.svg`, ícono de aplicación `frontend/app/apple-icon.tsx` (PNG 180×180), imagen para compartir `frontend/app/opengraph-image.tsx` (1200×630).
+- Tamaño mínimo legible: 16 px (favicon). Sobre fondo de marca se usa solo el isotipo.
 
-## Tipografía e iconografía
-[Pendiente.]
+## Paleta (provisoria)
+
+| Rol | Claro | Oscuro | Uso |
+|---|---|---|---|
+| Marca (primary) | `#0e5550` verde petróleo | `#5ec5b7` | Botones principales, enlaces, isotipo |
+| Acento (highlight) | `#d9673a` terracota | `#f08a5d` | Detalles, la "coincidencia" del logo, destacados. Nunca para textos largos |
+| Fondo | `#fbfaf7` neutro cálido | `#0b1413` | Página |
+| Texto | `#14201f` | `#eef4f2` | Texto principal |
+
+Motivo: los CRM del rubro usan azules corporativos; el verde petróleo transmite confianza y se diferencia, y el terracota remite a lo inmobiliario sin caer en clichés. Valores completos y contraste verificado: `frontend/styles/tokens.css` y `tokens.test.ts`.
+
+## Tipografía e iconografía (provisorias)
+
+- **Plus Jakarta Sans** (Google Fonts, licencia OFL), servida por la propia app con `next/font`: geométrica, moderna y muy legible en pantallas. Titulares en 700–800, texto en 400–500.
+- Íconos: trazos simples de 1,75–2 px (check, flechas). Sin set de íconos de marca todavía.
 
 ## Voz, tono e idiomas
 
