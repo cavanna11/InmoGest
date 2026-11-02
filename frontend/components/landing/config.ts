@@ -14,7 +14,8 @@ export type LandingLinks = {
 };
 
 export const landingLinks: LandingLinks = {
-  platform: '/login',
+  // Oculto hasta publicar el ingreso (incremento 1.1, ruta /ingresar): sin botones a páginas inexistentes.
+  platform: null,
   demo: null,
   terms: null,
   privacy: null,

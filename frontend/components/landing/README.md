@@ -19,13 +19,11 @@ Página pública de promoción de InmoPanel by C&C. Se desarrolló en la rama `f
 ## Pendientes (datos que faltan, no se inventan)
 
 - **Canal de demo** (`landingLinks.demo`): formulario, WhatsApp comercial o agenda. Mientras sea `null`, "Solicitar una demo" lleva a `#demo` y esa sección avisa que pronto se podrá coordinar.
-- **Ruta de login** (`landingLinks.platform = '/login'`): ruta prevista por `docs/ARCHITECTURE.md`; confirmar al integrar F-02. Hoy el prefetch de `/login` da 404.
+- **Acceso a la plataforma** (`landingLinks.platform`): `null` (botón oculto) hasta publicar el ingreso del incremento 1.1; entonces pasa a `'/ingresar'`.
 - **Legales** (`terms`, `privacy`): según ADR 0009 los textos viven en la base y se publican explícitamente. El pie muestra los enlaces cuando haya una ruta pública que los renderice.
 - **Precios**: son valores de referencia en USD (PRD §6); el mecanismo en pesos está [A CONFIRMAR]. `SHOW_PRICES` los oculta si hace falta.
 - **Marca**: InmoPanel by C&C (`docs/BRAND.md`). Sin logo definitivo: se muestra como texto, con "InmoPanel" protagonista y "by C&C" en segundo plano. El dominio `inmopanel.com.ar` todavía no está comprado.
 
 ## Integración
 
-1. `app/page.tsx` pasa a renderizar `<LandingPage />` con la `metadata` de `app/landing/page.tsx`.
-2. Borrar la ruta de vista previa `app/landing/`.
-3. Cuando existan, cargar en `config.ts` el canal de demo y las rutas de login y legales.
+Desde el 02/11/2026 la landing es la página de inicio (`app/page.tsx`); se quitó la vista previa `/landing`. Pendiente: cargar en `config.ts` el canal de demo, el acceso (`/ingresar`) y las rutas de legales cuando existan.
