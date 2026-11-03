@@ -9,6 +9,10 @@ Página de inicio pública de InmoPanel by C&C (`app/page.tsx`). Identidad en `d
 | `landing-page.tsx` | Secciones (Server Component). |
 | `demos.tsx` · `landing.css` | Maquetas animadas en loop (CSS), sin JavaScript. |
 
+## Canal de demo
+
+WhatsApp comercial de C&C, +54 9 2257 52-9684 (definido el 03/11/2026): `DEMO_WHATSAPP_NUMBER` en `config.ts`. Todos los "Solicitar una demo" abren `wa.me` en otra pestaña con un mensaje precargado. Si `landingLinks.demo` vuelve a `null`, los botones llevan a `#demo`, que avisa que pronto se podrá coordinar.
+
 ## Reglas
 
 - Solo tokens semánticos de `styles/tokens.css`. Sin colores sueltos.
@@ -35,7 +39,6 @@ Página de inicio pública de InmoPanel by C&C (`app/page.tsx`). Identidad en `d
 
 ## Pendientes (datos que faltan, no se inventan)
 
-- **Canal de demo** (`landingLinks.demo`): formulario, WhatsApp comercial o agenda. Mientras sea `null`, "Solicitar una demo" lleva a `#demo`, que avisa que pronto se podrá coordinar.
 - **Acceso a la plataforma** (`landingLinks.platform`): `null` (oculto) hasta publicar el ingreso del incremento 1.1; entonces `'/ingresar'`.
 - **Legales** (`terms`, `privacy`): según ADR 0009 se publican explícitamente. El pie muestra los enlaces cuando haya una ruta pública que los renderice.
 - **Precios**: valores de referencia en USD (PRD §6); el mecanismo en pesos está [A CONFIRMAR]. `SHOW_PRICES` los oculta si hace falta.

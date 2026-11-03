@@ -40,6 +40,11 @@ function ButtonLink({ href, variant = 'primary', size = 'md', className = '', ch
     <Link href={href} className={classes}>
       {children}
     </Link>
+  ) : href.startsWith('http') ? (
+    // Canales externos (WhatsApp): en otra pestaña, sin exponer la landing al destino.
+    <a href={href} target="_blank" rel="noopener noreferrer" className={classes}>
+      {children}
+    </a>
   ) : (
     <a href={href} className={classes}>
       {children}
@@ -405,9 +410,12 @@ function DemoRequest() {
         </p>
         <div className="relative mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
           {landingLinks.demo ? (
-            <ButtonLink href={landingLinks.demo} variant="inverse">
-              Solicitar una demo
-            </ButtonLink>
+            <>
+              <ButtonLink href={landingLinks.demo} variant="inverse">
+                Coordinar por WhatsApp
+              </ButtonLink>
+              <p className="text-sm text-primary-foreground/85">Se abre WhatsApp con el mensaje listo para enviar.</p>
+            </>
           ) : (
             // PENDIENTE: falta el canal para pedir demos (landingLinks.demo). No se inventa uno.
             <p className="rounded-lg border border-primary-foreground/30 px-5 py-3 text-sm font-medium">

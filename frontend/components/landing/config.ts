@@ -5,7 +5,7 @@
 export type LandingLinks = {
   /** Ingreso a la plataforma. Ruta prevista por docs/ARCHITECTURE.md (grupo `(auth)`); llega con el login (F-02). */
   platform: string | null;
-  /** Canal para pedir una demo (formulario, WhatsApp comercial o agenda). PENDIENTE: lo define C&C. */
+  /** Canal para pedir una demo. Hoy: WhatsApp comercial de C&C (aprobado el 03/11/2026). */
   demo: string | null;
   /** Términos y condiciones (PRD §10). PENDIENTE: requieren revisión profesional. */
   terms: string | null;
@@ -13,15 +13,19 @@ export type LandingLinks = {
   privacy: string | null;
 };
 
+/** WhatsApp comercial de C&C para coordinar demos, en formato E.164 sin "+" (lo pide wa.me). */
+export const DEMO_WHATSAPP_NUMBER = '5492257529684';
+const DEMO_WHATSAPP_MESSAGE = 'Hola, quiero coordinar una demo de InmoPanel.';
+
 export const landingLinks: LandingLinks = {
   // Oculto hasta publicar el ingreso (incremento 1.1, ruta /ingresar): sin botones a páginas inexistentes.
   platform: null,
-  demo: null,
+  demo: `https://wa.me/${DEMO_WHATSAPP_NUMBER}?text=${encodeURIComponent(DEMO_WHATSAPP_MESSAGE)}`,
   terms: null,
   privacy: null,
 };
 
-/** Ancla de la sección de demo: es el destino de "Solicitar una demo" mientras no haya canal. */
+/** Ancla de la sección de demo: es el destino de "Solicitar una demo" si no hay canal configurado. */
 export const DEMO_SECTION_ID = 'demo';
 
 /** Adónde lleva "Solicitar una demo": el canal configurado o, si falta, la sección de demo. */
