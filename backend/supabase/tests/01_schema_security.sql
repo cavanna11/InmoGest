@@ -39,7 +39,7 @@ select results_eq(
   $$ select p.oid::regprocedure::text from pg_proc p join pg_namespace n on n.oid = p.pronamespace
      where n.nspname = 'public' and has_function_privilege('anon', p.oid, 'execute')
      order by 1 $$,
-  $$ values ('health()'), ('invitation_preview(text)'), ('registration_legal_documents()'), ('resolve_organization_slug(text)') $$,
+  $$ values ('health()'), ('invitation_preview(text)'), ('public_property(text,text)'), ('registration_legal_documents()'), ('resolve_organization_slug(text)') $$,
   'anon solo puede ejecutar health() y las RPC públicas previstas'
 );
 
@@ -51,7 +51,9 @@ select set_eq(
     'registration_legal_documents()', 'resolve_organization_slug(text)', 'start_support_session(uuid)',
     'accept_invitation(text)', 'create_organization(text,text,uuid[])', 'invitation_preview(text)',
     'organization_members(uuid)',
-    'create_contact(uuid,text,text[],text[],text,boolean,boolean,uuid,contact_source)', 'merge_contacts(uuid,uuid)'
+    'create_contact(uuid,text,text[],text[],text,boolean,boolean,uuid,contact_source)', 'merge_contacts(uuid,uuid)',
+    'merge_properties(uuid,uuid)', 'public_property(text,text)',
+    'property_duplicate_candidates(uuid,text,property_operation,property_type,uuid[],uuid)'
   ],
   'authenticated solo ejecuta las RPC previstas'
 );

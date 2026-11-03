@@ -50,10 +50,10 @@
 | `merge_log` | Registro de unificaciones y fusiones: qué registro absorbió a cuál, quién, cuándo, snapshot del absorbido. |
 | `locations` | Zonas jerárquicas (provincia → ciudad → barrio) por inmobiliaria. |
 | `feature_catalog` | Características globales (cochera, pileta, apto crédito…). |
-| `properties` | Propiedad: código (PRO-000123), slug, operación, tipo, ubicación, dirección y visibilidad, precio y moneda, ambientes, dormitorios, baños, superficies, características, estado (borrador, disponible, reservada, vendida, alquilada, pausada), `assigned_user_id`, `merged_into_id`. |
-| `property_owners` | Propiedad ↔ contacto propietario. |
-| `property_images` | Fotos (ruta en Storage, orden, portada). |
-| `property_changes` | Historial de precio y estado. |
+| `properties` | Propiedad: código correlativo por inmobiliaria (`seq` → PRO-000123), slug estable `<base>-<número>` (no cambia al editar), operación, tipo, ubicación, dirección y `show_address`, precio y moneda, expensas, ambientes, dormitorios, baños, superficies, características (claves del catálogo de la app), estado (borrador, disponible, reservada, vendida, alquilada, pausada; publicar exige precio), `assigned_user_id`, `merged_into_id`, `published_at`. Límite del plan en el alta (IG001; las fusionadas no cuentan). Fusión con `merge_properties` (solo el dueño, IG014). Migración `20261103120000_properties.sql`. |
+| `property_owners` | Propiedad ↔ contacto propietario (claves compuestas); vincular marca al contacto como propietario. |
+| `property_images` | Fotos: ruta en el bucket público `property-images` (`<organization_id>/<property_id>/<archivo>`, se suben desde el navegador) y orden (la primera es la portada). |
+| `property_changes` | Historial de alta, precio, estado y fusión (lo escribe la base). |
 | `client_searches` | Búsqueda de un contacto: operación, tipos, presupuesto mínimo y máximo con moneda, `budget_tolerance_pct` (default 10), ambientes/dormitorios mínimos, características obligatorias y deseables, etapa del embudo, `assigned_user_id`. |
 | `client_search_locations` | Zonas de una búsqueda. |
 | `pipeline_stages` | Etapas del embudo por inmobiliaria: nombre, posición, `kind` (`open`, `won`, `lost`), activa. |

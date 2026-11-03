@@ -61,28 +61,6 @@ export const PREVIEW_SECTIONS = {
       ],
     },
   },
-  propiedades: {
-    slug: 'propiedades',
-    label: 'Propiedades',
-    title: 'Propiedades',
-    summary: 'La cartera de la inmobiliaria con fotos, características, propietario y estado.',
-    features: [
-      'Estados: disponible, reservada, vendida, alquilada y pausada.',
-      'Página pública por propiedad, para compartir por URL.',
-      'Detección de propiedades duplicadas y fusión por el dueño.',
-      'Al cargar una propiedad, InmoPanel busca qué clientes la están buscando.',
-    ],
-    mock: {
-      kind: 'table',
-      columns: ['Código', 'Propiedad', 'Operación', 'Precio', 'Estado'],
-      rows: [
-        ['PRO-000123', 'Departamento 3 amb. · Belgrano', 'Venta', 'USD 98.000', { chip: 'Disponible', tone: 'success' }],
-        ['PRO-000122', 'Departamento 2 amb. · Palermo', 'Alquiler', '$ 650.000', { chip: 'Reservada', tone: 'warning' }],
-        ['PRO-000118', 'PH 4 amb. con patio · Villa Urquiza', 'Venta', 'USD 145.000', { chip: 'Disponible', tone: 'success' }],
-        ['PRO-000101', 'Casa 5 amb. · San Isidro', 'Venta', 'USD 320.000', { chip: 'Vendida' }],
-      ],
-    },
-  },
   busquedas: {
     slug: 'busquedas',
     label: 'Búsquedas',

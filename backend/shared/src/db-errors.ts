@@ -18,6 +18,7 @@ import { err, type Err } from './result.ts';
  *   IG011 teléfono o email ya registrado en otro contacto (detail: id del contacto existente)
  *   IG012 reasignación no permitida (falta la capacidad agents_can_reassign)
  *   IG013 unificación de contactos no válida
+ *   IG014 fusión de propiedades no válida
  */
 
 export type DbErrorCode =
@@ -38,6 +39,7 @@ export type DbErrorCode =
   | 'contact_exists'
   | 'reassign_not_allowed'
   | 'invalid_merge'
+  | 'invalid_property_merge'
   | 'unexpected';
 
 const INVITATION_MESSAGES: Record<string, string> = {
@@ -116,6 +118,8 @@ export function translateDbError(error: DbErrorLike | null | undefined): Err<DbE
       return err('reassign_not_allowed', 'Solo el dueño puede cambiar a quién está asignado.');
     case 'IG013':
       return err('invalid_merge', 'No se pueden unificar estos contactos: alguno ya fue unificado.');
+    case 'IG014':
+      return err('invalid_property_merge', 'No se pueden fusionar estas propiedades: alguna ya fue fusionada.');
     default:
       return err('unexpected', 'Ocurrió un error inesperado. Intentá de nuevo en unos minutos.');
   }

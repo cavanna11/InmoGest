@@ -13,7 +13,7 @@ export const metadata: Metadata = { title: 'Inicio' };
 // Asistente de configuración (CU-01 paso 5, F-03): muestra qué falta, permite saltear y retomar.
 // Los pasos de funciones que todavía no existen se muestran como "Próximamente", sin botón.
 // Recorrido por lo que va a incluir el panel (vistas previas de las secciones en desarrollo).
-const TOUR = (['conversaciones', 'propiedades', 'busquedas', 'oportunidades', 'agenda', 'importar'] as const).map(
+const TOUR = (['conversaciones', 'busquedas', 'oportunidades', 'agenda', 'importar', 'automaticos'] as const).map(
   (slug) => PREVIEW_SECTIONS[slug],
 );
 

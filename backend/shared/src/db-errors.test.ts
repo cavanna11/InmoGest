@@ -21,6 +21,7 @@ describe('translateDbError', () => {
     ['IG011', 'contact_exists'],
     ['IG012', 'reassign_not_allowed'],
     ['IG013', 'invalid_merge'],
+    ['IG014', 'invalid_property_merge'],
     ['XX000', 'unexpected'],
   ])('%s → %s', (code, expected) => {
     expect(translateDbError({ code }).error.code).toBe(expected);

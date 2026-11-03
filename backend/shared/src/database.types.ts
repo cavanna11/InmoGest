@@ -422,6 +422,122 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"properties": {
+                  Row: {
+                    "address": string,"assigned_user_id": string | null,"bathrooms": number | null,"bedrooms": number | null,"city": string,"code": string | null,"covered_area_m2": number | null,"created_at": string,"created_by": string | null,"currency": string,"description": string,"expenses": number | null,"expenses_currency": string,"features": (string)[],"id": string,"merged_at": string | null,"merged_into_id": string | null,"neighborhood": string,"operation": Database["public"]['Enums']["property_operation"],"organization_id": string,"price": number | null,"property_type": Database["public"]['Enums']["property_type"],"province": string,"published_at": string | null,"rooms": number | null,"seq": number,"show_address": boolean,"slug": string,"status": Database["public"]['Enums']["property_status"],"title": string,"total_area_m2": number | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "address"?: string,"assigned_user_id"?: string | null,"bathrooms"?: number | null,"bedrooms"?: number | null,"city"?: string,"code"?: never,"covered_area_m2"?: number | null,"created_at"?: string,"created_by"?: string | null,"currency"?: string,"description"?: string,"expenses"?: number | null,"expenses_currency"?: string,"features"?: (string)[],"id"?: string,"merged_at"?: string | null,"merged_into_id"?: string | null,"neighborhood"?: string,"operation": Database["public"]['Enums']["property_operation"],"organization_id": string,"price"?: number | null,"property_type": Database["public"]['Enums']["property_type"],"province"?: string,"published_at"?: string | null,"rooms"?: number | null,"seq"?: number,"show_address"?: boolean,"slug"?: string,"status"?: Database["public"]['Enums']["property_status"],"title": string,"total_area_m2"?: number | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "address"?: string,"assigned_user_id"?: string | null,"bathrooms"?: number | null,"bedrooms"?: number | null,"city"?: string,"code"?: never,"covered_area_m2"?: number | null,"created_at"?: string,"created_by"?: string | null,"currency"?: string,"description"?: string,"expenses"?: number | null,"expenses_currency"?: string,"features"?: (string)[],"id"?: string,"merged_at"?: string | null,"merged_into_id"?: string | null,"neighborhood"?: string,"operation"?: Database["public"]['Enums']["property_operation"],"organization_id"?: string,"price"?: number | null,"property_type"?: Database["public"]['Enums']["property_type"],"province"?: string,"published_at"?: string | null,"rooms"?: number | null,"seq"?: number,"show_address"?: boolean,"slug"?: string,"status"?: Database["public"]['Enums']["property_status"],"title"?: string,"total_area_m2"?: number | null,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "properties_organization_id_assigned_user_id_fkey"
+      columns: ["organization_id","assigned_user_id"]
+isOneToOne: false
+      referencedRelation: "memberships"
+      referencedColumns: ["organization_id","user_id"]
+    },{
+      foreignKeyName: "properties_organization_id_fkey"
+      columns: ["organization_id"]
+isOneToOne: false
+      referencedRelation: "organizations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "properties_organization_id_merged_into_id_fkey"
+      columns: ["organization_id","merged_into_id"]
+isOneToOne: false
+      referencedRelation: "properties"
+      referencedColumns: ["organization_id","id"]
+    }
+                  ]
+                },"property_changes": {
+                  Row: {
+                    "author_id": string | null,"created_at": string,"field": string,"id": string,"new_value": Json | null,"old_value": Json | null,"organization_id": string,"property_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "author_id"?: string | null,"created_at"?: string,"field": string,"id"?: string,"new_value"?: Json | null,"old_value"?: Json | null,"organization_id": string,"property_id": string
+                  }
+                  Update: {
+                    "author_id"?: string | null,"created_at"?: string,"field"?: string,"id"?: string,"new_value"?: Json | null,"old_value"?: Json | null,"organization_id"?: string,"property_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "property_changes_organization_id_fkey"
+      columns: ["organization_id"]
+isOneToOne: false
+      referencedRelation: "organizations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "property_changes_organization_id_property_id_fkey"
+      columns: ["organization_id","property_id"]
+isOneToOne: false
+      referencedRelation: "properties"
+      referencedColumns: ["organization_id","id"]
+    }
+                  ]
+                },"property_images": {
+                  Row: {
+                    "created_at": string,"id": string,"organization_id": string,"position": number,"property_id": string,"storage_path": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"id"?: string,"organization_id": string,"position"?: number,"property_id": string,"storage_path": string
+                  }
+                  Update: {
+                    "created_at"?: string,"id"?: string,"organization_id"?: string,"position"?: number,"property_id"?: string,"storage_path"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "property_images_organization_id_fkey"
+      columns: ["organization_id"]
+isOneToOne: false
+      referencedRelation: "organizations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "property_images_organization_id_property_id_fkey"
+      columns: ["organization_id","property_id"]
+isOneToOne: false
+      referencedRelation: "properties"
+      referencedColumns: ["organization_id","id"]
+    }
+                  ]
+                },"property_owners": {
+                  Row: {
+                    "contact_id": string,"created_at": string,"organization_id": string,"property_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "contact_id": string,"created_at"?: string,"organization_id": string,"property_id": string
+                  }
+                  Update: {
+                    "contact_id"?: string,"created_at"?: string,"organization_id"?: string,"property_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "property_owners_organization_id_contact_id_fkey"
+      columns: ["organization_id","contact_id"]
+isOneToOne: false
+      referencedRelation: "contacts"
+      referencedColumns: ["organization_id","id"]
+    },{
+      foreignKeyName: "property_owners_organization_id_fkey"
+      columns: ["organization_id"]
+isOneToOne: false
+      referencedRelation: "organizations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "property_owners_organization_id_property_id_fkey"
+      columns: ["organization_id","property_id"]
+isOneToOne: false
+      referencedRelation: "properties"
+      referencedColumns: ["organization_id","id"]
+    }
+                  ]
                 },"rate_limits": {
                   Row: {
                     "count": number,"key": string,"window_start": string
@@ -511,6 +627,9 @@ isOneToOne: false
 "merge_contacts":
 { Args: { "p_keep_id": string,"p_merge_id": string }; Returns: string
                            },
+"merge_properties":
+{ Args: { "p_keep_id": string,"p_merge_id": string }; Returns: string
+                           },
 "my_organizations":
 { Args: Record<PropertyKey, never>; Returns: {
               "name": string,"organization_id": string,"role": Database["public"]['Enums']["member_role"],"slug": string,"state": Database["public"]['Enums']["account_state"]
@@ -519,6 +638,16 @@ isOneToOne: false
 "organization_members":
 { Args: { "p_organization_id": string }; Returns: {
               "created_at": string,"email": string,"full_name": string,"membership_id": string,"role": Database["public"]['Enums']["member_role"],"status": Database["public"]['Enums']["membership_status"],"user_id": string
+            }[]
+                           },
+"property_duplicate_candidates":
+{ Args: { "p_address": string,"p_exclude_id"?: string,"p_operation": Database["public"]['Enums']["property_operation"],"p_organization_id": string,"p_owner_ids"?: (string)[],"p_property_type": Database["public"]['Enums']["property_type"] }; Returns: {
+              "code": string,"id": string,"reason": string,"title": string
+            }[]
+                           },
+"public_property":
+{ Args: { "p_organization_slug": string,"p_property_slug": string }; Returns: {
+              "address": string,"bathrooms": number,"bedrooms": number,"city": string,"code": string,"covered_area_m2": number,"currency": string,"description": string,"expenses": number,"expenses_currency": string,"features": (string)[],"images": (string)[],"neighborhood": string,"operation": Database["public"]['Enums']["property_operation"],"organization_email": string,"organization_logo_path": string,"organization_name": string,"organization_phone": string,"price": number,"property_type": Database["public"]['Enums']["property_type"],"province": string,"rooms": number,"status": Database["public"]['Enums']["property_status"],"title": string,"total_area_m2": number
             }[]
                            },
 "registration_legal_documents":
@@ -534,7 +663,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "account_state": "trial"|"active"|"read_only"|"blocked"|"pending_deletion","audit_scope": "organization"|"platform","contact_source": "manual"|"whatsapp"|"import","duplicate_report_status": "open"|"merged"|"dismissed","job_status": "pending"|"running"|"succeeded"|"failed"|"cancelled","legal_document_kind": "terms"|"privacy","member_role": "owner"|"agent"|"admin"|"supervisor"|"staff","membership_status": "active"|"deactivated","stage_kind": "open"|"won"|"lost"
+            "account_state": "trial"|"active"|"read_only"|"blocked"|"pending_deletion","audit_scope": "organization"|"platform","contact_source": "manual"|"whatsapp"|"import","duplicate_report_status": "open"|"merged"|"dismissed","job_status": "pending"|"running"|"succeeded"|"failed"|"cancelled","legal_document_kind": "terms"|"privacy","member_role": "owner"|"agent"|"admin"|"supervisor"|"staff","membership_status": "active"|"deactivated","property_operation": "sale"|"rent"|"temporary_rent","property_status": "draft"|"available"|"reserved"|"sold"|"rented"|"paused","property_type": "apartment"|"house"|"ph"|"land"|"office"|"commercial"|"garage"|"warehouse"|"farm","stage_kind": "open"|"won"|"lost"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -650,7 +779,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "account_state": ["trial", "active", "read_only", "blocked", "pending_deletion"],"audit_scope": ["organization", "platform"],"contact_source": ["manual", "whatsapp", "import"],"duplicate_report_status": ["open", "merged", "dismissed"],"job_status": ["pending", "running", "succeeded", "failed", "cancelled"],"legal_document_kind": ["terms", "privacy"],"member_role": ["owner", "agent", "admin", "supervisor", "staff"],"membership_status": ["active", "deactivated"],"stage_kind": ["open", "won", "lost"]
+            "account_state": ["trial", "active", "read_only", "blocked", "pending_deletion"],"audit_scope": ["organization", "platform"],"contact_source": ["manual", "whatsapp", "import"],"duplicate_report_status": ["open", "merged", "dismissed"],"job_status": ["pending", "running", "succeeded", "failed", "cancelled"],"legal_document_kind": ["terms", "privacy"],"member_role": ["owner", "agent", "admin", "supervisor", "staff"],"membership_status": ["active", "deactivated"],"property_operation": ["sale", "rent", "temporary_rent"],"property_status": ["draft", "available", "reserved", "sold", "rented", "paused"],"property_type": ["apartment", "house", "ph", "land", "office", "commercial", "garage", "warehouse", "farm"],"stage_kind": ["open", "won", "lost"]
           }
         }
 } as const

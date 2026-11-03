@@ -23,6 +23,9 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   poweredByHeader: false,
   transpilePackages: ['@inmogest/shared'],
+  // Logos de hasta 2 MB por Server Action (el límite por defecto es 1 MB; Vercel acepta hasta 4,5 MB).
+  // Las fotos de propiedades no pasan por acá: se suben directo a Storage desde el navegador.
+  experimental: { serverActions: { bodySizeLimit: '3mb' } },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];
   },

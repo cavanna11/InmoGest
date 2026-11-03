@@ -23,7 +23,7 @@ function navGroups(isOwner: boolean): Array<{ title: string; items: NavItem[] }>
       items: [
         { href: '/panel/conversaciones', label: 'Conversaciones', soon: true },
         { href: '/panel/contactos', label: 'Contactos' },
-        { href: '/panel/propiedades', label: 'Propiedades', soon: true },
+        { href: '/panel/propiedades', label: 'Propiedades' },
         { href: '/panel/busquedas', label: 'Búsquedas', soon: true },
         { href: '/panel/oportunidades', label: 'Oportunidades', soon: true },
         { href: '/panel/agenda', label: 'Agenda', soon: true },
