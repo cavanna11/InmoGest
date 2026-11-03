@@ -1,0 +1,61 @@
+TÉRMINOS Y CONDICIONES DE LA BETA CERRADA DE INMOPANEL
+
+Versión beta-1 · Vigente desde su publicación en la plataforma
+
+1. QUIÉNES SOMOS
+InmoPanel es una plataforma de gestión inmobiliaria desarrollada y prestada por C&C (nombre comercial con el que presta el servicio su titular, CUIT 20-44426791-8, con domicilio en el Partido de La Costa, Provincia de Buenos Aires, Argentina), en adelante "C&C". Contacto: WhatsApp +54 9 2257 52-9684 y cavannaprogramacion@gmail.com.
+
+2. QUÉ ES LA BETA CERRADA
+InmoPanel está en desarrollo. Esta beta es un período de prueba por invitación: C&C da de alta las cuentas a mano y decide quién participa. Al usarla, la inmobiliaria (en adelante "la Inmobiliaria") y cada persona que ingresa con su usuario aceptan estos términos.
+Durante la beta:
+- El servicio puede cambiar, interrumpirse o tener errores. Algunas funciones pueden no estar disponibles o funcionar de forma incompleta.
+- No hay compromiso de disponibilidad, tiempos de respuesta ni niveles de servicio.
+- C&C puede reiniciar funciones, pedir que se vuelvan a cargar datos o terminar la beta, avisando con la mayor anticipación posible.
+- Recomendamos no usar InmoPanel como único lugar donde guardar información crítica del negocio: mantené una copia propia de tus datos importantes.
+
+3. COSTO
+La beta es gratuita. Si C&C lanza planes pagos, los informará antes de cobrar algo y la Inmobiliaria decidirá si continúa. Nada se cobra sin aceptación expresa.
+
+4. CUENTAS Y ACCESO
+- La persona que da de alta la Inmobiliaria es su dueña dentro de InmoPanel y puede sumar o quitar integrantes de su equipo.
+- Cada usuario es personal. Hay que mantener la contraseña en reserva y avisar a C&C si se sospecha un uso no autorizado.
+- La Inmobiliaria es responsable de lo que hagan los usuarios de su equipo dentro de la plataforma.
+
+5. DATOS QUE CARGA LA INMOBILIARIA
+- La Inmobiliaria es la responsable de los datos que carga y administra (contactos, propiedades, conversaciones, búsquedas y demás), y de contar con el derecho o el consentimiento necesario para tratarlos, de acuerdo con la Ley 25.326 de Protección de Datos Personales y demás normas aplicables.
+- C&C trata esos datos solo para prestar el servicio, por cuenta y según las instrucciones de la Inmobiliaria, y no los vende ni los usa con otros fines.
+- Los datos de cada Inmobiliaria están aislados de los de las demás.
+- La forma en que C&C trata los datos personales se explica en la Política de Privacidad de la beta, que forma parte de estos términos.
+
+6. WHATSAPP
+Si la plataforma ofrece la conexión de un número de WhatsApp, esa conexión se hace escaneando un código QR y NO es una integración oficial de WhatsApp ni de Meta. Esto implica riesgos que la Inmobiliaria acepta al conectarse:
+- WhatsApp puede limitar, suspender o bloquear el número conectado, en especial ante envíos masivos o mensajes no deseados.
+- La conexión puede cortarse y requerir volver a escanear el código.
+- C&C no controla WhatsApp y no puede garantizar que el número no sea bloqueado.
+La Inmobiliaria es responsable del contenido y la frecuencia de los mensajes que envía, y de respetar las condiciones de uso de WhatsApp.
+
+7. ACCESO DE SOPORTE ("INGRESAR COMO")
+Para dar soporte, personal autorizado de C&C puede ingresar a la cuenta de la Inmobiliaria y ver o hacer lo mismo que un usuario de esa cuenta. Ese acceso se usa solo para resolver consultas o problemas y queda registrado.
+
+8. USO PERMITIDO
+No está permitido: usar InmoPanel para enviar spam o mensajes no solicitados; cargar datos obtenidos sin derecho; intentar acceder a datos de otras inmobiliarias; vulnerar la seguridad de la plataforma; ni revender o ceder el acceso sin autorización de C&C. C&C puede suspender una cuenta que incumpla estas reglas.
+
+9. EXPORTACIÓN, BAJA Y ELIMINACIÓN DE DATOS
+- La Inmobiliaria puede pedir la exportación de sus datos en cualquier momento, por los medios que ofrezca la plataforma o escribiendo a C&C.
+- La Inmobiliaria puede darse de baja cuando quiera, avisando a C&C.
+- Al terminar la beta o al darse de baja, C&C conservará los datos un (1) año para permitir su exportación o la continuidad del servicio, y luego los eliminará, salvo que la ley exija conservarlos.
+
+10. SEGURIDAD
+C&C aplica medidas razonables para proteger la información (acceso cifrado, aislamiento de datos entre inmobiliarias, control de permisos por rol). Ningún sistema es infalible; ante un incidente que afecte los datos de la Inmobiliaria, C&C le avisará.
+
+11. RESPONSABILIDAD
+La beta se ofrece "tal como está", gratis y con fines de prueba. En la medida permitida por la ley, C&C no responde por lucro cesante, pérdida de oportunidades comerciales, bloqueos de números de WhatsApp ni pérdida de datos que la Inmobiliaria no haya resguardado por su cuenta. Nada de lo anterior limita los derechos que la ley reconoce a los consumidores, cuando corresponda.
+
+12. PROPIEDAD INTELECTUAL
+InmoPanel, su software y su marca pertenecen a C&C. Los datos que carga la Inmobiliaria son de la Inmobiliaria. Las sugerencias que la Inmobiliaria comparta sobre el producto pueden ser usadas por C&C para mejorarlo, sin obligación de pago.
+
+13. CAMBIOS EN ESTOS TÉRMINOS
+C&C puede actualizar estos términos. La versión nueva se publica en la plataforma y se pide aceptarla nuevamente cuando el cambio sea relevante.
+
+14. LEY APLICABLE Y JURISDICCIÓN
+Estos términos se rigen por las leyes de la República Argentina. Ante cualquier conflicto, las partes intentarán resolverlo de buena fe; si no es posible, serán competentes los tribunales ordinarios del Departamento Judicial de Dolores, Provincia de Buenos Aires, sin perjuicio de la jurisdicción que la ley reconozca al consumidor cuando corresponda.

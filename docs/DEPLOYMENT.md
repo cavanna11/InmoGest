@@ -27,11 +27,22 @@ El repositorio está conectado a Vercel desde el 01/11/2026.
 | Root Directory | `frontend` |
 | Framework | Next.js, fijado en `frontend/vercel.json` (`"framework": "nextjs"`). El proyecto se creó con Root Directory en la raíz, donde no hay Next.js, y el preset quedó en "Other": con "Other" el build compila pero falla al buscar una carpeta `public` estática. |
 | Node.js Version | 22.x |
-| Variables | Ninguna obligatoria hoy. Al agregar las de Supabase: `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` por ambiente; `SUPABASE_SECRET_KEY` solo si alguna ruta del servidor la usa. |
+| Variables | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` y `SUPABASE_SECRET_KEY` (límite de intentos en el servidor). Durante la beta cerrada, las del proyecto de desarrollo (ADR 0010). `REGISTRATION_OPEN` vacío. |
 
 **Importante:** con Root Directory `frontend`, Vercel instala **solo las dependencias del workspace `@inmogest/web`** (no las `devDependencies` de la raíz). Por eso todo lo que `next build` necesita (`typescript`, `@types/node`, Tailwind) se declara en `frontend/package.json`, y los tests de la app (`*.test.ts`, que usan `vitest` de la raíz) quedan fuera de `frontend/tsconfig.json` y se chequean con `frontend/tsconfig.test.json` en `npm run typecheck`. Para reproducir el build de Vercel: clon limpio, `cd frontend && npm install && npm run build`.
 
 **[A CONFIRMAR]** Con la integración por defecto, cada push a `main` despliega a **Production**. Mientras no exista el ambiente de producción (base, dominio, textos legales), decidir: desactivar los deploys automáticos de producción, o tratar ese proyecto de Vercel como ambiente de desarrollo sin datos reales.
+
+## Beta cerrada (desde el 03/11/2026, ADR 0010)
+
+La beta usa el proyecto de Supabase de **desarrollo** y el deploy de producción de Vercel. Sin dominio no hay email transaccional, así que:
+
+1. **Alta de una inmobiliaria:** `npm run beta -- access <email> --name "Nombre" ` genera un enlace de un solo uso (no envía emails). Se manda por WhatsApp; la persona elige su contraseña y crea su inmobiliaria aceptando los términos vigentes. El enlace vence según "Email OTP Expiration" de Supabase Auth (1 hora por defecto): si vence, se vuelve a correr el comando.
+2. **Integrantes del equipo:** el dueño los invita desde Equipo; C&C da de alta su cuenta con el mismo comando y la persona abre la invitación ya con sesión iniciada.
+3. **Contraseña olvidada:** el mismo comando, sobre un email existente, genera un enlace de recuperación.
+4. **Superadministrador:** `--admin` (el primero queda como principal).
+5. **Antes de dar accesos:** `npm run beta -- secure` (bloquea los usuarios del seed, cuya contraseña es pública) y textos legales vigentes (`npm run beta -- legal beta-1`).
+6. **Supabase Auth del proyecto de desarrollo:** Site URL `https://inmopanel-beta.vercel.app` y Redirect URL `https://inmopanel-beta.vercel.app/auth/confirm` (además de las de localhost).
 
 ## Al comprar el dominio `inmopanel.com.ar`
 

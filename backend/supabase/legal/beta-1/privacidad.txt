@@ -1,0 +1,47 @@
+POLÍTICA DE PRIVACIDAD DE LA BETA CERRADA DE INMOPANEL
+
+Versión beta-1 · Vigente desde su publicación en la plataforma
+
+1. RESPONSABLE
+C&C (nombre comercial con el que presta el servicio su titular, CUIT 20-44426791-8, con domicilio en el Partido de La Costa, Provincia de Buenos Aires, Argentina) presta el servicio InmoPanel. Contacto para temas de privacidad: WhatsApp +54 9 2257 52-9684 y cavannaprogramacion@gmail.com.
+
+2. DOS TIPOS DE DATOS
+a) Datos de los usuarios de InmoPanel (las personas que ingresan a la plataforma): C&C es responsable de su tratamiento.
+b) Datos que cada inmobiliaria carga sobre sus clientes y contactos (nombres, teléfonos, emails, búsquedas, conversaciones, propiedades): la inmobiliaria es la responsable; C&C los trata solo por su cuenta, para prestarle el servicio.
+
+3. QUÉ DATOS DE LOS USUARIOS TRATAMOS
+- Nombre, email y contraseña (guardada de forma cifrada; C&C no puede verla).
+- La inmobiliaria a la que pertenece y su rol.
+- Registros técnicos de uso y seguridad: fechas de ingreso, acciones relevantes dentro de la cuenta, dirección IP y navegador.
+- La versión de estos documentos que aceptó y cuándo.
+
+4. PARA QUÉ LOS USAMOS
+- Crear y administrar la cuenta y permitir el ingreso.
+- Prestar el servicio y darle soporte, incluido el acceso de soporte "Ingresar como", que queda registrado.
+- Proteger la seguridad de la plataforma y prevenir abusos.
+- Comunicarnos sobre la beta (cambios, avisos, consultas).
+- Mejorar el producto a partir de información de uso.
+No vendemos datos personales ni los usamos para publicidad de terceros.
+
+5. CON QUIÉN SE COMPARTEN
+Para funcionar, InmoPanel usa proveedores que alojan o procesan información por cuenta de C&C:
+- Supabase: base de datos, autenticación y archivos.
+- Vercel: alojamiento de la aplicación web.
+- WhatsApp (Meta), solo si la inmobiliaria conecta un número: los mensajes pasan por WhatsApp.
+- El servidor de C&C donde funciona la conexión de WhatsApp, cuando esa función esté disponible.
+Algunos de estos proveedores pueden almacenar datos fuera de la Argentina (por ejemplo, en Estados Unidos o Brasil). C&C elige proveedores con medidas de seguridad adecuadas.
+También podemos compartir datos si una autoridad competente lo exige conforme a la ley.
+
+6. CUÁNTO TIEMPO LOS GUARDAMOS
+Mientras la cuenta esté activa. Si la inmobiliaria se da de baja o termina la beta, los datos se conservan un (1) año para permitir su exportación y luego se eliminan, salvo obligación legal de conservarlos. Los registros de seguridad pueden conservarse por más tiempo para investigar incidentes.
+
+7. SEGURIDAD
+Conexiones cifradas, contraseñas cifradas, aislamiento de los datos de cada inmobiliaria en la base y permisos por rol. Ante un incidente que afecte datos personales, avisaremos a los afectados.
+
+8. TUS DERECHOS
+Podés pedir acceso, rectificación, actualización o supresión de tus datos personales escribiéndonos por los medios de contacto del punto 1. Responderemos dentro de los plazos de la Ley 25.326 (10 días corridos para el acceso y 5 días hábiles para rectificación o supresión).
+Si sos cliente o contacto de una inmobiliaria que usa InmoPanel, dirigí tu pedido a esa inmobiliaria; si nos escribís a nosotros, se lo trasladaremos.
+La AGENCIA DE ACCESO A LA INFORMACIÓN PÚBLICA, en su carácter de Órgano de Control de la Ley N° 25.326, tiene la atribución de atender las denuncias y reclamos que interpongan quienes resulten afectados en sus derechos por incumplimiento de las normas vigentes en materia de protección de datos personales.
+
+9. CAMBIOS
+Si cambiamos esta política, publicamos la versión nueva en la plataforma y, cuando el cambio sea relevante, pedimos aceptarla nuevamente.

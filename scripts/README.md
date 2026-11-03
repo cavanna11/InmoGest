@@ -4,7 +4,8 @@ Automatizaciones versionadas. Se ejecutan con `npm run <script>` desde la raíz 
 
 | Script | Comando | Qué hace |
 |---|---|---|
-| `db-push.mjs` | `npm run db:push [-- --seed] [-- --dry-run]` | Aplica migraciones con la CLI de Supabase y, con `--seed`, corre `seed.sql` con `pg` en una transacción (idempotente). Solo con `APP_ENV=local` o `ci`. |
+| `db-push.mjs` | `npm run db:push [-- --seed] [-- --dry-run]` | Aplica migraciones con la CLI de Supabase y, con `--seed`, corre `seed.sql` con `pg` en una transacción (idempotente). Solo con `APP_ENV=local` o `ci`; `--seed` solo contra un Supabase local (ADR 0010). |
+| `beta.mjs` | `npm run beta -- secure` · `access <email> [--name "…"] [--admin] [--url …]` · `legal <versión>` | Beta cerrada (ADR 0010): bloquea los usuarios del seed, crea cuentas o genera un enlace de acceso sin enviar emails, y publica los textos legales de `backend/supabase/legal/<versión>`. |
 | `ci-supabase-env.mjs` | (solo GitHub Actions) | Exporta y enmascara las credenciales del Supabase local efímero del runner. |
 | `run-pgtap.mjs` | `npm run test:db [-- 02 06]` | Corre los tests pgTAP contra `SUPABASE_DB_URL` sin Docker; todo se revierte. |
 | `db-types.mjs` | `npm run db:types` | Genera los tipos TypeScript de la base en `backend/shared`. |

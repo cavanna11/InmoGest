@@ -15,12 +15,15 @@ export type LandingLinks = {
 
 /** WhatsApp comercial de C&C para coordinar demos, en formato E.164 sin "+" (lo pide wa.me). */
 export const DEMO_WHATSAPP_NUMBER = '5492257529684';
-const DEMO_WHATSAPP_MESSAGE = 'Hola, quiero coordinar una demo de InmoPanel.';
+
+/** Enlace de WhatsApp al comercial de C&C con un mensaje precargado. */
+export function whatsappHref(message: string): string {
+  return `https://wa.me/${DEMO_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
 
 export const landingLinks: LandingLinks = {
-  // Oculto hasta publicar el ingreso (incremento 1.1, ruta /ingresar): sin botones a páginas inexistentes.
-  platform: null,
-  demo: `https://wa.me/${DEMO_WHATSAPP_NUMBER}?text=${encodeURIComponent(DEMO_WHATSAPP_MESSAGE)}`,
+  platform: '/ingresar',
+  demo: whatsappHref('Hola, quiero coordinar una demo de InmoPanel.'),
   terms: null,
   privacy: null,
 };

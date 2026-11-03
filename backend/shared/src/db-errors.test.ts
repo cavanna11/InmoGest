@@ -14,6 +14,10 @@ describe('translateDbError', () => {
     ['IG004', 'platform_only'],
     ['IG005', 'slug_unavailable'],
     ['IG006', 'legal_document_invalid'],
+    ['IG007', 'email_not_confirmed'],
+    ['IG008', 'organization_limit'],
+    ['IG009', 'invitation_unavailable'],
+    ['IG010', 'last_terminal_stage'],
     ['XX000', 'unexpected'],
   ])('%s → %s', (code, expected) => {
     expect(translateDbError({ code }).error.code).toBe(expected);
@@ -40,6 +44,12 @@ describe('translateDbError', () => {
     expect(translateDbError({ code: 'IG001', details: 'no-json' }).error.message).toBe(
       'Llegaste al límite de tu plan. Cambiá de plan para agregar más.',
     );
+  });
+
+  it('explica por qué no se puede usar una invitación', () => {
+    expect(translateDbError({ code: 'IG009', details: 'expired' }).error.message).toContain('venció');
+    expect(translateDbError({ code: 'IG009', detail: 'email_mismatch' }).error.message).toContain('otro email');
+    expect(translateDbError({ code: 'IG009', details: 'raro' }).error.message).toContain('no es válido');
   });
 
   it('nunca expone el mensaje original de la base', () => {

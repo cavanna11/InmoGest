@@ -24,6 +24,7 @@
     "build": "npm run build -w @inmogest/shared && npm run build -w @inmogest/worker && npm run build -w @inmogest/web",
     "db:push": "node scripts/db-push.mjs",
     "db:types": "node scripts/db-types.mjs",
+    "beta": "node scripts/beta.mjs",
     "check:env": "node scripts/check-public-env.mjs",
     "e2e:install": "playwright install chromium"
   },

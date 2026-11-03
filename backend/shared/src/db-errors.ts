@@ -10,6 +10,11 @@ import { err, type Err } from './result.ts';
  *   IG004 operación reservada a la plataforma
  *   IG005 slug no disponible (en uso o reservado por el historial, ADR 0008)
  *   IG006 documento legal no vigente, borrador no habilitado o ya aceptado (ADR 0009)
+ *   IG007 email sin confirmar
+ *   IG008 límite de inmobiliarias creadas por usuario (anti-abuso)
+ *   IG009 invitación no disponible (detail: not_found | expired | revoked | accepted | email_mismatch |
+ *         organization_unavailable)
+ *   IG010 última etapa activa de tipo ganada o perdida
  */
 
 export type DbErrorCode =
@@ -23,7 +28,20 @@ export type DbErrorCode =
   | 'platform_only'
   | 'slug_unavailable'
   | 'legal_document_invalid'
+  | 'email_not_confirmed'
+  | 'organization_limit'
+  | 'invitation_unavailable'
+  | 'last_terminal_stage'
   | 'unexpected';
+
+const INVITATION_MESSAGES: Record<string, string> = {
+  not_found: 'El enlace de invitación no es válido. Pedile a la inmobiliaria uno nuevo.',
+  expired: 'La invitación venció. Pedile a la inmobiliaria que te envíe una nueva.',
+  revoked: 'La invitación fue cancelada. Pedile a la inmobiliaria una nueva.',
+  accepted: 'Esta invitación ya fue usada.',
+  email_mismatch: 'La invitación es para otro email. Ingresá con la cuenta del email invitado.',
+  organization_unavailable: 'La inmobiliaria no puede sumar usuarios en este momento.',
+};
 
 /** Forma común de PostgrestError (supabase-js) y de DatabaseError (pg). */
 export type DbErrorLike = { code?: string | undefined; detail?: string | undefined; details?: string | null | undefined };
@@ -69,6 +87,22 @@ export function translateDbError(error: DbErrorLike | null | undefined): Err<DbE
       return err(
         'legal_document_invalid',
         'Los términos y condiciones cambiaron o no están disponibles. Recargá la página para ver la versión vigente.',
+      );
+    case 'IG007':
+      return err('email_not_confirmed', 'Confirmá tu email con el enlace que te enviamos antes de continuar.');
+    case 'IG008':
+      return err(
+        'organization_limit',
+        'Alcanzaste el máximo de inmobiliarias que podés crear por ahora. Probá de nuevo más tarde.',
+      );
+    case 'IG009': {
+      const reason = error.detail ?? error.details ?? '';
+      return err('invitation_unavailable', INVITATION_MESSAGES[reason] ?? INVITATION_MESSAGES.not_found ?? '');
+    }
+    case 'IG010':
+      return err(
+        'last_terminal_stage',
+        'El embudo tiene que conservar al menos una etapa activa de cierre ganado y una de cierre perdido.',
       );
     default:
       return err('unexpected', 'Ocurrió un error inesperado. Intentá de nuevo en unos minutos.');

@@ -1,6 +1,6 @@
 // Aplica las migraciones de backend/supabase/migrations al proyecto de DESARROLLO con la CLI de Supabase.
 //   npm run db:push                 migraciones pendientes
-//   npm run db:push -- --seed       además, backend/supabase/seed.sql (solo desarrollo)
+//   npm run db:push -- --seed       además, backend/supabase/seed.sql (solo Supabase local)
 //   npm run db:push -- --dry-run    muestra qué aplicaría
 // La CLI se invoca con node (no con el atajo .cmd, que falla porque la ruta contiene "&").
 //
@@ -31,6 +31,14 @@ const cliArgs = [
   '--yes',
 ];
 if (args.has('--dry-run')) cliArgs.push('--dry-run');
+
+// El proyecto de desarrollo en la nube aloja la beta cerrada (ADR 0010): el seed (usuarios con
+// contraseña pública, documentos legales de prueba) solo se aplica a un Supabase local.
+const dbHost = new URL(process.env.SUPABASE_DB_URL).hostname;
+if (args.has('--seed') && !['localhost', '127.0.0.1', '::1'].includes(dbHost)) {
+  console.error('--seed solo se aplica a un Supabase local: el proyecto de desarrollo aloja la beta cerrada.');
+  process.exit(1);
+}
 
 console.log(`Aplicando migraciones (APP_ENV=${process.env.APP_ENV})…`);
 const result = spawnSync(process.execPath, cliArgs, { stdio: 'inherit', cwd: ROOT });

@@ -39,7 +39,6 @@ WhatsApp comercial de C&C, +54 9 2257 52-9684 (definido el 03/11/2026): `DEMO_WH
 
 ## Pendientes (datos que faltan, no se inventan)
 
-- **Acceso a la plataforma** (`landingLinks.platform`): `null` (oculto) hasta publicar el ingreso del incremento 1.1; entonces `'/ingresar'`.
 - **Legales** (`terms`, `privacy`): según ADR 0009 se publican explícitamente. El pie muestra los enlaces cuando haya una ruta pública que los renderice.
 - **Precios**: valores de referencia en USD (PRD §6); el mecanismo en pesos está [A CONFIRMAR]. `SHOW_PRICES` los oculta si hace falta.
 - **Prueba social** (testimonios, logos, cifras): solo cuando existan clientes reales y su autorización.

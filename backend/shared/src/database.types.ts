@@ -68,14 +68,14 @@ isOneToOne: false
                   ]
                 },"legal_acceptances": {
                   Row: {
-                    "accepted_at": string,"id": string,"legal_document_id": string,"organization_id": string | null,"user_id": string
+                    "accepted_at": string,"document_is_draft": boolean,"id": string,"legal_document_id": string,"organization_id": string | null,"user_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "accepted_at"?: string,"id"?: string,"legal_document_id": string,"organization_id"?: string | null,"user_id": string
+                    "accepted_at"?: string,"document_is_draft"?: boolean,"id"?: string,"legal_document_id": string,"organization_id"?: string | null,"user_id": string
                   }
                   Update: {
-                    "accepted_at"?: string,"id"?: string,"legal_document_id"?: string,"organization_id"?: string | null,"user_id"?: string
+                    "accepted_at"?: string,"document_is_draft"?: boolean,"id"?: string,"legal_document_id"?: string,"organization_id"?: string | null,"user_id"?: string
                   }
                   Relationships: [
                     {
@@ -94,14 +94,14 @@ isOneToOne: false
                   ]
                 },"legal_documents": {
                   Row: {
-                    "content": string,"created_at": string,"id": string,"kind": Database["public"]['Enums']["legal_document_kind"],"published_at": string | null,"title": string,"version": string
+                    "content": string,"created_at": string,"id": string,"is_draft": boolean,"kind": Database["public"]['Enums']["legal_document_kind"],"published_at": string | null,"title": string,"version": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "content": string,"created_at"?: string,"id"?: string,"kind": Database["public"]['Enums']["legal_document_kind"],"published_at"?: string | null,"title": string,"version": string
+                    "content": string,"created_at"?: string,"id"?: string,"is_draft"?: boolean,"kind": Database["public"]['Enums']["legal_document_kind"],"published_at"?: string | null,"title": string,"version": string
                   }
                   Update: {
-                    "content"?: string,"created_at"?: string,"id"?: string,"kind"?: Database["public"]['Enums']["legal_document_kind"],"published_at"?: string | null,"title"?: string,"version"?: string
+                    "content"?: string,"created_at"?: string,"id"?: string,"is_draft"?: boolean,"kind"?: Database["public"]['Enums']["legal_document_kind"],"published_at"?: string | null,"title"?: string,"version"?: string
                   }
                   Relationships: [
                     
@@ -126,6 +126,46 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"onboarding_progress": {
+                  Row: {
+                    "completed_at": string | null,"organization_id": string,"skipped_at": string | null,"step": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "completed_at"?: string | null,"organization_id": string,"skipped_at"?: string | null,"step": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "completed_at"?: string | null,"organization_id"?: string,"skipped_at"?: string | null,"step"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "onboarding_progress_organization_id_fkey"
+      columns: ["organization_id"]
+isOneToOne: false
+      referencedRelation: "organizations"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"organization_slug_history": {
+                  Row: {
+                    "organization_id": string | null,"retired_at": string,"slug": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "organization_id"?: string | null,"retired_at"?: string,"slug": string
+                  }
+                  Update: {
+                    "organization_id"?: string | null,"retired_at"?: string,"slug"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "organization_slug_history_organization_id_fkey"
+      columns: ["organization_id"]
+isOneToOne: false
+      referencedRelation: "organizations"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"organizations": {
                   Row: {
                     "agents_can_reassign": boolean,"contact_email": string | null,"contact_phone": string | null,"created_at": string,"created_by": string | null,"default_currency": string,"deleted_at": string | null,"id": string,"logo_path": string | null,"name": string,"paid_until": string | null,"plan_code": string,"slug": string,"suspended_at": string | null,"trial_ends_at": string,"updated_at": string,"usd_ars_rate": number | null,"usd_ars_rate_enabled": boolean
@@ -144,6 +184,26 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "plans"
       referencedColumns: ["code"]
+    }
+                  ]
+                },"pipeline_stages": {
+                  Row: {
+                    "created_at": string,"id": string,"is_active": boolean,"kind": Database["public"]['Enums']["stage_kind"],"name": string,"organization_id": string,"position": number,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"id"?: string,"is_active"?: boolean,"kind": Database["public"]['Enums']["stage_kind"],"name": string,"organization_id": string,"position": number,"updated_at"?: string
+                  }
+                  Update: {
+                    "created_at"?: string,"id"?: string,"is_active"?: boolean,"kind"?: Database["public"]['Enums']["stage_kind"],"name"?: string,"organization_id"?: string,"position"?: number,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "pipeline_stages_organization_id_fkey"
+      columns: ["organization_id"]
+isOneToOne: false
+      referencedRelation: "organizations"
+      referencedColumns: ["id"]
     }
                   ]
                 },"plans": {
@@ -176,17 +236,29 @@ isOneToOne: false
                   ]
                 },"platform_settings": {
                   Row: {
-                    "id": boolean,"signup_max_organizations_per_user": number,"signup_window_hours": number,"trial_plan_code": string,"updated_at": string,"updated_by": string | null,"version": number,"wa_auto_daily_limit": number,"wa_auto_hourly_limit": number,"wa_auto_min_interval_seconds": number,"wa_auto_window_end": string | null,"wa_auto_window_start": string | null,"wa_max_retries": number
+                    "allow_draft_legal_documents": boolean,"current_privacy_id": string | null,"current_terms_id": string | null,"id": boolean,"signup_max_organizations_per_user": number,"signup_window_hours": number,"trial_plan_code": string,"updated_at": string,"updated_by": string | null,"version": number,"wa_auto_daily_limit": number,"wa_auto_hourly_limit": number,"wa_auto_min_interval_seconds": number,"wa_auto_window_end": string | null,"wa_auto_window_start": string | null,"wa_max_retries": number
                   }
                   ComputedFields: never
                   Insert: {
-                    "id"?: boolean,"signup_max_organizations_per_user"?: number,"signup_window_hours"?: number,"trial_plan_code"?: string,"updated_at"?: string,"updated_by"?: string | null,"version"?: number,"wa_auto_daily_limit"?: number,"wa_auto_hourly_limit"?: number,"wa_auto_min_interval_seconds"?: number,"wa_auto_window_end"?: string | null,"wa_auto_window_start"?: string | null,"wa_max_retries"?: number
+                    "allow_draft_legal_documents"?: boolean,"current_privacy_id"?: string | null,"current_terms_id"?: string | null,"id"?: boolean,"signup_max_organizations_per_user"?: number,"signup_window_hours"?: number,"trial_plan_code"?: string,"updated_at"?: string,"updated_by"?: string | null,"version"?: number,"wa_auto_daily_limit"?: number,"wa_auto_hourly_limit"?: number,"wa_auto_min_interval_seconds"?: number,"wa_auto_window_end"?: string | null,"wa_auto_window_start"?: string | null,"wa_max_retries"?: number
                   }
                   Update: {
-                    "id"?: boolean,"signup_max_organizations_per_user"?: number,"signup_window_hours"?: number,"trial_plan_code"?: string,"updated_at"?: string,"updated_by"?: string | null,"version"?: number,"wa_auto_daily_limit"?: number,"wa_auto_hourly_limit"?: number,"wa_auto_min_interval_seconds"?: number,"wa_auto_window_end"?: string | null,"wa_auto_window_start"?: string | null,"wa_max_retries"?: number
+                    "allow_draft_legal_documents"?: boolean,"current_privacy_id"?: string | null,"current_terms_id"?: string | null,"id"?: boolean,"signup_max_organizations_per_user"?: number,"signup_window_hours"?: number,"trial_plan_code"?: string,"updated_at"?: string,"updated_by"?: string | null,"version"?: number,"wa_auto_daily_limit"?: number,"wa_auto_hourly_limit"?: number,"wa_auto_min_interval_seconds"?: number,"wa_auto_window_end"?: string | null,"wa_auto_window_start"?: string | null,"wa_max_retries"?: number
                   }
                   Relationships: [
                     {
+      foreignKeyName: "platform_settings_current_privacy_id_fkey"
+      columns: ["current_privacy_id"]
+isOneToOne: false
+      referencedRelation: "legal_documents"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "platform_settings_current_terms_id_fkey"
+      columns: ["current_terms_id"]
+isOneToOne: false
+      referencedRelation: "legal_documents"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "platform_settings_trial_plan_code_fkey"
       columns: ["trial_plan_code"]
 isOneToOne: false
@@ -254,13 +326,19 @@ isOneToOne: false
             [_ in never]: never
           }
           Functions: {
-            "claim_jobs":
+            "accept_invitation":
+{ Args: { "p_token": string }; Returns: string
+                           },
+"claim_jobs":
 { Args: { "p_limit"?: number,"p_lock_timeout_seconds"?: number,"p_worker_id": string }; Returns: {
               "attempts": number,"id": string,"max_attempts": number,"organization_id": string,"payload": Json,"type": string
             }[]
                            },
 "complete_job":
 { Args: { "p_job_id": string,"p_worker_id": string }; Returns: boolean
+                           },
+"create_organization":
+{ Args: { "p_legal_document_ids": (string)[],"p_name": string,"p_slug_base": string }; Returns: string
                            },
 "current_support_organization":
 { Args: Record<PropertyKey, never>; Returns: string
@@ -280,17 +358,35 @@ isOneToOne: false
 "hit_rate_limit":
 { Args: { "p_key": string,"p_max": number,"p_window_seconds": number }; Returns: boolean
                            },
+"invitation_preview":
+{ Args: { "p_token": string }; Returns: {
+              "email": string,"expires_at": string,"organization_name": string,"role": Database["public"]['Enums']["member_role"],"status": string
+            }[]
+                           },
 "my_organizations":
 { Args: Record<PropertyKey, never>; Returns: {
               "name": string,"organization_id": string,"role": Database["public"]['Enums']["member_role"],"slug": string,"state": Database["public"]['Enums']["account_state"]
             }[]
+                           },
+"organization_members":
+{ Args: { "p_organization_id": string }; Returns: {
+              "created_at": string,"email": string,"full_name": string,"membership_id": string,"role": Database["public"]['Enums']["member_role"],"status": Database["public"]['Enums']["membership_status"],"user_id": string
+            }[]
+                           },
+"registration_legal_documents":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "id": string,"is_draft": boolean,"kind": Database["public"]['Enums']["legal_document_kind"],"title": string,"version": string
+            }[]
+                           },
+"resolve_organization_slug":
+{ Args: { "p_slug": string }; Returns: string
                            },
 "start_support_session":
 { Args: { "p_organization_id": string }; Returns: string
                            }
           }
           Enums: {
-            "account_state": "trial"|"active"|"read_only"|"blocked"|"pending_deletion","audit_scope": "organization"|"platform","job_status": "pending"|"running"|"succeeded"|"failed"|"cancelled","legal_document_kind": "terms"|"privacy","member_role": "owner"|"agent"|"admin"|"supervisor"|"staff","membership_status": "active"|"deactivated"
+            "account_state": "trial"|"active"|"read_only"|"blocked"|"pending_deletion","audit_scope": "organization"|"platform","job_status": "pending"|"running"|"succeeded"|"failed"|"cancelled","legal_document_kind": "terms"|"privacy","member_role": "owner"|"agent"|"admin"|"supervisor"|"staff","membership_status": "active"|"deactivated","stage_kind": "open"|"won"|"lost"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -406,7 +502,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "account_state": ["trial", "active", "read_only", "blocked", "pending_deletion"],"audit_scope": ["organization", "platform"],"job_status": ["pending", "running", "succeeded", "failed", "cancelled"],"legal_document_kind": ["terms", "privacy"],"member_role": ["owner", "agent", "admin", "supervisor", "staff"],"membership_status": ["active", "deactivated"]
+            "account_state": ["trial", "active", "read_only", "blocked", "pending_deletion"],"audit_scope": ["organization", "platform"],"job_status": ["pending", "running", "succeeded", "failed", "cancelled"],"legal_document_kind": ["terms", "privacy"],"member_role": ["owner", "agent", "admin", "supervisor", "staff"],"membership_status": ["active", "deactivated"],"stage_kind": ["open", "won", "lost"]
           }
         }
 } as const
