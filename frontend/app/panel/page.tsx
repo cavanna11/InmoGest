@@ -13,7 +13,7 @@ export const metadata: Metadata = { title: 'Inicio' };
 // Asistente de configuración (CU-01 paso 5, F-03): muestra qué falta, permite saltear y retomar.
 // Los pasos de funciones que todavía no existen se muestran como "Próximamente", sin botón.
 // Recorrido por lo que va a incluir el panel (vistas previas de las secciones en desarrollo).
-const TOUR = (['conversaciones', 'contactos', 'propiedades', 'busquedas', 'oportunidades', 'agenda'] as const).map(
+const TOUR = (['conversaciones', 'propiedades', 'busquedas', 'oportunidades', 'agenda', 'importar'] as const).map(
   (slug) => PREVIEW_SECTIONS[slug],
 );
 
@@ -40,9 +40,14 @@ async function PanelHome() {
 
   return (
     <div className="grid gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Hola{firstName ? `, ${firstName}` : ''}</h1>
-        <p className="mt-1 text-muted-foreground">Estás en {organization.name}.</p>
+      <div className="relative overflow-hidden rounded-2xl bg-primary px-6 py-7 text-primary-foreground sm:px-8">
+        <div aria-hidden="true" className="pointer-events-none absolute -top-16 -right-10 size-48 rounded-full border-[24px] border-primary-foreground/10" />
+        <div aria-hidden="true" className="pointer-events-none absolute -bottom-10 right-24 size-20 rounded-full bg-highlight/80" />
+        <p className="relative text-sm font-medium text-primary-foreground/80">{organization.name}</p>
+        <h1 className="relative mt-1 text-2xl font-bold tracking-tight sm:text-3xl">Hola{firstName ? `, ${firstName}` : ''}</h1>
+        <p className="relative mt-2 max-w-lg text-primary-foreground/85">
+          Este es tu panel. Completá la configuración inicial y recorré lo que va a incluir InmoPanel.
+        </p>
       </div>
 
       <Card>
@@ -71,7 +76,7 @@ async function PanelHome() {
                     {title}
                     {status === 'done' ? <Badge variant="success">Listo</Badge> : null}
                     {status === 'skipped' ? <Badge>Salteado</Badge> : null}
-                    {!href && status !== 'done' ? <Badge>Próximamente</Badge> : null}
+                    {!href && status !== 'done' ? <Badge variant="highlight">Próximamente</Badge> : null}
                   </p>
                   <p className="mt-1 text-sm text-muted-foreground">{description}</p>
                 </div>
@@ -115,7 +120,7 @@ async function PanelHome() {
               >
                 <span className="flex items-center justify-between gap-2 font-medium">
                   {section.title}
-                  <Badge>Próximamente</Badge>
+                  <Badge variant="highlight">Próximamente</Badge>
                 </span>
                 <span className="mt-1 block text-sm text-muted-foreground">{section.summary}</span>
               </Link>

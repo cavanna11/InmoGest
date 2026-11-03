@@ -4,6 +4,7 @@ import { Alert, Card, CardDescription, CardTitle } from '@/components/ui/surface
 import { requireActiveOrganization } from '@/lib/tenant.ts';
 import { LogoForm, OrganizationSettingsForm } from '@/modules/organization/components.tsx';
 import { getOrganizationDetails, logoUrl } from '@/modules/organization/queries.ts';
+import { PageHeader } from '@/components/ui/page-header.tsx';
 
 export const metadata: Metadata = { title: 'Datos de la inmobiliaria' };
 
@@ -28,7 +29,7 @@ async function OrganizationSettings() {
 
   return (
     <div className="grid gap-6">
-      <h1 className="text-2xl font-semibold">Datos de la inmobiliaria</h1>
+      <PageHeader section="configuracion" title="Datos de la inmobiliaria" description="Nombre, contacto, moneda y logo." />
       {disabled ? <Alert variant="warning">La cuenta está en solo lectura: no se pueden hacer cambios.</Alert> : null}
       <Card>
         <CardTitle>Datos generales</CardTitle>

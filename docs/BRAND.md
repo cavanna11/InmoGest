@@ -63,10 +63,11 @@ InmoPanel centraliza y organiza la operación comercial de una inmobiliaria: con
 
 | Rol | Claro | Oscuro | Uso |
 |---|---|---|---|
-| Marca (primary) | `#0e5550` verde petróleo | `#5ec5b7` | Botones principales, enlaces, isotipo |
-| Acento (highlight) | `#d9673a` terracota | `#f08a5d` | Detalles, la "coincidencia" del logo, destacados. Nunca para textos largos |
-| Fondo | `#fbfaf7` neutro cálido | `#0b1413` | Página |
-| Texto | `#14201f` | `#eef4f2` | Texto principal |
+| Marca (primary) | `#0a7468` verde petróleo | `#5fd8c7` | Botones principales, enlaces, isotipo, menú activo |
+| Acento (highlight) | `#e2572f` terracota | `#ff8f63` | Detalles, la "coincidencia" del logo, destacados. Nunca para textos largos |
+| Tintes | `#d8f1ec` / `#fde5da` | `#14302c` / `#3a1c10` | Fondos de íconos, etiquetas y avisos |
+| Fondo | `#f6f9f8` neutro claro | `#0c1615` | Página (claro por defecto; oscuro a elección) |
+| Texto | `#10201e` | `#eef5f3` | Texto principal |
 
 Motivo: los CRM del rubro usan azules corporativos; el verde petróleo transmite confianza y se diferencia, y el terracota remite a lo inmobiliario sin caer en clichés. Valores completos y contraste verificado: `frontend/styles/tokens.css` y `tokens.test.ts`.
 

@@ -43,10 +43,10 @@
 
 | Tabla | Propósito |
 |---|---|
-| `contacts` | Persona: nombre, notas, origen, `is_owner` / `is_prospect` (derivados), `do_not_contact` (baja), `assigned_user_id`, `merged_into_id`. |
+| `contacts` | Persona: nombre, notas, origen, `is_owner` / `is_prospect` (se cargan a mano hasta el 1.3/1.4, después también se derivan de propiedades y búsquedas), `do_not_contact` (baja, con fecha), `assigned_user_id` (miembro activo; reasignar requiere dueño o `agents_can_reassign`, IG012), `merged_into_id`. Alta con `create_contact` (IG011 si un teléfono o email ya existe) y unificación con `merge_contacts` (solo el dueño, IG013). Migración `20261103110000_contacts.sql`. |
 | `contact_phones` | Teléfonos de un contacto (E.164, etiqueta, si es WhatsApp). Único por inmobiliaria. |
 | `contact_emails` | Emails de un contacto. Único por inmobiliaria. |
-| `duplicate_reports` | Posibles duplicados (contactos o propiedades) reportados por un agente o detectados por el sistema; estado (abierto, unificado, descartado). |
+| `duplicate_reports` | Posibles duplicados de contactos reportados por un miembro; un solo reporte abierto por par; estado (abierto, unificado, descartado). Las propiedades se suman en el 1.3. |
 | `merge_log` | Registro de unificaciones y fusiones: qué registro absorbió a cuál, quién, cuándo, snapshot del absorbido. |
 | `locations` | Zonas jerárquicas (provincia → ciudad → barrio) por inmobiliaria. |
 | `feature_catalog` | Características globales (cochera, pileta, apto crédito…). |
@@ -61,7 +61,7 @@
 | `match_results` | Coincidencia búsqueda ↔ propiedad: puntaje, deseables cumplidos/total, `over_budget`, cotización usada, explicación, estado (nueva, vista, enviada, descartada), versión del algoritmo. |
 | `appointments` | Visitas (requieren contacto y propiedad) y otras citas; estado; `assigned_user_id`. |
 | `tasks` | Tareas con vencimiento, prioridad, estado; contacto/propiedad opcionales; `assigned_user_id`. |
-| `activities` | Historial unificado por contacto y propiedad (nota, llamada, mensaje enviado, cambio de etapa, ficha enviada…), con autor. |
+| `activities` | Historial por contacto (nota y llamada las cargan los usuarios; alta, asignación, baja y unificación las registra la base), con autor. Propiedad, mensajes y etapas se agregan en sus incrementos. |
 | `notifications` | Notificaciones internas por usuario, con clave de deduplicación. |
 
 ### WhatsApp

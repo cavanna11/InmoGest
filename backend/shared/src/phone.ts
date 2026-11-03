@@ -64,6 +64,11 @@ export function toE164(input: string): string | null {
   return result.ok ? result.value.e164 : null;
 }
 
+/** Teléfono E.164 para mostrar (+5491155550188 → "+54 9 11 5555 0188"); si no se reconoce, tal cual. */
+export function formatPhone(e164: string): string {
+  return parsePhoneNumberFromString(e164)?.formatInternational() ?? e164;
+}
+
 function invalid() {
   return err(
     'phone_invalid' as const,

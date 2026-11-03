@@ -14,7 +14,7 @@ function parseBlock(block: string): Record<string, string> {
   return tokens;
 }
 
-const [lightBlock = '', darkBlock = ''] = css.split('@media (prefers-color-scheme: dark)');
+const [lightBlock = '', darkBlock = ''] = css.split(":root[data-theme='dark']");
 const themes = { claro: parseBlock(lightBlock), oscuro: parseBlock(darkBlock) };
 
 function luminance(hex: string): number {
@@ -46,6 +46,8 @@ const TEXT_PAIRS: Array<[string, string]> = [
   ['background', 'primary'],
   ['surface', 'primary'],
   ['highlight', 'highlight-foreground'],
+  ['primary-soft', 'primary-soft-foreground'],
+  ['highlight-soft', 'highlight-soft-foreground'],
 ];
 
 const UI_PAIRS: Array<[string, string]> = [

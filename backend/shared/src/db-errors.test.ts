@@ -18,6 +18,9 @@ describe('translateDbError', () => {
     ['IG008', 'organization_limit'],
     ['IG009', 'invitation_unavailable'],
     ['IG010', 'last_terminal_stage'],
+    ['IG011', 'contact_exists'],
+    ['IG012', 'reassign_not_allowed'],
+    ['IG013', 'invalid_merge'],
     ['XX000', 'unexpected'],
   ])('%s → %s', (code, expected) => {
     expect(translateDbError({ code }).error.code).toBe(expected);

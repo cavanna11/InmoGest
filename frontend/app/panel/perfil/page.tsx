@@ -5,6 +5,7 @@ import { requireUser } from '@/lib/auth.ts';
 import { UpdatePasswordForm } from '@/modules/auth/components.tsx';
 import { getOwnProfile } from '@/modules/organization/queries.ts';
 import { ProfileForm } from '@/modules/profile/components.tsx';
+import { PageHeader } from '@/components/ui/page-header.tsx';
 
 export const metadata: Metadata = { title: 'Mi perfil' };
 
@@ -21,7 +22,7 @@ async function Profile() {
   const profile = await getOwnProfile(user.id);
   return (
     <div className="grid gap-6">
-      <h1 className="text-2xl font-semibold">Mi perfil</h1>
+      <PageHeader section="perfil" title="Mi perfil" description="Tus datos y tu contraseña." />
       <Card>
         <CardTitle>Tus datos</CardTitle>
         <CardDescription>Ingresás con {user.email}.</CardDescription>

@@ -61,29 +61,6 @@ export const PREVIEW_SECTIONS = {
       ],
     },
   },
-  contactos: {
-    slug: 'contactos',
-    label: 'Contactos',
-    title: 'Contactos',
-    summary: 'Interesados y propietarios en un solo lugar, con todo su historial.',
-    features: [
-      'Varios teléfonos y emails por contacto, con detección de duplicados.',
-      'Asignación a un agente y filtros por agente.',
-      'Historial de actividad: conversaciones, visitas, fichas enviadas y cambios.',
-      'Reporte de posibles duplicados y unificación por el dueño.',
-      'Exportación a CSV.',
-    ],
-    mock: {
-      kind: 'table',
-      columns: ['Nombre', 'Teléfono', 'Tipo', 'Agente', 'Último contacto'],
-      rows: [
-        ['Ana G.', '+54 9 11 5555-0188', { chip: 'Interesada', tone: 'brand' }, 'Laura', 'Hoy'],
-        ['Jorge P.', '+54 9 11 5555-0123', { chip: 'Propietario', tone: 'highlight' }, 'Martín', 'Ayer'],
-        ['Carla M.', '+54 9 11 5555-0177', { chip: 'Interesada', tone: 'brand' }, 'Laura', 'Lunes'],
-        ['Diego R.', '+54 9 11 5555-0109', { chip: 'Interesado', tone: 'brand' }, 'Sin asignar', 'Hace 2 semanas'],
-      ],
-    },
-  },
   propiedades: {
     slug: 'propiedades',
     label: 'Propiedades',

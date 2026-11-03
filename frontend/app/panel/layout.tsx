@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { cache, Suspense } from 'react';
 import { BrandMark } from '@/components/brand-mark.tsx';
+import { ThemeToggle } from '@/components/theme.tsx';
 import { Button } from '@/components/ui/button.tsx';
 import { requireActiveOrganization } from '@/lib/tenant.ts';
 import { signOutAction } from '@/modules/auth/actions.ts';
@@ -50,7 +51,7 @@ async function PanelHeader() {
   const details = await getOrganizationDetails(organization.id);
 
   return (
-    <header className="border-b border-border bg-surface">
+    <header className="border-b border-border bg-surface/90 backdrop-blur">
       <div className="mx-auto flex min-h-14 max-w-7xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4 py-2 sm:px-6">
         <div className="flex min-w-0 items-center gap-3">
           <Link href="/panel" aria-label="InmoPanel by C&C, inicio del panel">
@@ -65,11 +66,14 @@ async function PanelHeader() {
             </Link>
           ) : null}
         </div>
-        <form action={signOutAction}>
-          <Button type="submit" variant="ghost" size="sm">
-            Salir
-          </Button>
-        </form>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <form action={signOutAction}>
+            <Button type="submit" variant="ghost" size="sm">
+              Salir
+            </Button>
+          </form>
+        </div>
       </div>
       <AccountBanner organization={organization} trialEndsAt={details?.trial_ends_at ?? null} paidUntil={details?.paid_until ?? null} />
     </header>

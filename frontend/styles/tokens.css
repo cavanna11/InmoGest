@@ -1,9 +1,11 @@
 /*
  * Tokens de diseño — ÚNICA fuente de la identidad visual (docs/DESIGN-SYSTEM.md, docs/BRAND.md).
  *
- * Identidad provisoria de InmoPanel (02/11/2026): verde petróleo como color de marca (confianza,
- * diferenciado del azul corporativo habitual en los CRM), terracota como acento (remite a lo
- * inmobiliario y marca la "coincidencia" en el logo) y neutros cálidos.
+ * Identidad provisoria de InmoPanel (03/11/2026): verde petróleo luminoso como color de marca
+ * (confianza, diferenciado del azul corporativo habitual en los CRM), terracota vivo como acento
+ * (remite a lo inmobiliario y marca la "coincidencia" en el logo) y neutros claros.
+ * Tema claro por defecto; el oscuro se activa con data-theme="dark" en <html> (selector de modo,
+ * components/theme.tsx).
  * Los componentes solo usan los nombres semánticos (bg-primary, text-muted-foreground, border-input…),
  * nunca colores sueltos.
  *
@@ -14,25 +16,30 @@
 
 :root {
   /* Superficies y texto */
-  --background: #fbfaf7;
-  --foreground: #14201f;
+  --background: #f6f9f8;
+  --foreground: #10201e;
   --surface: #ffffff;
-  --surface-foreground: #14201f;
+  --surface-foreground: #10201e;
   --popover: #ffffff;
-  --popover-foreground: #14201f;
-  --muted: #f1efe9;
-  --muted-foreground: #55605e;
+  --popover-foreground: #10201e;
+  --muted: #eef4f2;
+  --muted-foreground: #536361;
 
   /* Marca y acciones */
-  --primary: #0e5550;
-  --primary-foreground: #f7fbfa;
-  --secondary: #e4efed;
-  --secondary-foreground: #0b3f3b;
-  --accent: #e9f2f0;
-  --accent-foreground: #0b3f3b;
+  --primary: #0a7468;
+  --primary-foreground: #ffffff;
+  --secondary: #e3f3ef;
+  --secondary-foreground: #075049;
+  --accent: #d8f1ec;
+  --accent-foreground: #075049;
+  /* Tinte de marca: fondos de íconos, etiquetas y elementos seleccionados. */
+  --primary-soft: #d8f1ec;
+  --primary-soft-foreground: #075049;
   /* Acento cálido: detalles, la "coincidencia" del logo y destacados. */
-  --highlight: #d9673a;
+  --highlight: #e2572f;
   --highlight-foreground: #1c0f08;
+  --highlight-soft: #fde5da;
+  --highlight-soft-foreground: #8a2e10;
 
   /* Estados */
   --destructive: #b42318;
@@ -43,9 +50,9 @@
   --warning-foreground: #ffffff;
 
   /* Bordes y foco */
-  --border: #e2ded5;
-  --input: #747f7d;
-  --ring: #0e5550;
+  --border: #dfe7e4;
+  --input: #6f807d;
+  --ring: #0a7468;
 
   /* Geometría */
   --radius: 0.625rem;
@@ -55,35 +62,37 @@
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0b1413;
-    --foreground: #eef4f2;
-    --surface: #111d1c;
-    --surface-foreground: #eef4f2;
-    --popover: #111d1c;
-    --popover-foreground: #eef4f2;
-    --muted: #172523;
-    --muted-foreground: #9fb0ad;
+:root[data-theme='dark'] {
+  --background: #0c1615;
+  --foreground: #eef5f3;
+  --surface: #13201f;
+  --surface-foreground: #eef5f3;
+  --popover: #13201f;
+  --popover-foreground: #eef5f3;
+  --muted: #1a2a28;
+  --muted-foreground: #a3b5b2;
 
-    --primary: #5ec5b7;
-    --primary-foreground: #06201d;
-    --secondary: #1b2e2c;
-    --secondary-foreground: #d6ebe7;
-    --accent: #1b2e2c;
-    --accent-foreground: #d6ebe7;
-    --highlight: #f08a5d;
-    --highlight-foreground: #1c0f08;
+  --primary: #5fd8c7;
+  --primary-foreground: #04211d;
+  --secondary: #14302c;
+  --secondary-foreground: #9ff0e4;
+  --accent: #14302c;
+  --accent-foreground: #9ff0e4;
+  --primary-soft: #14302c;
+  --primary-soft-foreground: #9ff0e4;
+  --highlight: #ff8f63;
+  --highlight-foreground: #1c0f08;
+  --highlight-soft: #3a1c10;
+  --highlight-soft-foreground: #ffb18f;
 
-    --destructive: #f87171;
-    --destructive-foreground: #1c0f08;
-    --success: #4ade80;
-    --success-foreground: #052e16;
-    --warning: #fbbf24;
-    --warning-foreground: #1c1305;
+  --destructive: #f87171;
+  --destructive-foreground: #1c0f08;
+  --success: #4ade80;
+  --success-foreground: #052e16;
+  --warning: #fbbf24;
+  --warning-foreground: #1c1305;
 
-    --border: #243533;
-    --input: #6f817e;
-    --ring: #5ec5b7;
-  }
+  --border: #243533;
+  --input: #6f817e;
+  --ring: #5fd8c7;
 }

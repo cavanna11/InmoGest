@@ -1,6 +1,6 @@
 # Design System
 
-- **Estado:** identidad **provisoria de InmoPanel** (02/11/2026): verde petróleo, acento terracota y neutros cálidos; logo y tipografía en `docs/BRAND.md`.
+- **Estado:** identidad **provisoria de InmoPanel** (03/11/2026): verde petróleo luminoso, acento terracota vivo y neutros claros; logo y tipografía en `docs/BRAND.md`.
 - **Base:** Tailwind CSS 4 + componentes de shadcn/ui (`frontend/components.json`), que se agregan a medida que se usan.
 
 ## Regla principal
@@ -16,12 +16,13 @@ Toda la identidad visual vive en **un solo archivo**: `frontend/styles/tokens.cs
 | Superficies | `background`, `surface`, `popover`, `muted` (+ `-foreground`) | Fondo de página, tarjetas y paneles, menús, zonas atenuadas |
 | Acciones | `primary`, `secondary`, `accent` (+ `-foreground`) | Botón principal, secundario, hover/selección |
 | Acento de marca | `highlight` (+ `-foreground`) | Detalles cálidos, la "coincidencia" del logo, destacados (no para textos largos) |
+| Tintes | `primary-soft`, `highlight-soft` (+ `-foreground`) | Fondos de íconos de sección, etiquetas ("Próximamente", tipos de contacto), hover del menú y avisos de la prueba |
 | Estados | `destructive`, `success`, `warning` (+ `-foreground`) | Errores y acciones destructivas, confirmaciones, advertencias |
 | Bordes y foco | `border`, `input`, `ring` | Separadores decorativos, borde de campos, anillo de foco |
 | Geometría | `radius` (→ `rounded-sm/md/lg/xl`) | Radios derivados de un solo valor |
 | Tipografía | `font-sans`, `font-mono` | Plus Jakarta Sans (next/font) con respaldo del sistema |
 
-Tema claro y oscuro (según `prefers-color-scheme`), con los mismos nombres. Los valores van en hex.
+Tema **claro por defecto** y oscuro con los mismos nombres; los valores van en hex. El modo lo elige cada persona con el selector (claro, oscuro o según el sistema, `components/theme.tsx`): se guarda en el navegador y un script en el `<head>` lo aplica como `data-theme` en `<html>` antes de pintar (sin parpadeo).
 
 ## Accesibilidad
 

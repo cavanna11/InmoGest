@@ -2,6 +2,7 @@ import 'server-only';
 import type { Database } from '@inmogest/shared';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
+import { connection } from 'next/server';
 import { requirePublicEnv } from '../env.ts';
 
 /**
@@ -11,6 +12,9 @@ import { requirePublicEnv } from '../env.ts';
  */
 export async function createClient() {
   const env = requirePublicEnv();
+  // Siempre por pedido: la sesión de Supabase lee la hora (Date.now) y con cacheComponents eso no
+  // puede quedar en un prerender.
+  await connection();
   const cookieStore = await cookies();
 
   return createServerClient<Database>(env.supabaseUrl, env.supabasePublishableKey, {

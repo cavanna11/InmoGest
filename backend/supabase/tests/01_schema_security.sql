@@ -50,7 +50,8 @@ select set_eq(
     'current_support_organization()', 'end_support_session()', 'health()', 'my_organizations()',
     'registration_legal_documents()', 'resolve_organization_slug(text)', 'start_support_session(uuid)',
     'accept_invitation(text)', 'create_organization(text,text,uuid[])', 'invitation_preview(text)',
-    'organization_members(uuid)'
+    'organization_members(uuid)',
+    'create_contact(uuid,text,text[],text[],text,boolean,boolean,uuid,contact_source)', 'merge_contacts(uuid,uuid)'
   ],
   'authenticated solo ejecuta las RPC previstas'
 );

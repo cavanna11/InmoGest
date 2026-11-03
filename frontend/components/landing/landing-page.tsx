@@ -5,6 +5,7 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { Logo } from '@/components/brand/logo.tsx';
+import { ThemeToggle } from '@/components/theme.tsx';
 import { DEMO_SECTION_ID, PRODUCT_STATUS, SHOW_PRICES, demoHref, landingLinks } from './config.ts';
 import { commitments, comparison, faqs, painPoints, pillars, plans, startSteps } from './content.ts';
 import { InboxFlow, OpportunityFlow } from './demos.tsx';
@@ -105,6 +106,7 @@ function Header() {
           </ul>
         </nav>
         <div className="flex items-center gap-2">
+          <ThemeToggle className="hidden sm:inline-flex" />
           {landingLinks.platform ? (
             <ButtonLink href={landingLinks.platform} variant="outline" size="sm">
               Ingresar

@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <!-- Favicon de InmoPanel: copia estática de components/brand/logo.tsx con los colores de marca del tema claro. -->
-  <rect width="32" height="32" rx="8" fill="#0e5550"/>
+  <rect width="32" height="32" rx="8" fill="#0a7468"/>
   <path d="M11 7.5v17" stroke="#f7fbfa" stroke-width="3.2" stroke-linecap="round" fill="none"/>
   <path d="M11 7.5h5.75a5.75 5.75 0 0 1 0 11.5H11" stroke="#f7fbfa" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-  <path d="M17.25 19l3.4 3.4" stroke="#d9673a" stroke-width="2.2" stroke-linecap="round" fill="none"/>
-  <circle cx="22.4" cy="23.6" r="2.9" fill="#d9673a"/>
+  <path d="M17.25 19l3.4 3.4" stroke="#e2572f" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+  <circle cx="22.4" cy="23.6" r="2.9" fill="#e2572f"/>
 </svg>

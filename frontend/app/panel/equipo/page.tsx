@@ -6,6 +6,7 @@ import { requireActiveOrganization } from '@/lib/tenant.ts';
 import { InviteForm, MemberActions, RegenerateInvitationForm, RevokeInvitationButton, StatusBadge } from '@/modules/members/components.tsx';
 import { ROLE_LABELS } from '@/modules/organization/labels.ts';
 import { getTeam } from '@/modules/organization/queries.ts';
+import { PageHeader } from '@/components/ui/page-header.tsx';
 
 export const metadata: Metadata = { title: 'Equipo' };
 
@@ -31,7 +32,7 @@ async function Team() {
   const disabled = !organization.canWrite;
   return (
     <div className="grid gap-6">
-      <h1 className="text-2xl font-semibold">Equipo</h1>
+      <PageHeader section="equipo" title="Equipo" description="Sumá agentes y administrá quién tiene acceso." />
       {disabled ? <Alert variant="warning">La cuenta está en solo lectura: no se pueden hacer cambios en el equipo.</Alert> : null}
 
       <Card>

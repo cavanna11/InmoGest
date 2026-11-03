@@ -15,6 +15,9 @@ import { err, type Err } from './result.ts';
  *   IG009 invitación no disponible (detail: not_found | expired | revoked | accepted | email_mismatch |
  *         organization_unavailable)
  *   IG010 última etapa activa de tipo ganada o perdida
+ *   IG011 teléfono o email ya registrado en otro contacto (detail: id del contacto existente)
+ *   IG012 reasignación no permitida (falta la capacidad agents_can_reassign)
+ *   IG013 unificación de contactos no válida
  */
 
 export type DbErrorCode =
@@ -32,6 +35,9 @@ export type DbErrorCode =
   | 'organization_limit'
   | 'invitation_unavailable'
   | 'last_terminal_stage'
+  | 'contact_exists'
+  | 'reassign_not_allowed'
+  | 'invalid_merge'
   | 'unexpected';
 
 const INVITATION_MESSAGES: Record<string, string> = {
@@ -104,6 +110,12 @@ export function translateDbError(error: DbErrorLike | null | undefined): Err<DbE
         'last_terminal_stage',
         'El embudo tiene que conservar al menos una etapa activa de cierre ganado y una de cierre perdido.',
       );
+    case 'IG011':
+      return err('contact_exists', 'Ya hay un contacto con ese teléfono o email.');
+    case 'IG012':
+      return err('reassign_not_allowed', 'Solo el dueño puede cambiar a quién está asignado.');
+    case 'IG013':
+      return err('invalid_merge', 'No se pueden unificar estos contactos: alguno ya fue unificado.');
     default:
       return err('unexpected', 'Ocurrió un error inesperado. Intentá de nuevo en unos minutos.');
   }

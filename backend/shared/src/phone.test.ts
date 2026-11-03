@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizePhone, toE164 } from './phone.ts';
+import { formatPhone, normalizePhone, toE164 } from './phone.ts';
 
 describe('normalizePhone', () => {
   it.each([
@@ -44,4 +44,14 @@ describe('normalizePhone', () => {
       expect(normalizePhone(input)).toMatchObject({ ok: false, error: { code: 'phone_invalid' } });
     },
   );
+});
+
+describe('formatPhone', () => {
+  it('muestra un E.164 argentino con espacios', () => {
+    expect(formatPhone('+5491155550188')).toBe('+54 9 11 5555 0188');
+  });
+
+  it('devuelve el valor original si no lo reconoce', () => {
+    expect(formatPhone('no-es-un-telefono')).toBe('no-es-un-telefono');
+  });
 });

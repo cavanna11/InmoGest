@@ -66,7 +66,7 @@ function daysUntil(date: string): number {
 
 function Banner({ tone, children }: { tone: 'info' | 'warning' | 'destructive'; children: React.ReactNode }) {
   const toneClass = {
-    info: 'border-border bg-muted',
+    info: 'border-transparent bg-highlight-soft text-highlight-soft-foreground',
     warning: 'border-warning bg-background',
     destructive: 'border-destructive bg-background',
   }[tone];

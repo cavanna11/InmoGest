@@ -1,0 +1,37 @@
+import {
+  ArrowDownUp,
+  Bell,
+  Building2,
+  CalendarDays,
+  CreditCard,
+  House,
+  MessageCircle,
+  Search,
+  Smartphone,
+  SquareKanban,
+  Store,
+  UserRound,
+  Users,
+  UsersRound,
+  Zap,
+  type LucideIcon,
+} from 'lucide-react';
+
+/** Ícono de cada sección del panel, por su ruta bajo /panel ('' es el inicio). */
+export const SECTION_ICONS: Record<string, LucideIcon> = {
+  '': House,
+  notificaciones: Bell,
+  conversaciones: MessageCircle,
+  contactos: Users,
+  propiedades: Building2,
+  busquedas: Search,
+  oportunidades: SquareKanban,
+  agenda: CalendarDays,
+  importar: ArrowDownUp,
+  automaticos: Zap,
+  configuracion: Store,
+  equipo: UsersRound,
+  whatsapp: Smartphone,
+  plan: CreditCard,
+  perfil: UserRound,
+};

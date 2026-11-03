@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils.ts';
+import { SECTION_ICONS } from '@/modules/panel/icons.ts';
 
 type NavItem = { href: string; label: string; soon?: boolean };
 
@@ -21,7 +22,7 @@ function navGroups(isOwner: boolean): Array<{ title: string; items: NavItem[] }>
       title: 'Comercial',
       items: [
         { href: '/panel/conversaciones', label: 'Conversaciones', soon: true },
-        { href: '/panel/contactos', label: 'Contactos', soon: true },
+        { href: '/panel/contactos', label: 'Contactos' },
         { href: '/panel/propiedades', label: 'Propiedades', soon: true },
         { href: '/panel/busquedas', label: 'Búsquedas', soon: true },
         { href: '/panel/oportunidades', label: 'Oportunidades', soon: true },
@@ -66,19 +67,30 @@ export function PanelNav({ isOwner }: { isOwner: boolean }) {
             <ul className="contents lg:grid lg:gap-0.5">
               {group.items.map((item) => {
                 const current = item.href === '/panel' ? pathname === '/panel' : pathname.startsWith(item.href);
+                const Icon = SECTION_ICONS[item.href.replace(/^\/panel\/?/, '')];
                 return (
                   <li key={item.href} className="shrink-0">
                     <Link
                       href={item.href}
                       aria-current={current ? 'page' : undefined}
                       className={cn(
-                        'flex h-9 items-center justify-between gap-2 rounded-md px-3 text-sm whitespace-nowrap hover:bg-accent',
-                        current ? 'bg-accent font-medium text-accent-foreground' : 'text-muted-foreground',
+                        'group flex h-9 items-center gap-2.5 rounded-lg px-3 text-sm whitespace-nowrap transition-colors',
+                        current
+                          ? 'bg-primary text-primary-foreground shadow-sm'
+                          : 'text-muted-foreground hover:bg-primary-soft hover:text-primary-soft-foreground',
                       )}
                     >
-                      {item.label}
+                      {Icon ? (
+                        <Icon aria-hidden="true" className={cn('size-4 shrink-0', current ? '' : 'text-primary')} />
+                      ) : null}
+                      <span className="flex-1">{item.label}</span>
                       {item.soon ? (
-                        <span className="hidden text-[10px] font-medium tracking-wide text-muted-foreground uppercase lg:inline">
+                        <span
+                          className={cn(
+                            'hidden rounded-full px-1.5 py-px text-[10px] font-semibold tracking-wide uppercase lg:inline',
+                            current ? 'bg-primary-foreground/20 text-primary-foreground' : 'bg-highlight-soft text-highlight-soft-foreground',
+                          )}
+                        >
                           Pronto
                         </span>
                       ) : null}

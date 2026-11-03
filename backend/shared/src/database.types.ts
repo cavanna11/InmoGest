@@ -6,7 +6,33 @@ export type Database = {
   
   "public": {
           Tables: {
-            "audit_logs": {
+            "activities": {
+                  Row: {
+                    "author_id": string | null,"body": string,"contact_id": string,"created_at": string,"id": string,"kind": string,"metadata": NonNullable<Json>,"organization_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "author_id"?: string | null,"body"?: string,"contact_id": string,"created_at"?: string,"id"?: string,"kind": string,"metadata"?: NonNullable<Json>,"organization_id": string
+                  }
+                  Update: {
+                    "author_id"?: string | null,"body"?: string,"contact_id"?: string,"created_at"?: string,"id"?: string,"kind"?: string,"metadata"?: NonNullable<Json>,"organization_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "activities_organization_id_contact_id_fkey"
+      columns: ["organization_id","contact_id"]
+isOneToOne: false
+      referencedRelation: "contacts"
+      referencedColumns: ["organization_id","id"]
+    },{
+      foreignKeyName: "activities_organization_id_fkey"
+      columns: ["organization_id"]
+isOneToOne: false
+      referencedRelation: "organizations"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"audit_logs": {
                   Row: {
                     "action": string,"actor_user_id": string | null,"created_at": string,"entity_id": string | null,"entity_type": string,"id": string,"metadata": NonNullable<Json>,"organization_id": string | null,"scope": Database["public"]['Enums']["audit_scope"],"via_support_session": boolean
                   }
@@ -20,6 +46,122 @@ export type Database = {
                   Relationships: [
                     {
       foreignKeyName: "audit_logs_organization_fk"
+      columns: ["organization_id"]
+isOneToOne: false
+      referencedRelation: "organizations"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"contact_emails": {
+                  Row: {
+                    "contact_id": string,"created_at": string,"email": string,"id": string,"label": string | null,"organization_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "contact_id": string,"created_at"?: string,"email": string,"id"?: string,"label"?: string | null,"organization_id": string
+                  }
+                  Update: {
+                    "contact_id"?: string,"created_at"?: string,"email"?: string,"id"?: string,"label"?: string | null,"organization_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "contact_emails_organization_id_contact_id_fkey"
+      columns: ["organization_id","contact_id"]
+isOneToOne: false
+      referencedRelation: "contacts"
+      referencedColumns: ["organization_id","id"]
+    },{
+      foreignKeyName: "contact_emails_organization_id_fkey"
+      columns: ["organization_id"]
+isOneToOne: false
+      referencedRelation: "organizations"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"contact_phones": {
+                  Row: {
+                    "contact_id": string,"created_at": string,"id": string,"is_whatsapp": boolean,"label": string | null,"organization_id": string,"phone_e164": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "contact_id": string,"created_at"?: string,"id"?: string,"is_whatsapp"?: boolean,"label"?: string | null,"organization_id": string,"phone_e164": string
+                  }
+                  Update: {
+                    "contact_id"?: string,"created_at"?: string,"id"?: string,"is_whatsapp"?: boolean,"label"?: string | null,"organization_id"?: string,"phone_e164"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "contact_phones_organization_id_contact_id_fkey"
+      columns: ["organization_id","contact_id"]
+isOneToOne: false
+      referencedRelation: "contacts"
+      referencedColumns: ["organization_id","id"]
+    },{
+      foreignKeyName: "contact_phones_organization_id_fkey"
+      columns: ["organization_id"]
+isOneToOne: false
+      referencedRelation: "organizations"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"contacts": {
+                  Row: {
+                    "assigned_user_id": string | null,"created_at": string,"created_by": string | null,"do_not_contact": boolean,"do_not_contact_at": string | null,"full_name": string,"id": string,"is_owner": boolean,"is_prospect": boolean,"merged_at": string | null,"merged_into_id": string | null,"notes": string,"organization_id": string,"source": Database["public"]['Enums']["contact_source"],"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "assigned_user_id"?: string | null,"created_at"?: string,"created_by"?: string | null,"do_not_contact"?: boolean,"do_not_contact_at"?: string | null,"full_name": string,"id"?: string,"is_owner"?: boolean,"is_prospect"?: boolean,"merged_at"?: string | null,"merged_into_id"?: string | null,"notes"?: string,"organization_id": string,"source"?: Database["public"]['Enums']["contact_source"],"updated_at"?: string
+                  }
+                  Update: {
+                    "assigned_user_id"?: string | null,"created_at"?: string,"created_by"?: string | null,"do_not_contact"?: boolean,"do_not_contact_at"?: string | null,"full_name"?: string,"id"?: string,"is_owner"?: boolean,"is_prospect"?: boolean,"merged_at"?: string | null,"merged_into_id"?: string | null,"notes"?: string,"organization_id"?: string,"source"?: Database["public"]['Enums']["contact_source"],"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "contacts_organization_id_assigned_user_id_fkey"
+      columns: ["organization_id","assigned_user_id"]
+isOneToOne: false
+      referencedRelation: "memberships"
+      referencedColumns: ["organization_id","user_id"]
+    },{
+      foreignKeyName: "contacts_organization_id_fkey"
+      columns: ["organization_id"]
+isOneToOne: false
+      referencedRelation: "organizations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "contacts_organization_id_merged_into_id_fkey"
+      columns: ["organization_id","merged_into_id"]
+isOneToOne: false
+      referencedRelation: "contacts"
+      referencedColumns: ["organization_id","id"]
+    }
+                  ]
+                },"duplicate_reports": {
+                  Row: {
+                    "contact_a_id": string,"contact_b_id": string,"created_at": string,"id": string,"organization_id": string,"reason": string,"reported_by": string | null,"resolved_at": string | null,"resolved_by": string | null,"status": Database["public"]['Enums']["duplicate_report_status"]
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "contact_a_id": string,"contact_b_id": string,"created_at"?: string,"id"?: string,"organization_id": string,"reason"?: string,"reported_by"?: string | null,"resolved_at"?: string | null,"resolved_by"?: string | null,"status"?: Database["public"]['Enums']["duplicate_report_status"]
+                  }
+                  Update: {
+                    "contact_a_id"?: string,"contact_b_id"?: string,"created_at"?: string,"id"?: string,"organization_id"?: string,"reason"?: string,"reported_by"?: string | null,"resolved_at"?: string | null,"resolved_by"?: string | null,"status"?: Database["public"]['Enums']["duplicate_report_status"]
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "duplicate_reports_organization_id_contact_a_id_fkey"
+      columns: ["organization_id","contact_a_id"]
+isOneToOne: false
+      referencedRelation: "contacts"
+      referencedColumns: ["organization_id","id"]
+    },{
+      foreignKeyName: "duplicate_reports_organization_id_contact_b_id_fkey"
+      columns: ["organization_id","contact_b_id"]
+isOneToOne: false
+      referencedRelation: "contacts"
+      referencedColumns: ["organization_id","id"]
+    },{
+      foreignKeyName: "duplicate_reports_organization_id_fkey"
       columns: ["organization_id"]
 isOneToOne: false
       referencedRelation: "organizations"
@@ -337,6 +479,9 @@ isOneToOne: false
 "complete_job":
 { Args: { "p_job_id": string,"p_worker_id": string }; Returns: boolean
                            },
+"create_contact":
+{ Args: { "p_assigned_user_id"?: string,"p_emails"?: (string)[],"p_full_name": string,"p_is_owner"?: boolean,"p_is_prospect"?: boolean,"p_notes"?: string,"p_organization_id": string,"p_phones"?: (string)[],"p_source"?: Database["public"]['Enums']["contact_source"] }; Returns: string
+                           },
 "create_organization":
 { Args: { "p_legal_document_ids": (string)[],"p_name": string,"p_slug_base": string }; Returns: string
                            },
@@ -363,6 +508,9 @@ isOneToOne: false
               "email": string,"expires_at": string,"organization_name": string,"role": Database["public"]['Enums']["member_role"],"status": string
             }[]
                            },
+"merge_contacts":
+{ Args: { "p_keep_id": string,"p_merge_id": string }; Returns: string
+                           },
 "my_organizations":
 { Args: Record<PropertyKey, never>; Returns: {
               "name": string,"organization_id": string,"role": Database["public"]['Enums']["member_role"],"slug": string,"state": Database["public"]['Enums']["account_state"]
@@ -386,7 +534,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "account_state": "trial"|"active"|"read_only"|"blocked"|"pending_deletion","audit_scope": "organization"|"platform","job_status": "pending"|"running"|"succeeded"|"failed"|"cancelled","legal_document_kind": "terms"|"privacy","member_role": "owner"|"agent"|"admin"|"supervisor"|"staff","membership_status": "active"|"deactivated","stage_kind": "open"|"won"|"lost"
+            "account_state": "trial"|"active"|"read_only"|"blocked"|"pending_deletion","audit_scope": "organization"|"platform","contact_source": "manual"|"whatsapp"|"import","duplicate_report_status": "open"|"merged"|"dismissed","job_status": "pending"|"running"|"succeeded"|"failed"|"cancelled","legal_document_kind": "terms"|"privacy","member_role": "owner"|"agent"|"admin"|"supervisor"|"staff","membership_status": "active"|"deactivated","stage_kind": "open"|"won"|"lost"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -502,7 +650,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "account_state": ["trial", "active", "read_only", "blocked", "pending_deletion"],"audit_scope": ["organization", "platform"],"job_status": ["pending", "running", "succeeded", "failed", "cancelled"],"legal_document_kind": ["terms", "privacy"],"member_role": ["owner", "agent", "admin", "supervisor", "staff"],"membership_status": ["active", "deactivated"],"stage_kind": ["open", "won", "lost"]
+            "account_state": ["trial", "active", "read_only", "blocked", "pending_deletion"],"audit_scope": ["organization", "platform"],"contact_source": ["manual", "whatsapp", "import"],"duplicate_report_status": ["open", "merged", "dismissed"],"job_status": ["pending", "running", "succeeded", "failed", "cancelled"],"legal_document_kind": ["terms", "privacy"],"member_role": ["owner", "agent", "admin", "supervisor", "staff"],"membership_status": ["active", "deactivated"],"stage_kind": ["open", "won", "lost"]
           }
         }
 } as const

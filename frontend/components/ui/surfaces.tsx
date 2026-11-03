@@ -55,6 +55,8 @@ const badgeVariants = cva('inline-flex items-center rounded-full border px-2 py-
       success: 'border-transparent bg-success text-success-foreground',
       warning: 'border-transparent bg-warning text-warning-foreground',
       destructive: 'border-transparent bg-destructive text-destructive-foreground',
+      brand: 'border-transparent bg-primary-soft text-primary-soft-foreground',
+      highlight: 'border-transparent bg-highlight-soft text-highlight-soft-foreground',
     },
   },
   defaultVariants: { variant: 'default' },

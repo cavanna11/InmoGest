@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { PageHeader } from '@/components/ui/page-header.tsx';
 import { Badge, Card } from '@/components/ui/surfaces.tsx';
 import { cn } from '@/lib/utils.ts';
 import { PREVIEW_SECTIONS, type Cell, type Mock, type PreviewSlug, type Tone } from './sections.ts';
@@ -178,20 +179,19 @@ export function SectionPreview({ slug }: { slug: PreviewSlug }) {
   return (
     // grid-cols-1 (minmax(0, 1fr)): la tabla de la maqueta se desplaza dentro de su tarjeta, no la página.
     <div className="grid grid-cols-1 gap-6">
-      <div>
-        <h1 className="flex flex-wrap items-center gap-2 text-2xl font-semibold">
-          {section.title}
-          <Badge variant="warning">{'later' in section && section.later ? 'Después del lanzamiento' : 'Próximamente'}</Badge>
-        </h1>
-        <p className="mt-1 text-muted-foreground">{section.summary}</p>
-      </div>
+      <PageHeader
+        section={slug}
+        title={section.title}
+        description={section.summary}
+        badge={<Badge variant="highlight">{'later' in section && section.later ? 'Después del lanzamiento' : 'Próximamente'}</Badge>}
+      />
 
       <Card>
         <h2 className="text-sm font-semibold">Qué vas a poder hacer</h2>
         <ul className="mt-3 grid gap-2 text-sm">
           {section.features.map((feature) => (
             <li key={feature} className="flex gap-2">
-              <span aria-hidden="true" className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" />
+              <span aria-hidden="true" className="mt-1.5 size-2 shrink-0 rounded-full bg-highlight" />
               {feature}
             </li>
           ))}

@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
+import { themeScript } from '@/components/theme.tsx';
 import { brand } from '@/lib/brand.ts';
 import { isIndexable, siteUrl } from '@/lib/site.ts';
 import './globals.css';
@@ -38,15 +39,17 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#fbfaf7' },
-    { media: '(prefers-color-scheme: dark)', color: '#0b1413' },
-  ],
+  // Claro por defecto (el modo oscuro es una elección del usuario, components/theme.tsx).
+  themeColor: '#f6f9f8',
 };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="es-AR" className={jakarta.variable}>
+    // suppressHydrationWarning: el script de tema agrega data-theme antes de hidratar.
+    <html lang="es-AR" className={jakarta.variable} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="min-h-dvh font-sans">{children}</body>
     </html>
   );
