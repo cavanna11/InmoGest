@@ -9,7 +9,7 @@ import { emailSchema, invitedSignUpSchema, newPasswordSchema, signInSchema, sign
 import { isRegistrationOpen } from '@/lib/env.server.ts';
 import { createClient } from '@/lib/supabase/server.ts';
 import { clearActiveOrganizationCookie } from '@/lib/tenant.ts';
-import { getRegistrationLegalDocuments } from './queries.ts';
+import { getPendingLegalDocuments, getRegistrationLegalDocuments } from './queries.ts';
 
 const TOO_MANY = 'Hiciste demasiados intentos. Esperá unos minutos y probá de nuevo.';
 
@@ -100,6 +100,12 @@ export async function signInAction(_prev: FormState, formData: FormData): Promis
   if (error) return fail('El email o la contraseña no son correctos.');
 
   await clearActiveOrganizationCookie();
+  // El superadministrador entra a su panel; a una inmobiliaria solo con «Ingresar como».
+  if (!values.next || values.next === '/panel') {
+    const { data: auth } = await supabase.auth.getUser();
+    const { data: platformAdmin } = await supabase.from('platform_admins').select('user_id').eq('user_id', auth.user?.id ?? '').maybeSingle();
+    if (platformAdmin) redirect('/plataforma');
+  }
   redirect(safeNext(values.next));
 }
 
@@ -154,4 +160,17 @@ export async function signOutAction(): Promise<void> {
   await supabase.auth.signOut();
   await clearActiveOrganizationCookie();
   redirect('/ingresar');
+}
+
+/** Aceptación de los términos vigentes por el propio usuario (ADR 0009). */
+export async function acceptLegalAction(formData: FormData): Promise<void> {
+  if (formData.get('accept') !== 'on') redirect('/aceptar-terminos');
+  const supabase = await createClient();
+  const { data: auth } = await supabase.auth.getUser();
+  if (!auth.user) redirect('/ingresar');
+  const pending = await getPendingLegalDocuments(auth.user.id);
+  if (pending.length > 0) {
+    await supabase.from('legal_acceptances').insert(pending.map((document) => ({ user_id: auth.user.id, legal_document_id: document.id })));
+  }
+  redirect('/panel');
 }

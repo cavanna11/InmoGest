@@ -9,6 +9,8 @@ import { Alert, Badge, Card, CardDescription, CardTitle } from '@/components/ui/
 import { createClient } from '@/lib/supabase/server.ts';
 import { PAYMENT_STATUS } from '@/modules/billing/schemas.ts';
 import { changePlanAction, enterAsAction, extendTrialAction, reviewPaymentAction, setSuspendedAction } from '@/modules/platform/actions.ts';
+import { DeleteForeverForm, OwnerLinkForm } from '@/modules/platform/components.tsx';
+import { setDeletedAction } from '@/modules/platform/create-actions.ts';
 import { requirePlatformAdmin, STATE_LABELS, STATE_VARIANTS } from '@/modules/platform/guard.ts';
 
 export const metadata = { title: 'Inmobiliaria' };
@@ -40,16 +42,19 @@ export default async function PlatformOrganizationPage({ params, searchParams }:
   const hidden = <input type="hidden" name="organizationId" value={id} />;
   const suspendFormId = 'suspend-form';
   const enterFormId = 'enter-form';
+  const softDeleteFormId = 'soft-delete-form';
 
   return (
     <div className="grid grid-cols-1 gap-6">
-      <Link href="/plataforma" className="text-sm text-muted-foreground hover:text-foreground">
+      <Link href="/plataforma/inmobiliarias" className="text-sm text-muted-foreground hover:text-foreground">
         ← Inmobiliarias
       </Link>
       <div>
         <h1 className="flex flex-wrap items-center gap-2 text-2xl font-semibold tracking-tight">
           {organization.name}
-          <Badge variant={STATE_VARIANTS[organization.state]}>{STATE_LABELS[organization.state]}</Badge>
+          <Badge variant={organization.deleted_at ? 'destructive' : STATE_VARIANTS[organization.state]}>
+            {organization.deleted_at ? 'Dada de baja' : organization.suspended_at ? 'Suspendida' : STATE_LABELS[organization.state]}
+          </Badge>
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
           {organization.owner_email ?? 'Sin dueño activo'} · alta el {formatDate(organization.created_at)} · prueba hasta el {formatDate(organization.trial_ends_at)}
@@ -173,6 +178,47 @@ export default async function PlatformOrganizationPage({ params, searchParams }:
                 triggerVariant="default"
               />
             </form>
+          </Card>
+          <Card>
+            <CardTitle>Acceso del dueño</CardTitle>
+            <CardDescription>Enlace de un solo uso para el primer ingreso o una contraseña olvidada. Mandáselo por WhatsApp.</CardDescription>
+            <div className="mt-3">
+              <OwnerLinkForm organizationId={id} />
+            </div>
+          </Card>
+          <Card className="border-destructive/50">
+            <CardTitle>Eliminar la cuenta</CardTitle>
+            {organization.deleted_at ? (
+              <>
+                <CardDescription>Dada de baja el {formatDate(organization.deleted_at)}. Podés restaurarla con todos sus datos o eliminarla para siempre: eso no se puede deshacer.</CardDescription>
+                <form action={setDeletedAction} className="mt-3">
+                  {hidden}
+                  <input type="hidden" name="deleted" value="0" />
+                  <Button type="submit" variant="outline" size="sm">
+                    Restaurar
+                  </Button>
+                </form>
+                <div className="mt-4">
+                  <DeleteForeverForm organizationId={id} name={organization.name} />
+                </div>
+              </>
+            ) : (
+              <>
+                <CardDescription>Primero se da de baja: nadie puede entrar y los datos se conservan. Después podés restaurarla o eliminarla para siempre.</CardDescription>
+                <form id={softDeleteFormId} action={setDeletedAction} className="mt-3">
+                  {hidden}
+                  <input type="hidden" name="deleted" value="1" />
+                  <ConfirmSubmit
+                    formId={softDeleteFormId}
+                    title={`¿Dar de baja ${organization.name}?`}
+                    description="Nadie de la inmobiliaria va a poder ingresar y su página pública deja de verse. Los datos se conservan hasta que la restaures o la elimines."
+                    confirmLabel="Dar de baja"
+                    trigger="Dar de baja"
+                    destructive
+                  />
+                </form>
+              </>
+            )}
           </Card>
         </div>
       ) : null}

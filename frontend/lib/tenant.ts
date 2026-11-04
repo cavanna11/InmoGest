@@ -3,6 +3,7 @@ import type { Database } from '@inmogest/shared';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { requireUser, type CurrentUser } from './auth.ts';
+import { getPlatformRole } from './platform.ts';
 import { createClient } from './supabase/server.ts';
 
 /**
@@ -90,6 +91,7 @@ export async function requireActiveOrganization(
   const user = await requireUser(next);
   const { active, organizations } = await resolveActiveOrganization();
   if (!active) {
+    if (organizations.length === 0 && (await getPlatformRole()).isAdmin) redirect('/plataforma');
     redirect(organizations.length === 0 ? '/crear-inmobiliaria' : '/seleccionar-inmobiliaria');
   }
   return { user, organization: active, organizations };

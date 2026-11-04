@@ -906,9 +906,44 @@ isOneToOne: false
               "assigned_user_id": string,"stage_id": string,"total": number
             }[]
                            },
+"platform_activity":
+{ Args: { "p_limit"?: number }; Returns: {
+              "action": string,"actor_email": string,"created_at": string,"entity_type": string,"id": string,"metadata": Json,"organization_name": string
+            }[]
+                           },
+"platform_add_admin":
+{ Args: { "p_user_id": string }; Returns: undefined
+                           },
+"platform_create_organization":
+{ Args: { "p_name": string,"p_owner_user_id": string,"p_plan_code": string,"p_slug_base": string,"p_trial_days"?: number }; Returns: string
+                           },
+"platform_delete_organization":
+{ Args: { "p_confirm_name": string,"p_organization_id": string }; Returns: {
+              "bucket": string,"path": string
+            }[]
+                           },
+"platform_find_user":
+{ Args: { "p_email": string }; Returns: string
+                           },
+"platform_organization_owner":
+{ Args: { "p_organization_id": string }; Returns: {
+              "email": string,"user_id": string
+            }[]
+                           },
 "platform_organizations":
 { Args: Record<PropertyKey, never>; Returns: {
-              "contacts_count": number,"created_at": string,"id": string,"name": string,"owner_email": string,"paid_until": string,"pending_payments": number,"plan_code": string,"properties_count": number,"slug": string,"state": Database["public"]['Enums']["account_state"],"suspended_at": string,"trial_ends_at": string,"users_count": number
+              "contacts_count": number,"created_at": string,"deleted_at": string,"id": string,"name": string,"owner_email": string,"paid_until": string,"pending_payments": number,"plan_code": string,"properties_count": number,"slug": string,"state": Database["public"]['Enums']["account_state"],"suspended_at": string,"trial_ends_at": string,"users_count": number
+            }[]
+                           },
+"platform_remove_admin":
+{ Args: { "p_user_id": string }; Returns: undefined
+                           },
+"platform_set_deleted":
+{ Args: { "p_deleted": boolean,"p_organization_id": string }; Returns: undefined
+                           },
+"platform_team":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "created_at": string,"email": string,"full_name": string,"is_principal": boolean,"user_id": string
             }[]
                            },
 "property_duplicate_candidates":

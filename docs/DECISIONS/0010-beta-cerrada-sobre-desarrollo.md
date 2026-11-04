@@ -14,6 +14,8 @@ C&C quiere ofrecer pruebas a inmobiliarias antes de tener el dominio `inmopanel.
 - **Usuarios del seed bloqueados:** su contraseña está en el repositorio. `npm run beta -- secure` les pone una contraseña aleatoria, los suspende y les quita el rol de plataforma. `db:push --seed` solo se aplica a un Supabase local.
 - **Textos legales de la beta** (`backend/supabase/legal/beta-1`): redactados para la beta y publicados como vigentes (`npm run beta -- legal beta-1`) por decisión del dueño de C&C, **sin revisión profesional**. Deben revisarse antes del lanzamiento comercial (PRD §10).
 
+- **Súper panel (03/11/2026):** el alta, los enlaces de acceso, la suspensión, la baja y la eliminación definitiva se hacen desde `/plataforma`. El superadministrador entra directo ahí y no necesita una inmobiliaria propia; a las demás entra con «Ingresar como». La eliminación definitiva exige dar de baja antes y escribir el nombre de la cuenta.
+
 ## Alternativas consideradas
 
 - **Proyecto de Supabase de producción nuevo:** separa datos reales de los de prueba; se posterga por decisión de C&C.

@@ -16,7 +16,7 @@ export const STATE_LABELS: Record<string, string> = {
   active: 'Activa',
   read_only: 'Solo lectura',
   blocked: 'Bloqueada',
-  pending_deletion: 'Para eliminar',
+  pending_deletion: 'Vencida, para eliminar',
 };
 
 export const STATE_VARIANTS: Record<string, 'highlight' | 'success' | 'warning' | 'destructive' | 'default'> = {

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import { cache, Suspense } from 'react';
 import { BrandMark } from '@/components/brand-mark.tsx';
 import { ThemeToggle } from '@/components/theme.tsx';
@@ -7,6 +8,7 @@ import { Button } from '@/components/ui/button.tsx';
 import { getPlatformRole } from '@/lib/platform.ts';
 import { requireActiveOrganization } from '@/lib/tenant.ts';
 import { signOutAction } from '@/modules/auth/actions.ts';
+import { getPendingLegalDocuments } from '@/modules/auth/queries.ts';
 import { countUnread, syncReminders } from '@/modules/notifications/queries.ts';
 import { AccountBanner } from '@/modules/organization/account-banner.tsx';
 import { getOrganizationDetails } from '@/modules/organization/queries.ts';
@@ -49,7 +51,11 @@ function HeaderFallback() {
 }
 
 async function PanelHeader() {
-  const { organization, organizations } = await loadPanel();
+  const { user, organization, organizations } = await loadPanel();
+  // El dueño de una inmobiliaria creada por C&C acepta los términos al primer ingreso.
+  if (organization.isOwner && !organization.viaSupport && (await getPendingLegalDocuments(user.id)).length > 0) {
+    redirect('/aceptar-terminos');
+  }
   const [details, platform] = await Promise.all([getOrganizationDetails(organization.id), getPlatformRole()]);
 
   return (

@@ -27,3 +27,13 @@ export async function getRegistrationLegalDocuments(): Promise<LegalDocumentSumm
     isDraft: doc.is_draft,
   }));
 }
+
+/** Documentos vigentes que este usuario todavía no aceptó. */
+export async function getPendingLegalDocuments(userId: string) {
+  const current = await getRegistrationLegalDocuments();
+  if (!current) return [];
+  const supabase = await createClient();
+  const { data } = await supabase.from('legal_acceptances').select('legal_document_id').eq('user_id', userId);
+  const accepted = new Set((data ?? []).map((row) => row.legal_document_id));
+  return current.filter((document) => !accepted.has(document.id));
+}

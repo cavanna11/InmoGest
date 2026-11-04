@@ -35,7 +35,7 @@ El repositorio está conectado a Vercel desde el 01/11/2026.
 
 ## Beta cerrada (desde el 03/11/2026, ADR 0010)
 
-La beta usa el proyecto de Supabase de **desarrollo** y el deploy de producción de Vercel. Sin dominio no hay email transaccional, así que:
+La beta usa el proyecto de Supabase de **desarrollo** y el deploy de producción de Vercel. Sin dominio no hay email transaccional, así que las cuentas las da de alta C&C desde el súper panel (`/plataforma/inmobiliarias`), que genera el enlace de acceso para mandar por WhatsApp. El dueño acepta los términos al primer ingreso. El comando equivalente, para cuando no se puede usar el panel:
 
 1. **Alta de una inmobiliaria:** `npm run beta -- access <email> --name "Nombre" ` genera un enlace de un solo uso (no envía emails). Se manda por WhatsApp; la persona elige su contraseña y crea su inmobiliaria aceptando los términos vigentes. El enlace vence según "Email OTP Expiration" de Supabase Auth (1 hora por defecto): si vence, se vuelve a correr el comando.
 2. **Integrantes del equipo:** el dueño los invita desde Equipo; C&C da de alta su cuenta con el mismo comando y la persona abre la invitación ya con sesión iniciada.

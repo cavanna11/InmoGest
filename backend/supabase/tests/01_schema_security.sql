@@ -58,7 +58,10 @@ select set_eq(
     'move_search_stage(uuid,uuid)', 'pipeline_metrics(uuid)', 'sync_my_reminders(uuid)',
     'log_import(uuid,text,integer,integer)',
     'payment_instructions()', 'organization_usage(uuid)', 'platform_organizations()',
-    'approve_payment(uuid,text)', 'reject_payment(uuid,text)'
+    'approve_payment(uuid,text)', 'reject_payment(uuid,text)',
+    'platform_find_user(text)', 'platform_create_organization(text,text,uuid,text,integer)',
+    'platform_organization_owner(uuid)', 'platform_set_deleted(uuid,boolean)', 'platform_delete_organization(uuid,text)',
+    'platform_activity(integer)', 'platform_team()', 'platform_add_admin(uuid)', 'platform_remove_admin(uuid)'
   ],
   'authenticated solo ejecuta las RPC previstas'
 );
