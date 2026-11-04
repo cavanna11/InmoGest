@@ -11,10 +11,10 @@ import { requirePublicEnv } from '../env.ts';
  * Para validar la identidad usar supabase.auth.getUser(), nunca solo la cookie (docs/SECURITY.md).
  */
 export async function createClient() {
-  const env = requirePublicEnv();
   // Siempre por pedido: la sesión de Supabase lee la hora (Date.now) y con cacheComponents eso no
-  // puede quedar en un prerender.
+  // puede quedar en un prerender. Va primero: sin variables de entorno, el build no debe fallar acá.
   await connection();
+  const env = requirePublicEnv();
   const cookieStore = await cookies();
 
   return createServerClient<Database>(env.supabaseUrl, env.supabasePublishableKey, {
