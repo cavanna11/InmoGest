@@ -53,7 +53,12 @@ select set_eq(
     'organization_members(uuid)',
     'create_contact(uuid,text,text[],text[],text,boolean,boolean,uuid,contact_source)', 'merge_contacts(uuid,uuid)',
     'merge_properties(uuid,uuid)', 'public_property(text,text)',
-    'property_duplicate_candidates(uuid,text,property_operation,property_type,uuid[],uuid)'
+    'property_duplicate_candidates(uuid,text,property_operation,property_type,uuid[],uuid)',
+    'save_client_search(uuid,uuid,uuid,property_operation,property_type[],numeric,numeric,text,numeric,smallint,smallint,text[],text[],text,uuid,text[])',
+    'move_search_stage(uuid,uuid)', 'pipeline_metrics(uuid)', 'sync_my_reminders(uuid)',
+    'log_import(uuid,text,integer,integer)',
+    'payment_instructions()', 'organization_usage(uuid)', 'platform_organizations()',
+    'approve_payment(uuid,text)', 'reject_payment(uuid,text)'
   ],
   'authenticated solo ejecuta las RPC previstas'
 );

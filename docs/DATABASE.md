@@ -26,7 +26,7 @@
 | `platform_admins` | Usuarios de C&C con acceso al panel. `is_principal` marca al superadministrador principal (único). |
 | `support_sessions` | Sesiones de «Ingresar como»: usuario, inmobiliaria, inicio, fin. Una abierta por usuario como máximo. |
 | `legal_documents` | Versiones de términos y política de privacidad. |
-| `payment_reports` | Pagos por transferencia informados por las inmobiliarias: plan, período, monto informado, comprobante (Storage privado), estado (pendiente, aprobado, rechazado), quién lo revisó. |
+| `payment_reports` | Pagos por transferencia informados por el dueño: plan, meses, monto, referencia, comprobante (bucket privado `payment-receipts`), estado (pendiente, aprobado, rechazado), quién lo revisó. `approve_payment` activa la suscripción. Migración `20261103160000_payments_platform.sql`. |
 
 ### Inmobiliaria, usuarios y cuenta
 
@@ -58,11 +58,11 @@
 | `client_search_locations` | Zonas de una búsqueda. |
 | `pipeline_stages` | Etapas del embudo por inmobiliaria: nombre, posición, `kind` (`open`, `won`, `lost`), activa. |
 | `stage_changes` | Historial de cambios de etapa. |
-| `match_results` | Coincidencia búsqueda ↔ propiedad: puntaje, deseables cumplidos/total, `over_budget`, cotización usada, explicación, estado (nueva, vista, enviada, descartada), versión del algoritmo. |
+| `match_results` | Coincidencia búsqueda ↔ propiedad: puntaje, deseables cumplidos/total, qué falta, `over_budget`, cotización usada, estado (nueva, vista, enviada, descartada), `stale` (dejó de coincidir: se conserva como historial), versión del algoritmo. Se calcula en la base al guardar (ADR 0011). |
 | `appointments` | Visitas (requieren contacto y propiedad) y otras citas; estado; `assigned_user_id`. |
 | `tasks` | Tareas con vencimiento, prioridad, estado; contacto/propiedad opcionales; `assigned_user_id`. |
 | `activities` | Historial por contacto (nota y llamada las cargan los usuarios; alta, asignación, baja y unificación las registra la base), con autor. Propiedad, mensajes y etapas se agregan en sus incrementos. |
-| `notifications` | Notificaciones internas por usuario, con clave de deduplicación. |
+| `notifications` | Notificaciones internas por usuario, con clave de deduplicación. Solo las escribe la base; cada persona ve y marca las suyas. |
 
 ### WhatsApp
 

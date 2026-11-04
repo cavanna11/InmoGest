@@ -36,6 +36,8 @@ export async function updateOrganizationAction(_prev: FormState, formData: FormD
       contact_phone: parsed.data.contactPhone,
       default_currency: parsed.data.defaultCurrency,
       agents_can_reassign: parsed.data.agentsCanReassign,
+      usd_ars_rate_enabled: parsed.data.usdRateEnabled,
+      usd_ars_rate: parsed.data.usdRate,
     })
     .eq('id', organization.id)
     .select('id');

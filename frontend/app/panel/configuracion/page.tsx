@@ -44,6 +44,8 @@ async function OrganizationSettings() {
               contactPhone: details.contact_phone ?? '',
               defaultCurrency: details.default_currency,
               agentsCanReassign: details.agents_can_reassign,
+              usdRateEnabled: details.usd_ars_rate_enabled,
+              usdRate: details.usd_ars_rate,
             }}
           />
         </div>

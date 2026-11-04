@@ -61,102 +61,6 @@ export const PREVIEW_SECTIONS = {
       ],
     },
   },
-  busquedas: {
-    slug: 'busquedas',
-    label: 'Búsquedas',
-    title: 'Búsquedas y coincidencias',
-    summary: 'Qué busca cada cliente y qué propiedades le sirven, con el motivo de cada coincidencia.',
-    features: [
-      'Criterios obligatorios y deseables, con tolerancia de presupuesto.',
-      'Coincidencias automáticas con puntaje y explicación.',
-      'Aviso de "superior al presupuesto" cuando corresponde.',
-      'Aviso al agente cuando entra una propiedad que coincide.',
-    ],
-    mock: {
-      kind: 'matches',
-      search: {
-        title: 'Ana G. busca departamento en Belgrano',
-        criteria: ['Venta', 'Belgrano', '3 ambientes', 'Hasta USD 100.000', 'Deseables: cochera, balcón, luminoso'],
-      },
-      results: [
-        { property: 'Departamento 3 amb. · Belgrano', detail: 'PRO-000123 · USD 98.000', score: '67 %', reason: 'Cumple los obligatorios · deseables 2 de 3 (falta cochera)', tone: 'highlight' },
-        { property: 'Departamento 3 amb. · Colegiales', detail: 'PRO-000119 · USD 104.000', score: '100 %', reason: 'Deseables 3 de 3 · superior al presupuesto (+4 %)', tone: 'warning' },
-      ],
-    },
-  },
-  oportunidades: {
-    slug: 'oportunidades',
-    label: 'Oportunidades',
-    title: 'Embudo comercial',
-    summary: 'Cada búsqueda avanza por las etapas de venta de la inmobiliaria.',
-    features: [
-      'Embudo predefinido, que el dueño puede renombrar, reordenar, ampliar o desactivar.',
-      'Etapas ganadas y perdidas para medir resultados.',
-      'Cada cambio de etapa queda en el historial.',
-    ],
-    mock: {
-      kind: 'kanban',
-      columns: [
-        { title: 'Nuevo contacto', cards: [{ title: 'Diego R.', meta: 'Alquiler · Caballito' }, { title: '+54 9 11 5555-0142', meta: 'Consulta por Palermo' }] },
-        { title: 'Calificado', cards: [{ title: 'Carla M.', meta: 'Compra · hasta USD 120.000' }] },
-        { title: 'Visita coordinada', cards: [{ title: 'Ana G.', meta: 'Sábado 11:00 · PRO-000123' }] },
-        { title: 'Negociación', cards: [{ title: 'Familia S.', meta: 'Oferta USD 140.000 · PRO-000118' }] },
-      ],
-    },
-  },
-  agenda: {
-    slug: 'agenda',
-    label: 'Agenda',
-    title: 'Agenda de visitas y tareas',
-    summary: 'Visitas, llamadas y tareas del equipo, con recordatorios.',
-    features: [
-      'Visitas y tareas asignadas a cada agente.',
-      'Recordatorios y aviso de tareas vencidas dentro del panel.',
-      'Vista por agente o de todo el equipo.',
-    ],
-    mock: {
-      kind: 'agenda',
-      days: [
-        { day: 'Hoy', items: [{ time: '10:00', title: 'Llamar a Jorge P. por las fotos del PH', meta: 'Tarea · Martín' }, { time: '17:30', title: 'Visita PRO-000122 con Carla M.', meta: 'Visita · Laura' }] },
-        { day: 'Sábado', items: [{ time: '11:00', title: 'Visita PRO-000123 con Ana G.', meta: 'Visita · Laura' }] },
-      ],
-    },
-  },
-  notificaciones: {
-    slug: 'notificaciones',
-    label: 'Notificaciones',
-    title: 'Notificaciones',
-    summary: 'Lo que necesita tu atención, sin salir del panel.',
-    features: ['Mensajes nuevos.', 'Coincidencias nuevas.', 'Tareas vencidas.', 'WhatsApp desconectado.'],
-    mock: {
-      kind: 'list',
-      items: [
-        { title: 'Nueva coincidencia para la búsqueda de Ana G.', meta: 'Hace 5 minutos', chip: { chip: 'Coincidencia', tone: 'highlight' } },
-        { title: 'Mensaje nuevo de +54 9 11 5555-0142', meta: 'Hace 12 minutos', chip: { chip: 'WhatsApp', tone: 'brand' } },
-        { title: 'Tarea vencida: enviar tasación a Jorge P.', meta: 'Ayer', chip: { chip: 'Tarea', tone: 'warning' } },
-      ],
-    },
-  },
-  importar: {
-    slug: 'importar',
-    label: 'Importar y exportar',
-    title: 'Importar y exportar',
-    summary: 'Traé tus planillas actuales y llevate tus datos cuando quieras.',
-    features: [
-      'Importación de contactos y propiedades desde CSV.',
-      'Vista previa antes de importar y errores explicados fila por fila.',
-      'Exportación de contactos y propiedades a CSV.',
-    ],
-    mock: {
-      kind: 'table',
-      columns: ['Fila', 'Nombre', 'Teléfono', 'Resultado'],
-      rows: [
-        ['2', 'Ana G.', '11 5555-0188', { chip: 'Lista para importar', tone: 'success' }],
-        ['3', 'Jorge P.', '11 5555-0123', { chip: 'Posible duplicado', tone: 'warning' }],
-        ['4', 'Sin nombre', '—', { chip: 'Falta el nombre' }],
-      ],
-    },
-  },
   automaticos: {
     slug: 'automaticos',
     label: 'Mensajes automáticos',
@@ -193,26 +97,6 @@ export const PREVIEW_SECTIONS = {
       items: [
         { title: '+54 9 11 5555-0100 · Línea principal', meta: 'Conectado desde el 01/11', chip: { chip: 'Conectado', tone: 'success' } },
         { title: 'Mensajes automáticos de hoy', meta: '12 de 30 permitidos por día' },
-      ],
-    },
-  },
-  plan: {
-    slug: 'plan',
-    label: 'Plan y pago',
-    title: 'Plan y pago',
-    summary: 'Tu plan, cuánto usás de cada límite y el informe de pago.',
-    features: [
-      'Planes Inicial, Profesional y Empresa.',
-      'Uso de cada límite del plan.',
-      'Informe de pago por transferencia y activación por C&C.',
-    ],
-    mock: {
-      kind: 'list',
-      items: [
-        { title: 'Plan Profesional · prueba gratis', meta: 'Hasta el fin de la prueba', chip: { chip: 'Prueba', tone: 'brand' } },
-        { title: 'Usuarios', meta: '3 de 5' },
-        { title: 'Propiedades', meta: '128 de 500' },
-        { title: 'Último informe de pago', meta: 'Transferencia · en revisión', chip: { chip: 'En revisión', tone: 'warning' } },
       ],
     },
   },

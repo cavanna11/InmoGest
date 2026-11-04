@@ -13,6 +13,8 @@ import { removeChannelAction } from '@/modules/contacts/actions.ts';
 import { ActivityForm, AddChannelForm, ContactEditForm, ReportDuplicateForm } from '@/modules/contacts/components.tsx';
 import { getActiveMembers, getActivities, getContact, getSimilarContacts } from '@/modules/contacts/queries.ts';
 import { getOrganizationDetails } from '@/modules/organization/queries.ts';
+import { budgetLabel } from '@/modules/searches/format.ts';
+import { getStages, listSearches } from '@/modules/searches/queries.ts';
 
 export const metadata: Metadata = { title: 'Contacto' };
 
@@ -41,6 +43,12 @@ function activityText(activity: { kind: string; body: string; metadata: unknown 
       return meta.to ? `Asignado a ${names.get(String(meta.to)) ?? 'un miembro del equipo'}.` : 'Quedó sin asignar.';
     case 'do_not_contact':
       return meta.value ? 'Marcado como "no contactar".' : 'Se quitó la marca "no contactar".';
+    case 'search_created':
+      return 'Se cargó una búsqueda.';
+    case 'stage_changed':
+      return `Búsqueda movida a "${String(meta.stage ?? 'otra etapa')}".`;
+    case 'appointment':
+      return meta.status === 'done' ? 'Visita realizada.' : meta.status === 'cancelled' ? 'Visita cancelada.' : meta.status === 'no_show' ? 'No asistió a la visita.' : 'Visita agendada.';
     case 'contact_merged':
       return `Se unificó con "${String(meta.merged_name ?? 'otro contacto')}".`;
     default:
@@ -51,17 +59,19 @@ function activityText(activity: { kind: string; body: string; metadata: unknown 
 async function Contact({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   if (!z.uuid().safeParse(id).success) notFound();
-  const { organization } = await requireActiveOrganization(`/panel/contactos/${id}`);
+  const { user, organization } = await requireActiveOrganization(`/panel/contactos/${id}`);
   const contact = await getContact(organization.id, id);
   if (!contact) notFound();
   // Un contacto unificado lleva al que lo absorbió.
   if (contact.merged_into_id) redirect(`/panel/contactos/${contact.merged_into_id}`);
 
-  const [members, activities, details, similar] = await Promise.all([
+  const [members, activities, details, similar, { searches }, stages] = await Promise.all([
     getActiveMembers(organization.id),
     getActivities(organization.id, id),
     getOrganizationDetails(organization.id),
     getSimilarContacts(organization.id, id, contact.full_name),
+    listSearches(organization.id, user.id, { contactId: id }),
+    getStages(organization.id),
   ]);
   const names = new Map(members.map((member) => [member.userId, member.name]));
   const canWrite = organization.canWrite;
@@ -128,6 +138,33 @@ async function Contact({ params }: { params: Promise<{ id: string }> }) {
         </div>
 
         <div className="grid content-start gap-6">
+          <Card>
+            <div className="flex items-center justify-between gap-2">
+              <CardTitle>Búsquedas</CardTitle>
+              {canWrite ? (
+                <Button asChild size="sm" variant="secondary">
+                  <Link href={`/panel/busquedas/nueva?contacto=${contact.id}`}>Nueva</Link>
+                </Button>
+              ) : null}
+            </div>
+            <ul className="mt-3 grid gap-2">
+              {searches.length === 0 ? <li className="text-sm text-muted-foreground">Todavía no tiene búsquedas.</li> : null}
+              {searches.map((search) => {
+                const matches = search.match_results.filter((match) => !match.stale && match.status !== 'dismissed').length;
+                return (
+                  <li key={search.id}>
+                    <Link href={`/panel/busquedas/${search.id}`} className="grid gap-1 rounded-md bg-muted px-3 py-2 text-sm hover:bg-primary-soft">
+                      <span className="font-medium">{budgetLabel(search.budget_min, search.budget_max, search.currency)}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {stages.find((stage) => stage.id === search.stage_id)?.name} · {matches === 1 ? '1 coincidencia' : `${matches} coincidencias`}
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </Card>
+
           <Card>
             <CardTitle>Teléfonos</CardTitle>
             <ul className="mt-3 grid gap-2">

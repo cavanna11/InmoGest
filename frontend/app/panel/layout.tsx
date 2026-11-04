@@ -4,8 +4,10 @@ import { cache, Suspense } from 'react';
 import { BrandMark } from '@/components/brand-mark.tsx';
 import { ThemeToggle } from '@/components/theme.tsx';
 import { Button } from '@/components/ui/button.tsx';
+import { getPlatformRole } from '@/lib/platform.ts';
 import { requireActiveOrganization } from '@/lib/tenant.ts';
 import { signOutAction } from '@/modules/auth/actions.ts';
+import { countUnread, syncReminders } from '@/modules/notifications/queries.ts';
 import { AccountBanner } from '@/modules/organization/account-banner.tsx';
 import { getOrganizationDetails } from '@/modules/organization/queries.ts';
 import { PanelNav } from '@/modules/organization/panel-nav.tsx';
@@ -48,7 +50,7 @@ function HeaderFallback() {
 
 async function PanelHeader() {
   const { organization, organizations } = await loadPanel();
-  const details = await getOrganizationDetails(organization.id);
+  const [details, platform] = await Promise.all([getOrganizationDetails(organization.id), getPlatformRole()]);
 
   return (
     <header className="border-b border-border bg-surface/90 backdrop-blur">
@@ -67,6 +69,11 @@ async function PanelHeader() {
           ) : null}
         </div>
         <div className="flex items-center gap-2">
+          {platform.isAdmin ? (
+            <Button asChild variant="ghost" size="sm">
+              <Link href="/plataforma">Plataforma</Link>
+            </Button>
+          ) : null}
           <ThemeToggle />
           <form action={signOutAction}>
             <Button type="submit" variant="ghost" size="sm">
@@ -82,5 +89,7 @@ async function PanelHeader() {
 
 async function PanelSidebar() {
   const { organization } = await loadPanel();
-  return <PanelNav isOwner={organization.isOwner} />;
+  // Recordatorios de agenda: sin worker se generan al abrir el panel (ADR 0011).
+  await syncReminders(organization.id);
+  return <PanelNav isOwner={organization.isOwner} unread={await countUnread(organization.id)} />;
 }

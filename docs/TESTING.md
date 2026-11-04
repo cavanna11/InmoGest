@@ -46,6 +46,10 @@ typecheck y lint OK · unit 96/96 · build OK · pgTAP 170 aserciones, 0 fallas 
 
 typecheck y lint OK · unit 151/151 (incluye contraste WCAG de los tokens) · build OK · pgTAP 206 aserciones, 0 fallas (8 archivos) · integración 2/2 · E2E públicos 8/8. Los E2E `@auth` todavía no corrieron: corren en CI en el próximo push a `main`.
 
+### Resultados de los incrementos 1.4, 1.5, 1.6 y 1.8 (03/11/2026)
+
+typecheck y lint OK · unit 235/235 · build OK · pgTAP 391 aserciones, 0 fallas (14 archivos) · E2E públicos 14/14 · pgTAP nuevos: `12_searches_matching.sql` (criterios F-12 y F-31 del PRD, embudo, notificaciones, aislamiento, unificaciones), `13_agenda.sql`, `14_payments_platform.sql` · recorrido manual en local: contacto → propiedad → búsqueda → coincidencia 67 % con motivo y aviso, tablero del embudo, visita y tarea con recordatorios, importación con errores por fila, exportación, plan y pago. No verificado en pantalla: el panel /plataforma con rol de administrador (sus RPC están cubiertas por pgTAP).
+
 ### Resultados del incremento 1.3 — propiedades y página pública (03/11/2026)
 
 typecheck y lint OK · unit 203/203 · build OK · pgTAP 313 aserciones, 0 fallas (11 archivos; `11_properties.sql`: código y slug estables, historial de precio y estado, publicar exige precio, propietarios, duplicados por dirección o por propietario+operación+tipo, aislamiento, fotos fuera de la carpeta de la inmobiliaria, fusión solo del dueño, página pública sin borradores ni pausadas y sin dirección si no se eligió, límite del plan) · E2E públicos 14/14 · recorrido manual en local: alta, fotos subidas desde el navegador y página pública. No verificado en pantalla: el aviso de duplicado en vivo del formulario (cubierto por pgTAP).

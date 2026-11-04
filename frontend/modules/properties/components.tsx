@@ -26,7 +26,7 @@ function amountValue(value: number | null): string {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <fieldset className="grid gap-4 rounded-lg border border-border p-4 sm:p-5">
+    <fieldset className="grid min-w-0 gap-4 rounded-lg border border-border p-4 sm:p-5">
       <legend className="px-1 text-sm font-semibold text-primary">{title}</legend>
       {children}
     </fieldset>

@@ -19,6 +19,7 @@ import { CopyPublicLink, ImageUploader, PropertyForm } from '@/modules/propertie
 import { priceLabel } from '@/modules/properties/format.ts';
 import { publicImageUrl } from '@/modules/properties/images.ts';
 import { OPERATION_LABELS, STATUS_LABELS, STATUS_TONES, TYPE_LABELS, type PropertyStatus } from '@/modules/properties/labels.ts';
+import { getPropertyMatches } from '@/modules/searches/queries.ts';
 import { getDuplicateCandidates, getProperty, getPropertyChanges, organizationSlug, searchContacts } from '@/modules/properties/queries.ts';
 
 export const metadata: Metadata = { title: 'Propiedad' };
@@ -75,7 +76,7 @@ async function Property({
   const query = await searchParams;
   const ownerQuery = typeof query.propietario === 'string' ? query.propietario : '';
   const ownerIds = property.property_owners.map((owner) => owner.contact_id);
-  const [members, details, changes, slug, origin, duplicates, ownerResults] = await Promise.all([
+  const [members, details, changes, slug, origin, duplicates, ownerResults, matches] = await Promise.all([
     getActiveMembers(organization.id),
     getOrganizationDetails(organization.id),
     getPropertyChanges(organization.id, id),
@@ -83,6 +84,7 @@ async function Property({
     appOrigin(),
     getDuplicateCandidates(organization.id, property, ownerIds),
     searchContacts(organization.id, ownerQuery),
+    getPropertyMatches(organization.id, id),
   ]);
   const names = new Map(members.map((member) => [member.userId, member.name]));
   const canWrite = organization.canWrite;
@@ -183,6 +185,24 @@ async function Property({
         </div>
 
         <div className="grid content-start gap-6">
+          <Card className={matches.length > 0 ? 'border-highlight/50' : undefined}>
+            <CardTitle>Clientes que la buscan</CardTitle>
+            <ul className="mt-3 grid gap-2">
+              {matches.length === 0 ? <li className="text-sm text-muted-foreground">Por ahora ninguna búsqueda activa coincide.</li> : null}
+              {matches.map((match) => (
+                <li key={match.id}>
+                  <Link href={`/panel/busquedas/${match.search_id}`} className="flex items-center justify-between gap-2 rounded-md bg-muted px-3 py-2 text-sm hover:bg-primary-soft">
+                    <span className="font-medium">{match.client_searches?.contacts?.full_name ?? 'Cliente'}</span>
+                    <span className="flex items-center gap-1">
+                      {match.over_budget ? <Badge variant="warning">Sobre presupuesto</Badge> : null}
+                      <Badge variant="highlight">{match.score} %</Badge>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </Card>
+
           <Card>
             <CardTitle>Propietarios</CardTitle>
             <ul className="mt-3 grid gap-2">

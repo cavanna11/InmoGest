@@ -70,14 +70,34 @@ export const signInSchema = z.object({
   password: z.string().min(1, 'Ingresá tu contraseña.').max(200),
 });
 
-export const organizationSettingsSchema = z.object({
+export const organizationSettingsSchema = z
+  .object({
   name: organizationNameSchema,
   slug: slugSchema,
   contactEmail: z.union([z.literal(''), emailSchema]).transform((v) => (v === '' ? null : v)),
   contactPhone: optionalPhoneSchema,
   defaultCurrency: z.enum(['ARS', 'USD'], { message: 'Elegí una moneda.' }),
   agentsCanReassign: z.literal('on').optional().transform((v) => v === 'on'),
-});
+  // Cotización manual USD/ARS para comparar búsquedas y propiedades en distinta moneda (F-31).
+  usdRateEnabled: z.literal('on').optional().transform((v) => v === 'on'),
+  usdRate: z
+    .string()
+    .trim()
+    .optional()
+    .transform((value, ctx) => {
+      if (!value) return null;
+      const parsed = Number(value.replace(/\./g, '').replace(',', '.'));
+      if (!Number.isFinite(parsed) || parsed <= 0) {
+        ctx.addIssue({ code: 'custom', message: 'Ingresá una cotización válida.' });
+        return z.NEVER;
+      }
+      return parsed;
+    }),
+  })
+  .refine((value) => !value.usdRateEnabled || value.usdRate !== null, {
+    message: 'Para habilitarla, cargá la cotización.',
+    path: ['usdRate'],
+  });
 
 export const invitationSchema = z.object({
   email: emailSchema,

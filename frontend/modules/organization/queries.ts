@@ -5,7 +5,7 @@ export async function getOrganizationDetails(organizationId: string) {
   const supabase = await createClient();
   const { data } = await supabase
     .from('organizations')
-    .select('id, name, slug, logo_path, contact_email, contact_phone, default_currency, agents_can_reassign, trial_ends_at, paid_until')
+    .select('id, name, slug, logo_path, contact_email, contact_phone, default_currency, agents_can_reassign, usd_ars_rate_enabled, usd_ars_rate, trial_ends_at, paid_until')
     .eq('id', organizationId)
     .maybeSingle();
   return data;

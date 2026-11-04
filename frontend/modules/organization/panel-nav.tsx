@@ -15,7 +15,7 @@ function navGroups(isOwner: boolean): Array<{ title: string; items: NavItem[] }>
       title: 'General',
       items: [
         { href: '/panel', label: 'Inicio' },
-        { href: '/panel/notificaciones', label: 'Notificaciones', soon: true },
+        { href: '/panel/notificaciones', label: 'Notificaciones' },
       ],
     },
     {
@@ -24,15 +24,15 @@ function navGroups(isOwner: boolean): Array<{ title: string; items: NavItem[] }>
         { href: '/panel/conversaciones', label: 'Conversaciones', soon: true },
         { href: '/panel/contactos', label: 'Contactos' },
         { href: '/panel/propiedades', label: 'Propiedades' },
-        { href: '/panel/busquedas', label: 'Búsquedas', soon: true },
-        { href: '/panel/oportunidades', label: 'Oportunidades', soon: true },
-        { href: '/panel/agenda', label: 'Agenda', soon: true },
+        { href: '/panel/busquedas', label: 'Búsquedas' },
+        { href: '/panel/oportunidades', label: 'Oportunidades' },
+        { href: '/panel/agenda', label: 'Agenda' },
       ],
     },
     {
       title: 'Herramientas',
       items: [
-        { href: '/panel/importar', label: 'Importar y exportar', soon: true },
+        ...(isOwner ? [{ href: '/panel/importar', label: 'Importar y exportar' }] : []),
         { href: '/panel/automaticos', label: 'Mensajes automáticos', soon: true },
       ],
     },
@@ -44,7 +44,7 @@ function navGroups(isOwner: boolean): Array<{ title: string; items: NavItem[] }>
               { href: '/panel/configuracion', label: 'Inmobiliaria' },
               { href: '/panel/equipo', label: 'Equipo' },
               { href: '/panel/whatsapp', label: 'WhatsApp', soon: true },
-              { href: '/panel/plan', label: 'Plan y pago', soon: true },
+              { href: '/panel/plan', label: 'Plan y pago' },
             ]
           : []),
         { href: '/panel/perfil', label: 'Mi perfil' },
@@ -54,7 +54,7 @@ function navGroups(isOwner: boolean): Array<{ title: string; items: NavItem[] }>
 }
 
 // En celulares, una fila desplazable; desde lg, barra lateral agrupada.
-export function PanelNav({ isOwner }: { isOwner: boolean }) {
+export function PanelNav({ isOwner, unread = 0 }: { isOwner: boolean; unread?: number }) {
   const pathname = usePathname();
   return (
     <nav aria-label="Secciones del panel" className="overflow-x-auto lg:overflow-visible">
@@ -84,6 +84,14 @@ export function PanelNav({ isOwner }: { isOwner: boolean }) {
                         <Icon aria-hidden="true" className={cn('size-4 shrink-0', current ? '' : 'text-primary')} />
                       ) : null}
                       <span className="flex-1">{item.label}</span>
+                      {item.href === '/panel/notificaciones' && unread > 0 ? (
+                        <span
+                          aria-label={`${unread} sin leer`}
+                          className="rounded-full bg-highlight px-1.5 py-px text-[10px] font-bold text-highlight-foreground"
+                        >
+                          {unread > 99 ? '99+' : unread}
+                        </span>
+                      ) : null}
                       {item.soon ? (
                         <span
                           className={cn(

@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { Card, CardDescription, CardTitle } from '@/components/ui/surfaces.tsx';
+import Link from 'next/link';
 import { requireUser } from '@/lib/auth.ts';
+import { getPlatformRole } from '@/lib/platform.ts';
 import { listMyOrganizations } from '@/lib/tenant.ts';
 import { getRegistrationLegalDocuments } from '@/modules/auth/queries.ts';
 import { CreateOrganizationForm } from '@/modules/onboarding/components.tsx';
@@ -32,15 +34,25 @@ async function CreateOrganization() {
   if (!legal) {
     return <p className="text-sm text-muted-foreground">El registro de inmobiliarias todavía no está disponible.</p>;
   }
+  const platform = await getPlatformRole();
   const pending = user.metadata.pending_organization_name;
   const accepted = user.metadata.accepted_legal_document_ids;
   const alreadyAccepted =
     Array.isArray(accepted) && legal.every((doc) => accepted.includes(doc.id));
   return (
-    <CreateOrganizationForm
+    <>
+      {platform.isAdmin ? (
+        <p className="mb-4 text-sm">
+          <Link href="/plataforma" className="font-medium text-primary underline underline-offset-4">
+            Ir al panel de plataforma
+          </Link>
+        </p>
+      ) : null}
+      <CreateOrganizationForm
       defaultName={typeof pending === 'string' ? pending : ''}
       legal={legal}
       alreadyAccepted={alreadyAccepted}
-    />
+      />
+    </>
   );
 }

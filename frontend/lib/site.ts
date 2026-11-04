@@ -22,6 +22,7 @@ export function isIndexable(): boolean {
 /** Rutas privadas o transaccionales que nunca se indexan. */
 export const PRIVATE_PATHS = [
   '/panel',
+  '/plataforma',
   '/ingresar',
   '/registro',
   '/recuperar',

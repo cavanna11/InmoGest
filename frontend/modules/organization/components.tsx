@@ -14,6 +14,8 @@ export type OrganizationFormValues = {
   contactPhone: string;
   defaultCurrency: string;
   agentsCanReassign: boolean;
+  usdRateEnabled: boolean;
+  usdRate: number | null;
 };
 
 export function OrganizationSettingsForm({ values, disabled }: { values: OrganizationFormValues; disabled: boolean }) {
@@ -64,6 +66,13 @@ export function OrganizationSettingsForm({ values, disabled }: { values: Organiz
           <input type="checkbox" name="agentsCanReassign" defaultChecked={values.agentsCanReassign} className="mt-0.5 size-4 accent-primary" />
           <span>Los agentes pueden reasignar contactos, conversaciones y tareas a otros agentes.</span>
         </label>
+        <label className="flex items-start gap-2 text-sm">
+          <input type="checkbox" name="usdRateEnabled" defaultChecked={values.usdRateEnabled} className="mt-0.5 size-4 accent-primary" />
+          <span>Comparar búsquedas y propiedades en distinta moneda usando una cotización manual.</span>
+        </label>
+        <Field id="usdRate" label="Cotización USD/ARS" hint="Pesos por dólar. Solo se usa si la opción anterior está habilitada." error={e.usdRate}>
+          <Input id="usdRate" name="usdRate" inputMode="decimal" defaultValue={values.usdRate ?? ''} />
+        </Field>
         <div>
           <SubmitButton>Guardar cambios</SubmitButton>
         </div>
