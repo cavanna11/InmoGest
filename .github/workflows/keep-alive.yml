@@ -1,0 +1,30 @@
+# Mantiene activo el proyecto de Supabase de la beta (plan gratuito: se pausa tras 7 días sin actividad).
+# Llama a /api/health de la app desplegada, que hace una consulta real a la base (rpc `health`).
+# Si falla, el workflow queda en rojo y GitHub avisa por email: suele significar que el proyecto se pausó.
+# URL configurable con la variable de repositorio KEEPALIVE_URL (Settings → Variables).
+name: Keep-alive Supabase
+
+on:
+  schedule:
+    - cron: '23 11 * * *' # todos los días, 08:23 de Argentina
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      URL: ${{ vars.KEEPALIVE_URL || 'https://inmopanel-beta.vercel.app/api/health' }}
+    steps:
+      - name: Consultar /api/health
+        run: |
+          for attempt in 1 2 3; do
+            code=$(curl -s -o body.json -w '%{http_code}' -m 30 "$URL" || echo 000)
+            echo "Intento $attempt: HTTP $code $(cat body.json 2>/dev/null)"
+            [ "$code" = 200 ] && exit 0
+            sleep 20
+          done
+          echo "::error::/api/health respondió $code. Revisar si el proyecto de Supabase está pausado."
+          exit 1

@@ -44,6 +44,7 @@ Trazabilidad de negocio, guardada en la base (`docs/DATABASE.md`):
 - `GET /api/health` (app): responde si puede consultar la base.
 - Health del worker: último ciclo procesado y tamaño de la cola, expuesto en un endpoint interno o en una tabla de latidos.
 - Evolution: healthcheck de Docker + estado de cada instancia.
+- Keep-alive de la beta (`.github/workflows/keep-alive.yml`): GitHub Actions llama a `/api/health` de la app desplegada una vez por día para que el proyecto de Supabase del plan gratuito no se pause por inactividad. Si falla, el workflow queda en rojo y GitHub avisa por email. No reemplaza al monitor externo de disponibilidad.
 
 **Métricas técnicas** (PRD §1 y §8)
 
