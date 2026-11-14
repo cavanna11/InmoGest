@@ -43,7 +43,16 @@ export function ConfirmSubmit({
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
             <AlertDialog.Cancel className={buttonVariants({ variant: 'outline' })}>Cancelar</AlertDialog.Cancel>
             <AlertDialog.Action asChild>
-              <button type="submit" form={formId} className={buttonVariants({ variant: destructive ? 'destructive' : 'default' })}>
+              {/* Se envía a mano, antes de que el diálogo se cierre: un botón con form="…" que el cierre
+                  saca del DOM durante el clic queda sin formulario y el navegador no envía nada. */}
+              <button
+                type="button"
+                className={buttonVariants({ variant: destructive ? 'destructive' : 'default' })}
+                onClick={() => {
+                  const form = document.getElementById(formId);
+                  if (form instanceof HTMLFormElement) form.requestSubmit();
+                }}
+              >
                 {confirmLabel}
               </button>
             </AlertDialog.Action>
