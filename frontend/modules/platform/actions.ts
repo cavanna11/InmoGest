@@ -20,6 +20,14 @@ function orgPath(id: string) {
   return `/plataforma/${id}`;
 }
 
+export async function resolveApiRequestAction(formData: FormData): Promise<void> {
+  const id = uuid.safeParse(formData.get('id'));
+  if (!id.success) return;
+  const supabase = await createClient();
+  await supabase.rpc('platform_resolve_whatsapp_api_request', { p_id: id.data });
+  revalidatePath('/plataforma/ajustes');
+}
+
 export async function reviewPaymentAction(formData: FormData): Promise<void> {
   const id = uuid.safeParse(formData.get('reportId'));
   const organizationId = uuid.safeParse(formData.get('organizationId'));

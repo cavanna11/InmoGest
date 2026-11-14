@@ -76,6 +76,8 @@
 | `reminder_templates` | Plantillas y anticipación de recordatorios por WhatsApp (P1). |
 | `whatsapp_api_requests` | Pedidos de API oficial a C&C. |
 
+Implementado en el incremento 1.7: conexiones, conversaciones, mensajes, cola, eventos y pedidos. `automation_settings` y `reminder_templates` se agregan con F-20 y F-35. Las escrituras pasan por RPC; lo que llega del proveedor usa funciones solo para `service_role`. El hash del secreto del webhook no es legible por los usuarios (permisos por columna).
+
 ### Operación
 
 | Tabla | Propósito |

@@ -21,7 +21,7 @@ function navGroups(isOwner: boolean): Array<{ title: string; items: NavItem[] }>
     {
       title: 'Comercial',
       items: [
-        { href: '/panel/conversaciones', label: 'Conversaciones', soon: true },
+        { href: '/panel/conversaciones', label: 'Conversaciones' },
         { href: '/panel/contactos', label: 'Contactos' },
         { href: '/panel/propiedades', label: 'Propiedades' },
         { href: '/panel/busquedas', label: 'Búsquedas' },
@@ -43,7 +43,7 @@ function navGroups(isOwner: boolean): Array<{ title: string; items: NavItem[] }>
           ? [
               { href: '/panel/configuracion', label: 'Inmobiliaria' },
               { href: '/panel/equipo', label: 'Equipo' },
-              { href: '/panel/whatsapp', label: 'WhatsApp', soon: true },
+              { href: '/panel/whatsapp', label: 'WhatsApp' },
               { href: '/panel/plan', label: 'Plan y pago' },
             ]
           : []),

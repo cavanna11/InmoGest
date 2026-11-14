@@ -4,6 +4,8 @@ export type WorkerConfig = {
   supabaseUrl: string;
   secretKey: string;
   workerId: string;
+  /** Sin estas variables el worker corre igual, pero no envía ni controla WhatsApp. */
+  evolution: { baseUrl: string; apiKey: string } | null;
 };
 
 /** Lee la configuración del entorno. Nunca imprime valores, solo nombres de variables faltantes. */
@@ -22,5 +24,12 @@ export function readConfig(env: NodeJS.ProcessEnv = process.env): WorkerConfig {
     throw new Error('NEXT_PUBLIC_SUPABASE_URL debe ser solo https://<ref>.supabase.co, sin /rest/v1');
   }
   const workerId = env.WORKER_ID?.trim() || `${hostname()}-${process.pid}`;
-  return { supabaseUrl, secretKey, workerId: workerId.slice(0, 100) };
+  const evolutionUrl = env.EVOLUTION_API_URL?.trim();
+  const evolutionKey = env.EVOLUTION_API_KEY?.trim();
+  return {
+    supabaseUrl,
+    secretKey,
+    workerId: workerId.slice(0, 100),
+    evolution: evolutionUrl && evolutionKey ? { baseUrl: evolutionUrl, apiKey: evolutionKey } : null,
+  };
 }

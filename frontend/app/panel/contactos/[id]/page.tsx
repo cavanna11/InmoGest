@@ -13,6 +13,7 @@ import { removeChannelAction } from '@/modules/contacts/actions.ts';
 import { ActivityForm, AddChannelForm, ContactEditForm, ReportDuplicateForm } from '@/modules/contacts/components.tsx';
 import { getActiveMembers, getActivities, getContact, getSimilarContacts } from '@/modules/contacts/queries.ts';
 import { getOrganizationDetails } from '@/modules/organization/queries.ts';
+import { StartConversationButton } from '@/modules/whatsapp/components.tsx';
 import { budgetLabel } from '@/modules/searches/format.ts';
 import { getStages, listSearches } from '@/modules/searches/queries.ts';
 
@@ -49,6 +50,8 @@ function activityText(activity: { kind: string; body: string; metadata: unknown 
       return `Búsqueda movida a "${String(meta.stage ?? 'otra etapa')}".`;
     case 'appointment':
       return meta.status === 'done' ? 'Visita realizada.' : meta.status === 'cancelled' ? 'Visita cancelada.' : meta.status === 'no_show' ? 'No asistió a la visita.' : 'Visita agendada.';
+    case 'property_sent':
+      return `Se le envió por WhatsApp la ficha de "${String(meta.property_title ?? 'una propiedad')}".`;
     case 'contact_merged':
       return `Se unificó con "${String(meta.merged_name ?? 'otro contacto')}".`;
     default:
@@ -92,6 +95,11 @@ async function Contact({ params }: { params: Promise<{ id: string }> }) {
         }
       />
       {!canWrite ? <Alert variant="warning">La cuenta está en solo lectura: podés consultar, pero no modificar.</Alert> : null}
+      {canWrite ? (
+        <div className="justify-self-start">
+          <StartConversationButton contactId={contact.id} />
+        </div>
+      ) : null}
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
         <div className="grid content-start gap-6">

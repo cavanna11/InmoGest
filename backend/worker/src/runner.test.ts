@@ -1,7 +1,7 @@
 import type { ClaimedJob } from '@inmogest/shared';
 import { describe, expect, it, vi } from 'vitest';
 import { readConfig } from './config.ts';
-import { JobError, handlers, type JobHandlers } from './handlers.ts';
+import { JobError, createHandlers, handlers, type JobHandlers } from './handlers.ts';
 import { createJsonLogger, silentLogger, type LogFields } from './logger.ts';
 import type { JobQueue } from './queue.ts';
 import { abortableSleep, processBatch, runWorker } from './runner.ts';
@@ -59,13 +59,14 @@ describe('processBatch', () => {
   it('falla un payload inválido sin ejecutar el handler', async () => {
     const ping = vi.fn();
     const queue = new FakeQueue([[job({ payload: { extra: 'no permitido' } })]]);
-    await processBatch({ queue, handlers: { 'system.ping': ping }, logger: silentLogger });
+    await processBatch({ queue, handlers: { ...createHandlers(), 'system.ping': ping }, logger: silentLogger });
     expect(ping).not.toHaveBeenCalled();
     expect(queue.failed).toEqual([{ id: 'job-1', code: 'invalid_payload' }]);
   });
 
   it('guarda el código de un JobError y uno genérico para otros errores', async () => {
     const failing: JobHandlers = {
+      ...createHandlers(),
       'system.ping': async (payload) => {
         if (payload.note === 'conocido') throw new JobError('provider_unavailable');
         throw new Error('detalle interno con datos que no se deben guardar');
@@ -82,7 +83,7 @@ describe('processBatch', () => {
   it('pasa la inmobiliaria del job al handler', async () => {
     const ping = vi.fn(async () => {});
     const queue = new FakeQueue([[job({ organization_id: 'org-1', attempts: 2 })]]);
-    await processBatch({ queue, handlers: { 'system.ping': ping }, logger: silentLogger });
+    await processBatch({ queue, handlers: { ...createHandlers(), 'system.ping': ping }, logger: silentLogger });
     expect(ping).toHaveBeenCalledWith({}, expect.objectContaining({ organizationId: 'org-1', attempt: 2 }));
   });
 });

@@ -7,6 +7,8 @@ import { z } from 'zod';
 export const jobPayloadSchemas = {
   /** Job de prueba de la Fase 0: verifica el circuito encolar → tomar → completar. */
   'system.ping': z.object({ note: z.string().max(200).optional() }).strict(),
+  /** Descarga el adjunto de un mensaje recibido y lo guarda en Storage. */
+  'whatsapp.media': z.object({ message_id: z.uuid() }).strict(),
 } as const;
 
 export type JobType = keyof typeof jobPayloadSchemas;

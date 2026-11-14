@@ -61,7 +61,11 @@ select set_eq(
     'approve_payment(uuid,text)', 'reject_payment(uuid,text)',
     'platform_find_user(text)', 'platform_create_organization(text,text,uuid,text,integer)',
     'platform_organization_owner(uuid)', 'platform_set_deleted(uuid,boolean)', 'platform_delete_organization(uuid,text)',
-    'platform_activity(integer)', 'platform_team()', 'platform_add_admin(uuid)', 'platform_remove_admin(uuid)'
+    'platform_activity(integer)', 'platform_team()', 'platform_add_admin(uuid)', 'platform_remove_admin(uuid)',
+    'create_whatsapp_connection(uuid,text,boolean)', 'remove_whatsapp_connection(uuid)', 'open_whatsapp_conversation(uuid)',
+    'assign_whatsapp_conversation(uuid,uuid)', 'start_whatsapp_conversation(uuid,uuid)',
+    'send_whatsapp_message(uuid,text,message_type,text,text,text)', 'send_property_whatsapp(uuid,uuid,text,text[])',
+    'request_whatsapp_official_api(uuid,text)', 'platform_whatsapp_api_requests()', 'platform_resolve_whatsapp_api_request(uuid)'
   ],
   'authenticated solo ejecuta las RPC previstas'
 );

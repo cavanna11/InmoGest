@@ -18,6 +18,13 @@ export async function isRegistrationOpen(): Promise<boolean> {
   return process.env.REGISTRATION_OPEN === 'true';
 }
 
+/** Conexión con Evolution API. Null si no está configurada: el panel lo informa y no ofrece conectar. */
+export function readEvolutionEnv(): { baseUrl: string; apiKey: string } | null {
+  const baseUrl = process.env.EVOLUTION_API_URL?.trim();
+  const apiKey = process.env.EVOLUTION_API_KEY?.trim();
+  return baseUrl && apiKey ? { baseUrl, apiKey } : null;
+}
+
 export function requireServerEnv() {
   const parsed = serverEnvSchema.safeParse({
     supabaseSecretKey: process.env.SUPABASE_SECRET_KEY || undefined,

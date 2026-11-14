@@ -46,6 +46,10 @@ typecheck y lint OK · unit 96/96 · build OK · pgTAP 170 aserciones, 0 fallas 
 
 typecheck y lint OK · unit 151/151 (incluye contraste WCAG de los tokens) · build OK · pgTAP 206 aserciones, 0 fallas (8 archivos) · integración 2/2 · E2E públicos 8/8. Los E2E `@auth` todavía no corrieron: corren en CI en el próximo push a `main`.
 
+### Resultados de WhatsApp, incremento 1.7 (04/11/2026)
+
+pgTAP nuevo: `16_whatsapp.sql`, 69 aserciones (conexión, pautas, límite del plan, ingreso idempotente, alta y vínculo de contactos, asignación, cola, reintentos, baja, ficha, aislamiento). Unit nuevos: `evolution.test.ts` (contrato tomado del código de Evolution 2.3.7) y `whatsapp.test.ts` del worker. Recorrido en local con un doble de prueba de Evolution, que no se versiona: QR, conexión, entrante sin duplicar, adjunto guardado, asignación al abrir, respuesta enviada por el worker, actualización en vivo, desconexión con aviso, reconexión y ficha sin fotos. **No probado:** WhatsApp real, Evolution real, el VPS (`docker compose` y el Dockerfile del worker), el envío de adjuntos y de fichas con fotos en el navegador. `tests/e2e/platform.spec.ts` corre solo en CI: recién se ejecuta con el próximo push.
+
 ### Resultados del súper panel (03/11/2026)
 
 typecheck y lint OK · unit 235/235 · build OK · pgTAP 422 aserciones, 0 fallas (15 archivos; `15_platform_superpanel.sql`: permisos, alta, baja, restauración, eliminación definitiva, actividad y equipo) · recorrido manual en local: aceptación de términos y 404 para usuarios sin rol. No verificado en pantalla: las pantallas de `/plataforma` con rol de superadministrador.

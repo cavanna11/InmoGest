@@ -5,4 +5,6 @@ export * from './dates.ts';
 export * from './db-errors.ts';
 export * from './jobs.ts';
 export * from './slug.ts';
+export * from './whatsapp.ts';
+export * from './evolution.ts';
 export type { Database, Json } from './database.types.ts';

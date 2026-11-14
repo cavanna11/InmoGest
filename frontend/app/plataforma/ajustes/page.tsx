@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button.tsx';
 import { Field, Input, Label } from '@/components/ui/form-controls.tsx';
 import { Alert, Card, CardDescription, CardTitle } from '@/components/ui/surfaces.tsx';
 import { createClient } from '@/lib/supabase/server.ts';
-import { updatePlanAction, updateSettingsAction } from '@/modules/platform/actions.ts';
+import { resolveApiRequestAction, updatePlanAction, updateSettingsAction } from '@/modules/platform/actions.ts';
 import { requirePlatformAdmin } from '@/modules/platform/guard.ts';
 
 export const metadata = { title: 'Planes y ajustes' };
@@ -11,9 +11,10 @@ export const metadata = { title: 'Planes y ajustes' };
 export default async function PlatformSettingsPage() {
   const role = await requirePlatformAdmin('/plataforma/ajustes');
   const supabase = await createClient();
-  const [{ data: plans }, { data: settings }] = await Promise.all([
+  const [{ data: plans }, { data: settings }, { data: apiRequests }] = await Promise.all([
     supabase.from('plans').select('code, name, max_users, max_properties, max_whatsapp_numbers, reference_price_usd').order('sort_order'),
     supabase.from('platform_settings').select('payment_instructions, wa_auto_daily_limit, wa_auto_hourly_limit, wa_auto_min_interval_seconds').eq('id', true).maybeSingle(),
+    supabase.rpc('platform_whatsapp_api_requests'),
   ]);
   const disabled = !role.isPrincipal;
 
@@ -81,6 +82,27 @@ export default async function PlatformSettingsPage() {
             Guardar ajustes
           </Button>
         </form>
+      </Card>
+
+      <Card>
+        <CardTitle>Pedidos de API oficial de WhatsApp</CardTitle>
+        <ul className="mt-4 grid gap-3">
+          {(apiRequests ?? []).length === 0 ? <li className="text-sm text-muted-foreground">No hay pedidos abiertos.</li> : null}
+          {(apiRequests ?? []).map((request) => (
+            <li key={request.id} className="flex flex-wrap items-center justify-between gap-3 rounded-md border border-border p-3">
+              <div className="min-w-0">
+                <p className="font-medium">{request.organization_name}</p>
+                {request.notes ? <p className="text-sm whitespace-pre-line text-muted-foreground">{request.notes}</p> : null}
+              </div>
+              <form action={resolveApiRequestAction}>
+                <input type="hidden" name="id" value={request.id} />
+                <Button type="submit" variant="outline" size="sm">
+                  Marcar como resuelto
+                </Button>
+              </form>
+            </li>
+          ))}
+        </ul>
       </Card>
     </div>
   );

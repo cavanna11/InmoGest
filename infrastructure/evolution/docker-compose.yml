@@ -1,0 +1,86 @@
+# VPS de InmoPanel: Evolution API v2.3.7 (con su Postgres y Redis) y el worker.
+# Evolution, Postgres y Redis no publican puertos: Evolution se expone solo por el proxy con TLS (Caddy).
+# Guía: infrastructure/evolution/README.md
+name: inmopanel
+
+services:
+  caddy:
+    image: caddy:2.10-alpine
+    restart: always
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      EVOLUTION_DOMAIN: ${EVOLUTION_DOMAIN:?Falta EVOLUTION_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - evolution
+
+  evolution:
+    image: evoapicloud/evolution-api:v2.3.7
+    restart: always
+    environment:
+      SERVER_URL: https://${EVOLUTION_DOMAIN}
+      AUTHENTICATION_API_KEY: ${EVOLUTION_API_KEY:?Falta EVOLUTION_API_KEY}
+      DATABASE_PROVIDER: postgresql
+      DATABASE_CONNECTION_URI: postgresql://evolution:${EVOLUTION_DB_PASSWORD:?Falta EVOLUTION_DB_PASSWORD}@postgres:5432/evolution?schema=evolution_api
+      CACHE_REDIS_ENABLED: 'true'
+      CACHE_REDIS_URI: redis://redis:6379/6
+      CACHE_LOCAL_ENABLED: 'false'
+      # Cada instancia configura su propio webhook, con su secreto.
+      WEBHOOK_GLOBAL_ENABLED: 'false'
+      CONFIG_SESSION_PHONE_CLIENT: InmoPanel
+      LOG_LEVEL: ERROR,WARN
+    volumes:
+      - evolution_instances:/evolution/instances
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  postgres:
+    image: postgres:17-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: evolution
+      POSTGRES_USER: evolution
+      POSTGRES_PASSWORD: ${EVOLUTION_DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U evolution -d evolution']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+
+  worker:
+    build:
+      context: ../..
+      dockerfile: infrastructure/evolution/worker.Dockerfile
+    restart: always
+    environment:
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL:?Falta NEXT_PUBLIC_SUPABASE_URL}
+      SUPABASE_SECRET_KEY: ${SUPABASE_SECRET_KEY:?Falta SUPABASE_SECRET_KEY}
+      EVOLUTION_API_URL: http://evolution:8080
+      EVOLUTION_API_KEY: ${EVOLUTION_API_KEY}
+      WORKER_ID: vps-1
+    depends_on:
+      - evolution
+
+volumes:
+  caddy_data:
+  caddy_config:
+  evolution_instances:
+  postgres_data:
+  redis_data:

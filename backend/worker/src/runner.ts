@@ -56,7 +56,8 @@ async function runHandler(job: ClaimedJob, handlers: JobHandlers, logger: Logger
     logger,
   };
   try {
-    await handlers[type](parsed.data, context);
+    // El payload ya se validó con el esquema de este mismo tipo.
+    await (handlers[type] as (payload: unknown, context: JobContext) => Promise<void>)(parsed.data, context);
     return null;
   } catch (error) {
     return error instanceof JobError ? error.code : 'handler_error';

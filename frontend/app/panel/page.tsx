@@ -13,14 +13,14 @@ export const metadata: Metadata = { title: 'Inicio' };
 // Asistente de configuración (CU-01 paso 5, F-03): muestra qué falta, permite saltear y retomar.
 // Los pasos de funciones que todavía no existen se muestran como "Próximamente", sin botón.
 // Recorrido por lo que va a incluir el panel (vistas previas de las secciones en desarrollo).
-const TOUR = (['conversaciones', 'automaticos', 'whatsapp'] as const).map(
+const TOUR = (['automaticos'] as const).map(
   (slug) => PREVIEW_SECTIONS[slug],
 );
 
 const STEPS: Array<{ step: OnboardingStep; title: string; description: string; href: string | null }> = [
   { step: 'organization', title: 'Datos y logo de la inmobiliaria', description: 'Nombre, contacto, moneda y logo.', href: '/panel/configuracion' },
   { step: 'team', title: 'Invitá a tu equipo', description: 'Sumá a los agentes de la inmobiliaria.', href: '/panel/equipo' },
-  { step: 'whatsapp', title: 'Conectá WhatsApp', description: 'El número de la inmobiliaria, con un código QR.', href: null },
+  { step: 'whatsapp', title: 'Conectá WhatsApp', description: 'El número de la inmobiliaria, con un código QR.', href: '/panel/whatsapp' },
   { step: 'data', title: 'Cargá o importá propiedades y contactos', description: 'A mano o desde una planilla.', href: '/panel/importar' },
 ];
 

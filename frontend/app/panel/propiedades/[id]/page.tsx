@@ -20,6 +20,8 @@ import { priceLabel } from '@/modules/properties/format.ts';
 import { publicImageUrl } from '@/modules/properties/images.ts';
 import { OPERATION_LABELS, STATUS_LABELS, STATUS_TONES, TYPE_LABELS, type PropertyStatus } from '@/modules/properties/labels.ts';
 import { getPropertyMatches } from '@/modules/searches/queries.ts';
+import { SendPropertyForm } from '@/modules/whatsapp/components.tsx';
+import { getPropertySends, getSendableContacts } from '@/modules/whatsapp/queries.ts';
 import { getDuplicateCandidates, getProperty, getPropertyChanges, organizationSlug, searchContacts } from '@/modules/properties/queries.ts';
 
 export const metadata: Metadata = { title: 'Propiedad' };
@@ -76,7 +78,7 @@ async function Property({
   const query = await searchParams;
   const ownerQuery = typeof query.propietario === 'string' ? query.propietario : '';
   const ownerIds = property.property_owners.map((owner) => owner.contact_id);
-  const [members, details, changes, slug, origin, duplicates, ownerResults, matches] = await Promise.all([
+  const [members, details, changes, slug, origin, duplicates, ownerResults, matches, sends, sendable] = await Promise.all([
     getActiveMembers(organization.id),
     getOrganizationDetails(organization.id),
     getPropertyChanges(organization.id, id),
@@ -85,6 +87,8 @@ async function Property({
     getDuplicateCandidates(organization.id, property, ownerIds),
     searchContacts(organization.id, ownerQuery),
     getPropertyMatches(organization.id, id),
+    getPropertySends(organization.id, id),
+    getSendableContacts(organization.id),
   ]);
   const names = new Map(members.map((member) => [member.userId, member.name]));
   const canWrite = organization.canWrite;
@@ -185,6 +189,16 @@ async function Property({
         </div>
 
         <div className="grid content-start gap-6">
+          {canWrite && isPublic ? (
+            <Card>
+              <CardTitle>Enviar por WhatsApp</CardTitle>
+              <p className="mt-1 text-sm text-muted-foreground">Sale con hasta 3 fotos y el link a su página pública.</p>
+              <div className="mt-3">
+                <SendPropertyForm propertyId={property.id} contacts={sendable} />
+              </div>
+            </Card>
+          ) : null}
+
           <Card className={matches.length > 0 ? 'border-highlight/50' : undefined}>
             <CardTitle>Clientes que la buscan</CardTitle>
             <ul className="mt-3 grid gap-2">
@@ -315,6 +329,13 @@ async function Property({
                     {change.author_id ? ` · ${names.get(change.author_id) ?? 'Ex miembro del equipo'}` : ''}
                   </p>
                   <p className="text-sm">{changeText(change)}</p>
+                </li>
+              ))}
+              {sends.map((send) => (
+                <li key={send.id} className="relative">
+                  <span aria-hidden="true" className="absolute top-1.5 -left-[1.6rem] size-2.5 rounded-full bg-primary" />
+                  <p className="text-xs text-muted-foreground">{formatDateTime(send.created_at)}</p>
+                  <p className="text-sm">Ficha enviada por WhatsApp a {send.contacts?.full_name ?? 'un contacto'}.</p>
                 </li>
               ))}
             </ol>

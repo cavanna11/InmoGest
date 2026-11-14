@@ -19,6 +19,9 @@ import { err, type Err } from './result.ts';
  *   IG012 reasignación no permitida (falta la capacidad agents_can_reassign)
  *   IG013 unificación de contactos no válida
  *   IG014 fusión de propiedades no válida
+ *   IG015 número de WhatsApp no conectado
+ *   IG016 contacto marcado como "no contactar", sin conversación iniciada por él
+ *   IG017 propiedad sin página pública
  */
 
 export type DbErrorCode =
@@ -40,6 +43,9 @@ export type DbErrorCode =
   | 'reassign_not_allowed'
   | 'invalid_merge'
   | 'invalid_property_merge'
+  | 'whatsapp_not_connected'
+  | 'contact_do_not_contact'
+  | 'property_not_public'
   | 'unexpected';
 
 const INVITATION_MESSAGES: Record<string, string> = {
@@ -120,6 +126,12 @@ export function translateDbError(error: DbErrorLike | null | undefined): Err<DbE
       return err('invalid_merge', 'No se pueden unificar estos contactos: alguno ya fue unificado.');
     case 'IG014':
       return err('invalid_property_merge', 'No se pueden fusionar estas propiedades: alguna ya fue fusionada.');
+    case 'IG015':
+      return err('whatsapp_not_connected', 'El número de WhatsApp no está conectado. Volvé a conectarlo para enviar mensajes.');
+    case 'IG016':
+      return err('contact_do_not_contact', 'Este contacto pidió no recibir mensajes. Solo se le puede responder si escribe.');
+    case 'IG017':
+      return err('property_not_public', 'Esta propiedad no tiene página pública: publicala antes de enviarla.');
     default:
       return err('unexpected', 'Ocurrió un error inesperado. Intentá de nuevo en unos minutos.');
   }

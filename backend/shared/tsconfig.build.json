@@ -4,7 +4,8 @@
     "noEmit": false,
     "outDir": "dist",
     "rootDir": "src",
-    "types": []
+    "types": [],
+    "lib": ["ES2023", "DOM"]
   },
   "exclude": ["src/**/*.test.ts"]
 }
