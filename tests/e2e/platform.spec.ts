@@ -17,8 +17,9 @@ test.describe('súper panel @auth', () => {
     const name = `Inmobiliaria E2E ${Date.now()}`;
 
     await page.goto('/ingresar');
-    await page.getByLabel('Email').fill(SUPERADMIN.email);
-    await page.getByLabel('Contraseña').fill(SUPERADMIN.password);
+    // Exacto: la página también tiene "Email de la cuenta" para reenviar la confirmación.
+    await page.getByLabel('Email', { exact: true }).fill(SUPERADMIN.email);
+    await page.getByLabel('Contraseña', { exact: true }).fill(SUPERADMIN.password);
     await page.getByRole('button', { name: 'Ingresar', exact: true }).click();
     await expect(page).toHaveURL(/\/plataforma/);
 
@@ -62,10 +63,10 @@ test.describe('súper panel @auth', () => {
   });
 
   test('sin sesión, el súper panel lleva a ingresar', async ({ page }) => {
-    const response = await page.goto('/plataforma/inmobiliarias');
-    // Sin sesión lleva a ingresar; nunca muestra el panel.
-    expect(page.url()).toContain('/ingresar');
-    expect(response?.ok()).toBe(true);
-    await expect(page.getByText('Súper panel')).toHaveCount(0);
+    await page.goto('/plataforma/inmobiliarias');
+    // La redirección llega con el contenido en streaming: se espera a que el navegador la siga.
+    await expect(page).toHaveURL(/\/ingresar\?next=%2Fplataforma%2Finmobiliarias/);
+    await expect(page.getByRole('button', { name: 'Ingresar', exact: true })).toBeVisible();
+    await expect(page.getByRole('table', { name: 'Inmobiliarias de la plataforma' })).toHaveCount(0);
   });
 });
