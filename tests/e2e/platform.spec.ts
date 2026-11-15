@@ -55,6 +55,8 @@ test.describe('súper panel @auth', () => {
     await expect(page.getByText('Dada de baja').first()).toBeVisible();
     await page.getByLabel(`Para confirmar, escribí: ${name}`).fill('otro nombre');
     await page.getByRole('button', { name: 'Eliminar para siempre' }).click();
+    // Se espera la respuesta: al terminar, React reinicia el formulario y borraría lo que se escriba antes.
+    await expect(page.getByText('Escribí el nombre exacto de la inmobiliaria.')).toBeVisible();
     await expect(page).toHaveURL(detail);
     await page.getByLabel(`Para confirmar, escribí: ${name}`).fill(name);
     await page.getByRole('button', { name: 'Eliminar para siempre' }).click();

@@ -68,6 +68,12 @@ select tests.authenticate_as('a7000000-0000-4000-a000-000000000008');
 select public.platform_set_deleted((select id from ids where name = 'org'), false);
 select isnt(app.organization_state((select id from ids where name = 'org'))::text, 'pending_deletion', 'se puede restaurar');
 
+-- Recorrido del súper panel antes de eliminar: soporte, suspensión y reactivación (E2E platform.spec.ts).
+select public.start_support_session((select id from ids where name = 'org'));
+select public.end_support_session();
+update public.organizations set suspended_at = now() where id = (select id from ids where name = 'org');
+update public.organizations set suspended_at = null where id = (select id from ids where name = 'org');
+
 select public.platform_set_deleted((select id from ids where name = 'org'), true);
 select is(tests.error_of($$ select * from public.platform_delete_organization((select id from ids where name = 'org'), 'otro nombre') $$) ->> 'sqlstate', '22023', 'hay que confirmar el nombre exacto');
 select * from public.platform_delete_organization((select id from ids where name = 'org'), 'Inmo Súper');
