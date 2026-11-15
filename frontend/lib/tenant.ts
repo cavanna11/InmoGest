@@ -2,6 +2,7 @@ import 'server-only';
 import type { Database } from '@inmogest/shared';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { cache } from 'react';
 import { requireUser, type CurrentUser } from './auth.ts';
 import { getPlatformRole } from './platform.ts';
 import { createClient } from './supabase/server.ts';
@@ -31,7 +32,9 @@ export type ActiveOrganization = OrganizationSummary & {
   canWrite: boolean;
 };
 
-export async function listMyOrganizations(): Promise<OrganizationSummary[]> {
+// React.cache: el layout, la página y las Server Actions del mismo pedido comparten estas consultas
+// (vercel-react-best-practices, server-cache-react). Cada pedido sigue validando contra la base.
+export const listMyOrganizations = cache(async (): Promise<OrganizationSummary[]> => {
   const supabase = await createClient();
   const { data, error } = await supabase.rpc('my_organizations');
   if (error || !data) return [];
@@ -42,7 +45,7 @@ export async function listMyOrganizations(): Promise<OrganizationSummary[]> {
     role: row.role,
     state: row.state,
   }));
-}
+});
 
 async function supportOrganization(): Promise<OrganizationSummary | null> {
   const supabase = await createClient();
@@ -64,22 +67,22 @@ function toActive(org: OrganizationSummary, viaSupport: boolean): ActiveOrganiza
 }
 
 /** Resuelve la inmobiliaria activa validada, o null si el usuario no tiene ninguna elegible. */
-export async function resolveActiveOrganization(): Promise<{
+export const resolveActiveOrganization = cache(async (): Promise<{
   active: ActiveOrganization | null;
   organizations: OrganizationSummary[];
-}> {
-  const support = await supportOrganization();
+}> => {
+  // Independientes entre sí: van en paralelo (async-parallel).
+  const [support, organizations, cookieStore] = await Promise.all([supportOrganization(), listMyOrganizations(), cookies()]);
   if (support) return { active: toActive(support, true), organizations: [support] };
 
-  const organizations = await listMyOrganizations();
-  const cookieOrg = (await cookies()).get(ACTIVE_ORG_COOKIE)?.value;
+  const cookieOrg = cookieStore.get(ACTIVE_ORG_COOKIE)?.value;
   const fromCookie = organizations.find((org) => org.id === cookieOrg);
   if (fromCookie) return { active: toActive(fromCookie, false), organizations };
   if (organizations.length === 1 && organizations[0]) {
     return { active: toActive(organizations[0], false), organizations };
   }
   return { active: null, organizations };
-}
+});
 
 /**
  * Exige usuario e inmobiliaria activa. Sin inmobiliarias → crear una; con varias y ninguna elegida →
@@ -88,8 +91,7 @@ export async function resolveActiveOrganization(): Promise<{
 export async function requireActiveOrganization(
   next: string,
 ): Promise<{ user: CurrentUser; organization: ActiveOrganization; organizations: OrganizationSummary[] }> {
-  const user = await requireUser(next);
-  const { active, organizations } = await resolveActiveOrganization();
+  const [user, { active, organizations }] = await Promise.all([requireUser(next), resolveActiveOrganization()]);
   if (!active) {
     if (organizations.length === 0 && (await getPlatformRole()).isAdmin) redirect('/plataforma');
     redirect(organizations.length === 0 ? '/crear-inmobiliaria' : '/seleccionar-inmobiliaria');

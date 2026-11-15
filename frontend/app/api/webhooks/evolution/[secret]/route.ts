@@ -1,5 +1,6 @@
 import { parseEvolutionWebhook } from '@inmogest/shared';
 import { NextResponse } from 'next/server';
+import { readTextWithLimit } from '@/lib/body-limit.ts';
 import { allowRequest, rateLimitKey } from '@/lib/rate-limit.ts';
 import { createAdminClient } from '@/lib/supabase/admin.ts';
 import { hashWebhookSecret } from '@/lib/whatsapp.ts';
@@ -39,8 +40,8 @@ export async function POST(request: Request, { params }: RouteContext<'/api/webh
   }
   if (!connection) return new NextResponse(null, { status: 404 });
 
-  const text = await request.text();
-  if (text.length > MAX_BODY_BYTES) return new NextResponse(null, { status: 413 });
+  const text = await readTextWithLimit(request, MAX_BODY_BYTES);
+  if (text === null) return new NextResponse(null, { status: 413 });
   let payload: unknown;
   try {
     payload = JSON.parse(text);

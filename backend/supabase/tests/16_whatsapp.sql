@@ -189,8 +189,26 @@ with c as (
 ) insert into ids select 'borrador', id from c;
 select is(tests.error_of($$ select public.send_property_whatsapp((select id from ids where name = 'conv_dani'), (select id from ids where name = 'borrador'), 'Mirá') $$) ->> 'sqlstate',
   'IG017', 'un borrador no se envía');
+-- Fotos: solo URLs públicas de Storage de fotos registradas de ESA propiedad (sin SSRF hacia el VPS).
+insert into public.property_images (organization_id, property_id, storage_path, position)
+select 'a7000000-0000-4000-b000-000000000001', p.id, 'a7000000-0000-4000-b000-000000000001/' || p.id || '/' || n || '.jpg', n
+from ids p cross join generate_series(1, 2) n where p.name = 'prop';
+create temporary table photo_urls as
+select 'https://abcdefghijklmnop.supabase.co/storage/v1/object/public/property-images/a7000000-0000-4000-b000-000000000001/'
+  || (select id from ids where name = 'prop') || '/' || n || '.jpg' as url
+from generate_series(1, 2) n;
+select is(tests.error_of($$ select public.send_property_whatsapp((select id from ids where name = 'conv_dani'), (select id from ids where name = 'prop'), 'Mirá',
+  array['http://169.254.169.254/latest/meta-data/']) $$) ->> 'sqlstate', '23514', 'una URL que no es de Storage se rechaza');
+select is(tests.error_of($$ select public.send_property_whatsapp((select id from ids where name = 'conv_dani'), (select id from ids where name = 'prop'), 'Mirá',
+  array[replace((select min(url) from photo_urls), 'abcdefghijklmnop.supabase.co', 'evolution-api:8080')]) $$) ->> 'sqlstate', '23514',
+  'la ruta correcta con otro host se rechaza');
+select is(tests.error_of($$ select public.send_property_whatsapp((select id from ids where name = 'conv_dani'), (select id from ids where name = 'prop'), 'Mirá',
+  array['https://abcdefghijklmnop.supabase.co/storage/v1/object/public/property-images/a7000000-0000-4000-b000-000000000001/otra/9.jpg']) $$) ->> 'sqlstate', '23514',
+  'una foto que no es de la propiedad se rechaza');
+select is((select count(*)::int from public.messages where conversation_id = (select id from ids where name = 'conv_dani') and type = 'image'), 0,
+  'los rechazos no encolan nada');
 select public.send_property_whatsapp((select id from ids where name = 'conv_dani'), (select id from ids where name = 'prop'), 'Depto Palermo https://x.test/p/a/b',
-  array['https://x.test/1.jpg', 'https://x.test/2.jpg']);
+  (select array_agg(url order by url) from photo_urls));
 select is((select count(*)::int from public.messages where conversation_id = (select id from ids where name = 'conv_dani') and type = 'image'), 2, 'se encola una foto por mensaje');
 select is((select count(*)::int from public.messages where conversation_id = (select id from ids where name = 'conv_dani') and body like '%https://x.test/p/a/b'), 1, 'el link va una sola vez');
 select ok(exists (select 1 from public.activities where contact_id = (select id from ids where name = 'dani') and kind = 'property_sent'

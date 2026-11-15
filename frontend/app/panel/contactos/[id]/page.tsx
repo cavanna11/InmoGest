@@ -188,7 +188,7 @@ async function Contact({ params }: { params: Promise<{ id: string }> }) {
                       <input type="hidden" name="channelId" value={phone.id} />
                       <input type="hidden" name="contactId" value={contact.id} />
                       <input type="hidden" name="kind" value="phone" />
-                      <Button type="submit" variant="ghost" size="icon" className="size-8" aria-label={`Quitar ${formatPhone(phone.phone_e164)}`}>
+                      <Button type="submit" variant="ghost" size="icon" className="size-11 sm:size-8" aria-label={`Quitar ${formatPhone(phone.phone_e164)}`}>
                         <X aria-hidden="true" />
                       </Button>
                     </form>
@@ -218,7 +218,7 @@ async function Contact({ params }: { params: Promise<{ id: string }> }) {
                       <input type="hidden" name="channelId" value={email.id} />
                       <input type="hidden" name="contactId" value={contact.id} />
                       <input type="hidden" name="kind" value="email" />
-                      <Button type="submit" variant="ghost" size="icon" className="size-8" aria-label={`Quitar ${email.email}`}>
+                      <Button type="submit" variant="ghost" size="icon" className="size-11 sm:size-8" aria-label={`Quitar ${email.email}`}>
                         <X aria-hidden="true" />
                       </Button>
                     </form>

@@ -144,7 +144,7 @@ async function Property({
                           <form action={setCoverAction}>
                             <input type="hidden" name="imageId" value={image.id} />
                             <input type="hidden" name="propertyId" value={property.id} />
-                            <Button type="submit" variant="ghost" size="icon" className="size-8" aria-label={`Usar la foto ${index + 1} como portada`} title="Usar como portada">
+                            <Button type="submit" variant="ghost" size="icon" className="size-11 sm:size-8" aria-label={`Usar la foto ${index + 1} como portada`} title="Usar como portada">
                               <Star aria-hidden="true" />
                             </Button>
                           </form>
@@ -152,7 +152,7 @@ async function Property({
                         <form action={deleteImageAction}>
                           <input type="hidden" name="imageId" value={image.id} />
                           <input type="hidden" name="propertyId" value={property.id} />
-                          <Button type="submit" variant="ghost" size="icon" className="size-8" aria-label={`Borrar la foto ${index + 1}`} title="Borrar">
+                          <Button type="submit" variant="ghost" size="icon" className="size-11 sm:size-8" aria-label={`Borrar la foto ${index + 1}`} title="Borrar">
                             <Trash2 aria-hidden="true" />
                           </Button>
                         </form>

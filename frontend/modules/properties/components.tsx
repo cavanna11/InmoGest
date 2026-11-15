@@ -11,6 +11,7 @@ import { createClient } from '@/lib/supabase/browser.ts';
 import { createPropertyAction, findDuplicatesAction, registerImagesAction, updatePropertyAction } from './actions.ts';
 import { IMAGE_MAX_BYTES, IMAGE_TYPES, IMAGES_BUCKET } from './images.ts';
 import type { PropertyFormValues } from './form-values.ts';
+import { prepareImage } from './resize.ts';
 import { FEATURES, OPERATION_LABELS, STATUS_LABELS, TYPE_LABELS } from './labels.ts';
 
 type Member = { userId: string; name: string };
@@ -233,8 +234,10 @@ export function ImageUploader({ organizationId, propertyId }: { organizationId: 
     const supabase = createClient();
     const paths: string[] = [];
     for (const file of list) {
-      const path = `${organizationId}/${propertyId}/${crypto.randomUUID()}.${IMAGE_TYPES[file.type]}`;
-      const { error } = await supabase.storage.from(IMAGES_BUCKET).upload(path, file, { contentType: file.type, upsert: false });
+      // Se reduce antes de subir: listados y página pública no bajan fotos de varios MB.
+      const { blob, type } = await prepareImage(file);
+      const path = `${organizationId}/${propertyId}/${crypto.randomUUID()}.${IMAGE_TYPES[type]}`;
+      const { error } = await supabase.storage.from(IMAGES_BUCKET).upload(path, blob, { contentType: type, upsert: false });
       if (error) {
         setState({ status: 'error', message: `No pudimos subir "${file.name}". Probá de nuevo.` });
         break;

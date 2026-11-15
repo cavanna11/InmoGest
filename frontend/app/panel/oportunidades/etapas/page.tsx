@@ -70,7 +70,7 @@ async function Stages({ searchParams }: { searchParams: Promise<Record<string, s
                   <form key={direction} action={moveStagePositionAction}>
                     <input type="hidden" name="stageId" value={stage.id} />
                     <input type="hidden" name="direction" value={direction} />
-                    <Button type="submit" variant="ghost" size="icon" className="size-8" disabled={disabled || off} aria-label={`${label} ${stage.name}`}>
+                    <Button type="submit" variant="ghost" size="icon" className="size-11 sm:size-8" disabled={disabled || off} aria-label={`${label} ${stage.name}`}>
                       <Icon aria-hidden="true" />
                     </Button>
                   </form>

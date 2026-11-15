@@ -1,5 +1,6 @@
 import 'server-only';
 import { redirect } from 'next/navigation';
+import { cache } from 'react';
 import { readPublicEnv } from './env.ts';
 import { createClient } from './supabase/server.ts';
 
@@ -14,8 +15,9 @@ export type CurrentUser = {
 /**
  * Usuario de la sesión, validado contra Supabase Auth con getUser() (nunca solo la cookie,
  * docs/SECURITY.md). null si no hay sesión o falta configuración.
+ * Con React.cache: layout, página y helpers del mismo pedido comparten una sola validación.
  */
-export async function getCurrentUser(): Promise<CurrentUser | null> {
+export const getCurrentUser = cache(async (): Promise<CurrentUser | null> => {
   if (!readPublicEnv()) return null;
   const supabase = await createClient();
   const { data, error } = await supabase.auth.getUser();
@@ -28,7 +30,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     emailConfirmed: Boolean(data.user.email_confirmed_at),
     metadata,
   };
-}
+});
 
 /** Exige sesión; si no hay, manda a ingresar y vuelve a `next` después. */
 export async function requireUser(next: string): Promise<CurrentUser> {

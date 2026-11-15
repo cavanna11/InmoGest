@@ -53,10 +53,14 @@ function HeaderFallback() {
 async function PanelHeader() {
   const { user, organization, organizations } = await loadPanel();
   // El dueño de una inmobiliaria creada por C&C acepta los términos al primer ingreso.
-  if (organization.isOwner && !organization.viaSupport && (await getPendingLegalDocuments(user.id)).length > 0) {
-    redirect('/aceptar-terminos');
-  }
-  const [details, platform] = await Promise.all([getOrganizationDetails(organization.id), getPlatformRole()]);
+  // Las tres consultas son independientes: van en paralelo (async-parallel).
+  const checkLegal = organization.isOwner && !organization.viaSupport;
+  const [pendingLegal, details, platform] = await Promise.all([
+    checkLegal ? getPendingLegalDocuments(user.id) : Promise.resolve([]),
+    getOrganizationDetails(organization.id),
+    getPlatformRole(),
+  ]);
+  if (pendingLegal.length > 0) redirect('/aceptar-terminos');
 
   return (
     <header className="border-b border-border bg-surface/90 backdrop-blur">

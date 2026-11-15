@@ -27,6 +27,7 @@ PRD §6 y §8: ningún usuario de una inmobiliaria puede ver, crear ni modificar
 - Cada tabla nueva necesita `organization_id`, claves compuestas, RLS forzada, grants explícitos y tests pgTAP de aislamiento (`backend/supabase/tests/`).
 - El worker y los webhooks usan la clave secreta (sin RLS): toda consulta filtra por `organization_id` derivado de un dato confiable.
 - Las funciones de permisos se evalúan en cada consulta; las políticas usan `(select …)` para que Postgres las evalúe una vez por sentencia.
+- Actualización (15/11/2026): las políticas SELECT con `app.can_read(organization_id)` pasaron a `organization_id in (select app.readable_organization_ids())` (migración `rls_readable_organization_ids`). Una función con la columna como argumento no se puede evaluar una sola vez y corría por fila: un conteo de 5.000 contactos bajó de unos 3 s a unos 3 ms, con el mismo resultado. Escritura y Storage siguen con las funciones por fila (afectan pocas filas).
 
 ## Referencias
 

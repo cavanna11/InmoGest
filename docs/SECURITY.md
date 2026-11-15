@@ -33,6 +33,8 @@
   - `app.is_owner(org)`: rol dueño, o sesión de soporte abierta.
   - `app.can_read(org)`: `is_member` y estado efectivo distinto de `blocked` (la sesión de soporte ignora el estado).
   - `app.can_write(org)`: `is_member` y estado efectivo `trial` o `active` (la sesión de soporte ignora el estado).
+  - `app.readable_organization_ids()`: el conjunto de inmobiliarias para las que `can_read` es verdadero. Las políticas SELECT lo usan como `organization_id in (select app.readable_organization_ids())`, que se evalúa una vez por consulta y no por fila. Las políticas SELECT nuevas siguen ese patrón (lo controla `tests/17_rls_read_set.sql`).
+- `send_property_whatsapp` solo acepta como fotos las URLs públicas de Storage (`*.supabase.co` o el Supabase local) de fotos registradas de esa propiedad: el proveedor de WhatsApp descarga esas URLs desde el VPS y no debe poder apuntarse a la red interna.
 - Claves foráneas compuestas: aunque una política tuviera un error, la base rechaza vincular registros de dos inmobiliarias.
 - La asignación (`assigned_user_id`) no participa de ninguna política.
 
