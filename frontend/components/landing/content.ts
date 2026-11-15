@@ -7,18 +7,22 @@ export const painPoints = [
   {
     title: 'La consulta llegó al celular de un agente y nadie la vio a tiempo.',
     consequence: 'El interesado le escribe a otra inmobiliaria.',
+    solution: 'Bandeja compartida: cada consulta crea o vincula su contacto y cualquiera del equipo responde.',
   },
   {
     title: 'Entró la propiedad justa para un cliente y nadie se acordó de avisarle.',
     consequence: 'Una venta que se pierde sin que nadie se entere.',
+    solution: 'Coincidencias automáticas con el motivo, y aviso al agente que atiende la búsqueda.',
   },
   {
     title: 'Los datos están repartidos entre planillas, cuadernos y chats personales.',
     consequence: 'Cada seguimiento empieza de cero.',
+    solution: 'Una sola base con contactos, propiedades, conversaciones y agenda de toda la inmobiliaria.',
   },
   {
     title: 'Un agente deja la inmobiliaria y se lleva los contactos en su teléfono.',
     consequence: 'La cartera queda incompleta.',
+    solution: 'El historial queda en la inmobiliaria y lo pendiente se reasigna.',
   },
 ] as const;
 
@@ -91,29 +95,6 @@ export const pillars: Array<{ id: string; title: string; summary: string; items:
 ];
 
 /** Hoy vs. con InmoPanel (PRD §2 y §12). */
-export const comparison = [
-  {
-    today: 'Contactos en planillas, cuadernos y el celular de cada agente.',
-    withUs: 'Una sola base con contactos, propiedades, conversaciones y agenda de toda la inmobiliaria.',
-  },
-  {
-    today: 'Consultas por WhatsApp que se pierden o se responden tarde.',
-    withUs: 'Bandeja compartida: cada consulta crea o vincula su contacto y cualquiera del equipo responde.',
-  },
-  {
-    today: 'Cruzar qué busca cada cliente con lo que entra, de memoria.',
-    withUs: 'Coincidencias automáticas con el motivo, y aviso al agente que atiende la búsqueda.',
-  },
-  {
-    today: 'Cuando un agente se va, se lleva los contactos y el historial.',
-    withUs: 'El historial queda en la inmobiliaria y lo pendiente se reasigna.',
-  },
-  {
-    today: 'Cambiar de sistema implica cargar todo a mano.',
-    withUs: 'Importación desde planillas con vista previa, errores por fila y control de duplicados.',
-  },
-] as const;
-
 /** Compromisos verificables: decisiones de diseño del producto, no promesas de resultados. */
 export const commitments = [
   {

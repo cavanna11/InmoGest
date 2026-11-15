@@ -1,6 +1,6 @@
 // Maquetas animadas de flujos del primer lanzamiento (PRD: CU-04, CU-07, F-12, F-16, F-17, F-18, F-23).
-// Datos ficticios; no son capturas del sistema. Se reproducen solas en loop (landing.css) y son
-// aria-hidden: la descripción accesible es la lista de pasos que las acompaña.
+// Datos ficticios; no son capturas del sistema. FlowPlayer las reproduce una vez al verse (landing.css)
+// y las marca aria-hidden: la descripción accesible va en su `description` y en los pasos que las acompañan.
 import type { ReactNode } from 'react';
 
 const PHONE = '+54 9 11 5555-0142';
@@ -13,7 +13,7 @@ function Chip({ tone = 'neutral', children }: { tone?: 'neutral' | 'success' | '
     highlight: 'bg-highlight text-highlight-foreground',
   };
   return (
-    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold whitespace-nowrap ${tones[tone]}`}>
+    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold whitespace-nowrap ${tones[tone]}`}>
       {children}
     </span>
   );
@@ -21,8 +21,8 @@ function Chip({ tone = 'neutral', children }: { tone?: 'neutral' | 'success' | '
 
 function Window({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-[0_24px_60px_-28px_color-mix(in_oklab,var(--primary)_45%,transparent)]">
-      <div className="flex items-center gap-2 border-b border-border bg-muted px-4 py-2.5">
+    <div className="ip-glass overflow-hidden rounded-xl">
+      <div className="flex items-center gap-2 border-b border-border/70 bg-muted/60 px-4 py-2.5">
         <span className="size-2.5 rounded-full bg-border" />
         <span className="size-2.5 rounded-full bg-border" />
         <span className="size-2.5 rounded-full bg-border" />
@@ -40,7 +40,7 @@ function TimelineStep({ index, label, children }: { index: 1 | 2 | 3 | 4; label:
       <span className="absolute left-0 top-1 flex size-6 items-center justify-center rounded-full border-2 border-primary bg-surface text-[11px] font-bold text-primary">
         {index}
       </span>
-      <p className="text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">{label}</p>
+      <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">{label}</p>
       <div className="mt-1.5 min-w-0 rounded-lg border border-border bg-background p-3">{children}</div>
     </li>
   );
@@ -52,8 +52,7 @@ function TimelineStep({ index, label, children }: { index: 1 | 2 | 3 | 4; label:
  */
 export function OpportunityFlow() {
   return (
-    <div className="ip-flow min-w-0" aria-hidden="true">
-      <Window title="InmoPanel · Coincidencias">
+    <Window title="InmoPanel · Coincidencias">
         <ol className="relative grid min-w-0 gap-4">
           <span className="ip-track absolute left-3 top-3 bottom-3 w-0.5 -translate-x-1/2 bg-primary/30" />
           <TimelineStep index={1} label="Propiedad nueva">
@@ -88,16 +87,14 @@ export function OpportunityFlow() {
             </div>
           </TimelineStep>
         </ol>
-      </Window>
-    </div>
+    </Window>
   );
 }
 
 /** Bandeja compartida: un número nuevo escribe, se crea el contacto y el equipo responde (CU-04). */
 export function InboxFlow() {
   return (
-    <div className="ip-flow min-w-0" aria-hidden="true">
-      <Window title="InmoPanel · Bandeja de WhatsApp">
+    <Window title="InmoPanel · Bandeja de WhatsApp">
         <div className="grid min-w-0 gap-3">
           <div className="min-w-0 ip-step ip-step-1 flex items-center justify-between gap-2 rounded-lg border border-border bg-background p-3">
             <div className="min-w-0">
@@ -121,15 +118,9 @@ export function InboxFlow() {
             <p className="ml-auto max-w-[90%] rounded-lg rounded-tr-sm bg-primary px-3 py-2 text-sm text-primary-foreground">
               ¡Sí! ¿Querés visitarlo el sábado a las 11?
             </p>
-            <p className="text-right text-[11px] text-muted-foreground">Respondió Martín · 14:32</p>
-          </div>
-          <div className="ip-typing flex gap-1 px-1" aria-hidden="true">
-            <span className="size-1.5 rounded-full bg-muted-foreground" />
-            <span className="size-1.5 rounded-full bg-muted-foreground" />
-            <span className="size-1.5 rounded-full bg-muted-foreground" />
+            <p className="text-right text-xs text-muted-foreground">Respondió Martín · 14:32</p>
           </div>
         </div>
-      </Window>
-    </div>
+    </Window>
   );
 }

@@ -7,7 +7,7 @@ Página de inicio pública de InmoPanel by C&C (`app/page.tsx`). Identidad en `d
 | `config.ts` | Destinos de los CTA (demo, acceso, legales), `SHOW_PRICES` y `PRODUCT_STATUS`. Único lugar con URLs. |
 | `content.ts` | Textos: situaciones, funciones por eje, comparación, compromisos, pasos, planes y preguntas frecuentes. Todo sale del PRD. |
 | `landing-page.tsx` | Secciones (Server Component). |
-| `demos.tsx` · `landing.css` | Maquetas animadas en loop (CSS), sin JavaScript. |
+| `demos.tsx` · `flow-player.tsx` · `landing.css` | Maquetas animadas (CSS). `FlowPlayer` es el único Client Component: las reproduce una vez al verse y ofrece "Ver de nuevo". |
 
 ## Canal de demo
 
@@ -18,7 +18,8 @@ WhatsApp comercial de C&C, +54 9 2257 52-9684 (definido el 03/11/2026): `DEMO_WH
 - Solo tokens semánticos de `styles/tokens.css`. Sin colores sueltos.
 - **InmoPanel está en desarrollo:** las funciones se presentan como "lo que incluye el primer lanzamiento" (PRD, MVP). Lo P1 se marca "Próximamente". Nunca se afirma que algo está disponible hoy, ni se agregan testimonios, logos de clientes, cifras o calificaciones que no existen.
 - Las maquetas llevan "Ilustrativo · datos ficticios", son `aria-hidden` y tienen al lado su descripción en texto.
-- Motion: loops discretos de 13 s solo con opacidad y transform; aparición al hacer scroll como mejora progresiva; con `prefers-reduced-motion` se ve el estado final.
+- Motion: cada maqueta se reproduce una sola vez al entrar en pantalla (≈ 4 s, solo opacidad y transform) y queda en su estado final; nada se mueve solo de forma continua (WCAG 2.2.2). Sin JavaScript o con `prefers-reduced-motion` se ve el estado final. Aparición al hacer scroll como mejora progresiva.
+- Glass: `.ip-glass` (maquetas) e `.ip-glass-on-brand`, translúcidos sobre resplandores de marca (`.ip-glow`), siempre desde los tokens. Con `prefers-reduced-transparency` o sin `backdrop-filter`, superficie opaca. Usar en pocos elementos: `backdrop-filter` es costoso en móvil.
 
 ## Estructura y por qué
 

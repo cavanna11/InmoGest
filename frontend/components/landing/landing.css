@@ -1,84 +1,112 @@
 /*
- * Animaciones de la landing (solo CSS, sin dependencias).
- * - Flujos en loop: cada paso aparece en su turno y el ciclo se reinicia con un fundido suave.
- *   Solo cambian opacidad y transform: no hay saltos de contenido (el espacio de cada paso está
- *   reservado desde el inicio).
- * - Aparición al hacer scroll: con animation-timeline (mejora progresiva). Sin soporte, el contenido
- *   se ve directamente.
- * - prefers-reduced-motion: sin animaciones; se ve el estado final completo.
+ * Estilos propios de la landing (solo CSS, sin dependencias). Colores siempre desde los tokens.
+ *
+ * Maquetas animadas (flow-player.tsx):
+ * - Se reproducen UNA vez al entrar en pantalla y quedan en el estado final; "Ver de nuevo" repite.
+ *   Nada se mueve solo de forma continua (WCAG 2.2.2).
+ * - El ocultamiento previo solo aplica con JavaScript y sin prefers-reduced-motion: en cualquier otro
+ *   caso se ve el estado final completo.
+ * - Solo cambian opacidad y transform: el espacio de cada paso está reservado (sin saltos de layout).
+ *
+ * Glass (vidrio): superficies translúcidas con desenfoque sobre los resplandores de marca. Se usa en
+ * pocos elementos (costo de backdrop-filter en móvil) y con fondo casi opaco para no perder contraste.
  */
 
-.ip-flow {
-  --ip-loop: 13s;
+/* El encabezado fijo no tapa lo enfocado ni el destino de un ancla (WCAG 2.4.11). */
+html:has(.ip-landing) {
+  scroll-padding-top: 5rem;
 }
 
-.ip-step {
-  animation-duration: var(--ip-loop);
-  animation-iteration-count: infinite;
-  animation-timing-function: ease-out;
-  animation-fill-mode: both;
+/* ---------- Glass ---------- */
+
+.ip-glass {
+  background-color: color-mix(in oklab, var(--surface) 72%, transparent);
+  border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklab, var(--surface) 60%, transparent),
+    0 24px 60px -28px color-mix(in oklab, var(--primary) 45%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
 }
 
-.ip-step-1 { animation-name: ip-step-1; }
-.ip-step-2 { animation-name: ip-step-2; }
-.ip-step-3 { animation-name: ip-step-3; }
-.ip-step-4 { animation-name: ip-step-4; }
-
-@keyframes ip-step-1 {
-  0% { opacity: 0; transform: translateY(8px); }
-  5%, 88% { opacity: 1; transform: none; }
-  96%, 100% { opacity: 0; transform: translateY(-4px); }
-}
-@keyframes ip-step-2 {
-  0%, 20% { opacity: 0; transform: translateY(8px); }
-  25%, 88% { opacity: 1; transform: none; }
-  96%, 100% { opacity: 0; transform: translateY(-4px); }
-}
-@keyframes ip-step-3 {
-  0%, 40% { opacity: 0; transform: translateY(8px); }
-  45%, 88% { opacity: 1; transform: none; }
-  96%, 100% { opacity: 0; transform: translateY(-4px); }
-}
-@keyframes ip-step-4 {
-  0%, 60% { opacity: 0; transform: translateY(8px); }
-  65%, 88% { opacity: 1; transform: none; }
-  96%, 100% { opacity: 0; transform: translateY(-4px); }
+/* Variante sobre el fondo de marca (bloque de demo). */
+.ip-glass-on-brand {
+  background-color: color-mix(in oklab, var(--primary-foreground) 12%, transparent);
+  border: 1px solid color-mix(in oklab, var(--primary-foreground) 25%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
-/* Línea que conecta los pasos: crece a medida que avanza el flujo. */
-.ip-track {
-  transform-origin: top;
-  animation: ip-track var(--ip-loop) ease-in-out infinite both;
+/* Resplandores de marca detrás de las superficies de vidrio: dan algo que desenfocar. */
+.ip-glow {
+  pointer-events: none;
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(64px);
+  opacity: 0.55;
 }
-@keyframes ip-track {
-  0% { transform: scaleY(0); opacity: 1; }
-  65%, 88% { transform: scaleY(1); opacity: 1; }
-  96%, 100% { transform: scaleY(1); opacity: 0; }
+.ip-glow-primary {
+  background: color-mix(in oklab, var(--primary) 55%, transparent);
 }
-
-/* Aviso que "late" cuando aparece la coincidencia. */
-.ip-ping {
-  animation: ip-ping var(--ip-loop) ease-out infinite both;
-}
-@keyframes ip-ping {
-  0%, 44% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--highlight) 0%, transparent); }
-  48% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--highlight) 45%, transparent); }
-  58%, 100% { box-shadow: 0 0 0 10px color-mix(in oklab, var(--highlight) 0%, transparent); }
+.ip-glow-highlight {
+  background: color-mix(in oklab, var(--highlight) 45%, transparent);
 }
 
-/* Indicador de "escribiendo" en la conversación. */
-.ip-typing span {
-  animation: ip-typing 1.2s ease-in-out infinite;
+/* Sin backdrop-filter o con transparencia reducida: superficie opaca, mismo diseño. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .ip-glass {
+    background-color: var(--surface);
+  }
 }
-.ip-typing span:nth-child(2) { animation-delay: 0.15s; }
-.ip-typing span:nth-child(3) { animation-delay: 0.3s; }
-@keyframes ip-typing {
-  0%, 60%, 100% { opacity: 0.35; transform: none; }
-  30% { opacity: 1; transform: translateY(-2px); }
+@media (prefers-reduced-transparency: reduce) {
+  .ip-glass {
+    background-color: var(--surface);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .ip-glass-on-brand {
+    background-color: color-mix(in oklab, var(--primary-foreground) 12%, var(--primary));
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .ip-glow {
+    display: none;
+  }
 }
 
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
+/* ---------- Maquetas animadas ---------- */
+
+.ip-step-1 { --ip-i: 0; }
+.ip-step-2 { --ip-i: 1; }
+.ip-step-3 { --ip-i: 2; }
+.ip-step-4 { --ip-i: 3; }
+
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  /* Antes de entrar en pantalla: pasos ocultos (su lugar ya está reservado). */
+  .ip-flow[data-state='idle'] .ip-step,
+  .ip-flow[data-state='idle'] .ip-track {
+    opacity: 0;
+  }
+
+  /* Al verse: cada paso aparece en su turno, una sola vez. Total ≈ 4 s. */
+  .ip-flow[data-state='playing'] .ip-step {
+    animation: ip-step-in 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(250ms + var(--ip-i) * 1000ms);
+  }
+
+  /* Línea que conecta los pasos: crece a medida que avanza el flujo. */
+  .ip-flow[data-state='playing'] .ip-track {
+    transform-origin: top;
+    animation: ip-track 3.3s ease-in-out 250ms both;
+  }
+
+  /* La coincidencia "late" una vez cuando aparece. */
+  .ip-flow[data-state='playing'] .ip-ping {
+    animation: ip-ping 900ms ease-out 1500ms both;
+  }
+
+  /* Aparición al hacer scroll (mejora progresiva: sin soporte, el contenido se ve directamente). */
+  @supports (animation-timeline: view()) {
     .ip-reveal {
       animation: ip-reveal linear both;
       animation-timeline: view();
@@ -86,18 +114,20 @@
     }
   }
 }
+
+@keyframes ip-step-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes ip-track {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+@keyframes ip-ping {
+  0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--highlight) 50%, transparent); }
+  100% { box-shadow: 0 0 0 10px color-mix(in oklab, var(--highlight) 0%, transparent); }
+}
 @keyframes ip-reveal {
   from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ip-step,
-  .ip-track,
-  .ip-ping,
-  .ip-typing span {
-    animation: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
 }

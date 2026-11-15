@@ -7,8 +7,9 @@ import type { ReactNode } from 'react';
 import { Logo } from '@/components/brand/logo.tsx';
 import { ThemeToggle } from '@/components/theme.tsx';
 import { DEMO_SECTION_ID, PRODUCT_STATUS, SHOW_PRICES, demoHref, landingLinks } from './config.ts';
-import { commitments, comparison, faqs, painPoints, pillars, plans, startSteps } from './content.ts';
+import { commitments, faqs, painPoints, pillars, plans, startSteps } from './content.ts';
 import { InboxFlow, OpportunityFlow } from './demos.tsx';
+import { FlowPlayer } from './flow-player.tsx';
 import './landing.css';
 
 const nav = [
@@ -21,7 +22,7 @@ const nav = [
 // Sin tailwind-merge en este módulo: tamaño y variante van por props, nunca sumando clases en conflicto.
 const buttonBase =
   'inline-flex items-center justify-center gap-2 rounded-lg text-sm font-semibold whitespace-nowrap transition-[background-color,box-shadow,transform] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring active:translate-y-px motion-reduce:transition-none';
-const buttonSizes = { md: 'h-11 px-5', sm: 'h-9 px-3 sm:px-4' };
+const buttonSizes = { md: 'h-11 px-5', sm: 'h-10 px-3 sm:px-4' };
 const buttonVariants = {
   primary: `${buttonBase} bg-primary text-primary-foreground shadow-sm hover:bg-primary/90 hover:shadow-md`,
   outline: `${buttonBase} border border-input bg-surface text-foreground hover:border-primary hover:text-primary`,
@@ -53,6 +54,49 @@ function ButtonLink({ href, variant = 'primary', size = 'md', className = '', ch
   );
 }
 
+/** Burbuja de chat (ícono genérico, no el logo de WhatsApp): indica que el botón abre una conversación. */
+function ChatIcon({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={`size-4 shrink-0 ${className}`} fill="none">
+      <path
+        d="M20 11.5a8 8 0 0 1-11.7 7.1L4 20l1.4-4.1A8 8 0 1 1 20 11.5Z"
+        stroke="currentColor"
+        strokeWidth="1.9"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+const demoOpensWhatsApp = demoHref().startsWith('https://wa.me/');
+
+/**
+ * "Solicitar una demo" en toda la página. Si el canal es WhatsApp lo anticipa: ícono visible y aviso
+ * para lectores de pantalla.
+ */
+function DemoButton({ size, variant, className, label = 'Solicitar una demo', shortLabel }: {
+  size?: keyof typeof buttonSizes;
+  variant?: keyof typeof buttonVariants;
+  className?: string;
+  label?: string;
+  shortLabel?: string;
+}) {
+  return (
+    <ButtonLink href={demoHref()} size={size} variant={variant} className={className}>
+      {demoOpensWhatsApp ? <ChatIcon /> : null}
+      {shortLabel ? (
+        <>
+          <span className="sm:hidden">{shortLabel}</span>
+          <span className="hidden sm:inline">{label}</span>
+        </>
+      ) : (
+        label
+      )}
+      {demoOpensWhatsApp ? <span className="sr-only"> (se abre WhatsApp)</span> : null}
+    </ButtonLink>
+  );
+}
+
 function CheckIcon({ className = '' }: { className?: string }) {
   return (
     <svg viewBox="0 0 16 16" aria-hidden="true" className={`size-4 shrink-0 ${className}`} fill="none">
@@ -62,7 +106,7 @@ function CheckIcon({ className = '' }: { className?: string }) {
 }
 
 function SoonBadge() {
-  return <span className="rounded-full border border-border px-2 py-0.5 text-[11px] font-medium text-muted-foreground">Próximamente</span>;
+  return <span className="rounded-full border border-border px-2 py-0.5 text-xs font-medium text-muted-foreground">Próximamente</span>;
 }
 
 function Section({ id, eyebrow, title, intro, children, tone = 'plain' }: {
@@ -89,13 +133,16 @@ function Section({ id, eyebrow, title, intro, children, tone = 'plain' }: {
 
 function Header() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur-md backdrop-saturate-150 supports-[backdrop-filter]:bg-background/65">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
-        <a href="#inicio" aria-label="InmoPanel by C&C, inicio" className="rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring">
-          <Logo />
+        <a href="#inicio" aria-label="InmoPanel by C&C, inicio" className="shrink-0 rounded-md whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring">
+          {/* En pantallas chicas solo "InmoPanel": "by C&C" no entra al lado de los botones. */}
+          <Logo showCompany={false} className="sm:hidden" />
+          <Logo className="hidden sm:inline-flex" />
         </a>
-        <nav aria-label="Secciones" className="hidden md:block">
-          <ul className="flex items-center gap-7 text-sm font-medium text-muted-foreground">
+        {/* Desde lg: entre md y lg las etiquetas se partían en dos líneas junto a los botones. */}
+        <nav aria-label="Secciones" className="hidden lg:block">
+          <ul className="flex items-center gap-7 text-sm font-medium whitespace-nowrap text-muted-foreground">
             {nav.map((item) => (
               <li key={item.href}>
                 <a href={item.href} className="transition-colors hover:text-foreground">
@@ -112,10 +159,7 @@ function Header() {
               Ingresar
             </ButtonLink>
           ) : null}
-          <ButtonLink href={demoHref()} size="sm">
-            <span className="sm:hidden">Pedir demo</span>
-            <span className="hidden sm:inline">Solicitar una demo</span>
-          </ButtonLink>
+          <DemoButton size="sm" shortLabel="Pedir demo" />
         </div>
       </div>
     </header>
@@ -124,18 +168,18 @@ function Header() {
 
 function Hero() {
   return (
-    <section id="inicio" className="relative overflow-hidden px-4 pt-14 pb-20 sm:px-6 sm:pt-20 sm:pb-28">
+    <section id="inicio" className="relative isolate overflow-hidden px-4 pt-8 pb-16 sm:px-6 sm:pt-20 sm:pb-28">
       {/* Trama sutil de "panel": guía visual, sin competir con el contenido. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:48px_48px] opacity-40 [mask-image:radial-gradient(ellipse_at_top,black_30%,transparent_75%)]"
       />
-      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-14 lg:grid-cols-[1.05fr_1fr]">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 sm:gap-14 lg:grid-cols-[1.05fr_1fr]">
         <div className="min-w-0">
-          <p className="mb-6 flex flex-wrap items-center gap-2 text-sm font-semibold text-primary">
+          <p className="mb-5 flex flex-wrap items-center gap-2 text-sm font-semibold text-primary sm:mb-6">
             <span>Software de gestión para inmobiliarias</span>
             {PRODUCT_STATUS ? (
-              <span className="rounded-full border border-highlight/50 bg-highlight/10 px-2.5 py-0.5 text-xs font-semibold text-foreground">
+              <span className="rounded-full border border-highlight/50 bg-highlight/10 px-2.5 py-0.5 text-xs font-semibold text-foreground backdrop-blur-sm">
                 {PRODUCT_STATUS}
               </span>
             ) : null}
@@ -143,17 +187,17 @@ function Hero() {
           <h1 className="text-4xl leading-[1.08] font-extrabold tracking-tight text-balance sm:text-6xl">
             Que ninguna consulta ni oportunidad se te escape.
           </h1>
-          <p className="mt-6 max-w-xl text-lg text-muted-foreground text-pretty sm:text-xl">
+          <p className="mt-5 max-w-xl text-lg text-muted-foreground text-pretty sm:mt-6 sm:text-xl">
             InmoPanel reúne los contactos, las propiedades y las conversaciones de WhatsApp de tu inmobiliaria en un solo
             lugar. Y cuando entra una propiedad, te avisa qué clientes la están buscando.
           </p>
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href={demoHref()}>Solicitar una demo</ButtonLink>
+          <div className="mt-7 flex flex-col gap-3 sm:mt-9 sm:flex-row">
+            <DemoButton />
             <ButtonLink href="#como-funciona" variant="outline">
               Ver cómo funciona
             </ButtonLink>
           </div>
-          <ul className="mt-9 grid gap-2 text-sm text-muted-foreground sm:flex sm:flex-wrap sm:gap-x-6">
+          <ul className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted-foreground sm:mt-9 sm:gap-x-6">
             {['Prueba gratis de 14 días', 'Sin instalación: navegador y celular', 'Importás tus planillas'].map((item) => (
               <li key={item} className="flex items-center gap-2">
                 <CheckIcon className="text-primary" />
@@ -162,9 +206,13 @@ function Hero() {
             ))}
           </ul>
         </div>
-        <div className="min-w-0">
-          <OpportunityFlow />
-          <p className="mt-3 text-center text-xs text-muted-foreground">Ilustrativo · datos ficticios</p>
+        <div className="relative isolate min-w-0">
+          {/* Resplandores de marca detrás de la maqueta de vidrio. */}
+          <div aria-hidden="true" className="ip-glow ip-glow-primary -top-10 -right-6 -z-10 size-56 sm:size-72" />
+          <div aria-hidden="true" className="ip-glow ip-glow-highlight -bottom-8 -left-8 -z-10 size-40 sm:size-56" />
+          <FlowPlayer description="Ejemplo: entra una propiedad, coincide con la búsqueda de un cliente al 67 %, se avisa al agente y se envía la ficha por WhatsApp.">
+            <OpportunityFlow />
+          </FlowPlayer>
         </div>
       </div>
     </section>
@@ -182,11 +230,18 @@ function PainPoints() {
     >
       <ul className="grid gap-4 sm:grid-cols-2">
         {painPoints.map((item) => (
-          <li key={item.title} className="ip-reveal rounded-xl border border-border bg-surface p-6">
+          <li key={item.title} className="ip-reveal flex flex-col rounded-xl border border-border bg-surface p-6">
             <p className="font-semibold text-pretty">{item.title}</p>
             <p className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
-              <span aria-hidden="true" className="size-1.5 rounded-full bg-highlight" />
+              <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-highlight" />
               {item.consequence}
+            </p>
+            <p className="mt-5 flex gap-2 border-t border-border pt-4 text-sm font-medium">
+              <CheckIcon className="mt-0.5 text-primary" />
+              <span>
+                <span className="text-primary">Con InmoPanel: </span>
+                {item.solution}
+              </span>
             </p>
           </li>
         ))}
@@ -261,41 +316,12 @@ function HowItWorks() {
             </li>
           ))}
         </ol>
-        <div className="min-w-0">
-          <InboxFlow />
-          <p className="mt-3 text-center text-xs text-muted-foreground">Ilustrativo · datos ficticios</p>
+        <div className="relative isolate min-w-0">
+          <div aria-hidden="true" className="ip-glow ip-glow-primary -top-8 -left-6 -z-10 size-56" />
+          <FlowPlayer description="Ejemplo: un número nuevo escribe, se crea el contacto, Laura abre la conversación y Martín responde; queda registrado quién respondió.">
+            <InboxFlow />
+          </FlowPlayer>
         </div>
-      </div>
-    </Section>
-  );
-}
-
-function Comparison() {
-  return (
-    <Section
-      id="diferencia"
-      eyebrow="Por qué cambiar"
-      title="De planillas y chats sueltos a un sistema que trabaja con vos."
-    >
-      <div className="ip-reveal overflow-hidden rounded-2xl border border-border bg-surface">
-        <div className="hidden grid-cols-2 border-b border-border bg-muted text-sm font-semibold md:grid">
-          <p className="px-6 py-3 text-muted-foreground">Hoy</p>
-          <p className="border-l border-border px-6 py-3 text-primary">Con InmoPanel</p>
-        </div>
-        <ul className="divide-y divide-border">
-          {comparison.map((item) => (
-            <li key={item.today} className="grid md:grid-cols-2">
-              <p className="px-6 pt-5 text-sm text-muted-foreground md:py-5">
-                <span className="font-semibold md:hidden">Hoy: </span>
-                {item.today}
-              </p>
-              <p className="flex gap-2 px-6 pt-2 pb-5 text-sm font-medium md:border-l md:border-border md:py-5">
-                <CheckIcon className="mt-0.5 text-primary" />
-                <span>{item.withUs}</span>
-              </p>
-            </li>
-          ))}
-        </ul>
       </div>
     </Section>
   );
@@ -385,9 +411,7 @@ function Pricing() {
                 </li>
               ))}
             </ul>
-            <ButtonLink href={demoHref()} variant={plan.highlighted ? 'primary' : 'outline'} className="mt-8">
-              Solicitar una demo
-            </ButtonLink>
+            <DemoButton variant={plan.highlighted ? 'primary' : 'outline'} className="mt-8" />
           </li>
         ))}
       </ul>
@@ -402,7 +426,8 @@ function DemoRequest() {
   return (
     <section id={DEMO_SECTION_ID} className="scroll-mt-20 px-4 py-20 sm:px-6 sm:py-28">
       <div className="ip-reveal relative mx-auto max-w-4xl overflow-hidden rounded-3xl bg-primary px-6 py-14 text-center text-primary-foreground sm:px-14">
-        <div aria-hidden="true" className="pointer-events-none absolute -top-24 -right-24 size-64 rounded-full border-[28px] border-primary-foreground/10" />
+        <div aria-hidden="true" className="ip-glow ip-glow-highlight -top-20 -right-16 size-64" />
+        <div aria-hidden="true" className="pointer-events-none absolute -bottom-24 -left-24 size-64 rounded-full border-[28px] border-primary-foreground/10" />
         <h2 className="relative text-3xl font-bold tracking-tight text-balance sm:text-4xl">
           Conocé InmoPanel antes del lanzamiento.
         </h2>
@@ -413,10 +438,8 @@ function DemoRequest() {
         <div className="relative mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
           {landingLinks.demo ? (
             <>
-              <ButtonLink href={landingLinks.demo} variant="inverse">
-                Coordinar por WhatsApp
-              </ButtonLink>
-              <p className="text-sm text-primary-foreground/85">Se abre WhatsApp con el mensaje listo para enviar.</p>
+              <DemoButton variant="inverse" label="Coordinar por WhatsApp" />
+              <p className="ip-glass-on-brand relative rounded-lg px-4 py-2 text-sm">Se abre WhatsApp con el mensaje listo para enviar.</p>
             </>
           ) : (
             // PENDIENTE: falta el canal para pedir demos (landingLinks.demo). No se inventa uno.
@@ -493,7 +516,7 @@ function Footer() {
 
 export function LandingPage() {
   return (
-    <>
+    <div className="ip-landing">
       <a
         href="#contenido"
         className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
@@ -506,7 +529,6 @@ export function LandingPage() {
         <PainPoints />
         <HowItHelps />
         <HowItWorks />
-        <Comparison />
         <Commitments />
         <GetStarted />
         <Pricing />
@@ -514,6 +536,6 @@ export function LandingPage() {
         <Faq />
       </main>
       <Footer />
-    </>
+    </div>
   );
 }
