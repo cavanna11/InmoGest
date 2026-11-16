@@ -1,33 +1,23 @@
 'use client';
 
-import { formatDateTime } from '@inmogest/shared';
-import { Paperclip } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useActionState, useEffect, useRef, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { FormMessage, SubmitButton } from '@/components/form-feedback.tsx';
-import { Button } from '@/components/ui/button.tsx';
 import { ConfirmSubmit } from '@/components/ui/confirm-dialog.tsx';
 import { Select } from '@/components/ui/form-controls.tsx';
-import { Badge } from '@/components/ui/surfaces.tsx';
-import { idle, type FormState } from '@/lib/action.ts';
+import { idle } from '@/lib/action.ts';
 import { createClient } from '@/lib/supabase/browser.ts';
 import {
-  assignConversationAction,
   connectionQrAction,
   connectWhatsappAction,
   openConversationAction,
   removeConnectionAction,
   requestOfficialApiAction,
-  sendAttachmentAction,
-  sendMessageAction,
   sendPropertyAction,
   startConversationAction,
   type QrResult,
 } from './actions.ts';
-import { ATTACHMENT_MAX_BYTES, ATTACHMENT_TYPES, MEDIA_BUCKET, MESSAGE_STATUS } from './labels.ts';
-import type { InboxMessage } from './queries.ts';
-
-type Member = { userId: string; name: string };
 
 const FALLBACK_REFRESH_MS = 20_000;
 const REFRESH_DEBOUNCE_MS = 300;
@@ -65,169 +55,6 @@ export function OpenConversation({ conversationId, lastMessageId }: { conversati
     void openConversationAction(conversationId);
   }, [conversationId, lastMessageId]);
   return null;
-}
-
-function MessageMedia({ message }: { message: InboxMessage }) {
-  const href = message.mediaHref;
-  if (!href) {
-    if (message.media_status === 'pending') return <p className="text-sm italic opacity-80">Descargando adjunto…</p>;
-    if (message.media_status === 'failed') return <p className="text-sm italic opacity-80">El adjunto no está disponible. Miralo en el teléfono.</p>;
-    return null;
-  }
-  if (message.type === 'image') {
-    return (
-      <a href={href} target="_blank" rel="noreferrer">
-        {/* eslint-disable-next-line @next/next/no-img-element -- URL firmada de corta duración, no optimizable */}
-        <img src={href} alt={message.media_name ?? 'Foto recibida por WhatsApp'} className="max-h-72 rounded-md object-contain" loading="lazy" />
-      </a>
-    );
-  }
-  if (message.type === 'audio') return <audio controls preload="none" src={href} className="max-w-full" />;
-  if (message.type === 'video') return <video controls preload="none" src={href} className="max-h-72 max-w-full rounded-md" />;
-  return (
-    <a href={href} target="_blank" rel="noreferrer" className="font-medium underline underline-offset-4">
-      {message.media_name ?? 'Abrir documento'}
-    </a>
-  );
-}
-
-export function MessageList({ messages, members }: { messages: InboxMessage[]; members: Member[] }) {
-  const endRef = useRef<HTMLLIElement>(null);
-  const lastId = messages.at(-1)?.id;
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ block: 'end' });
-  }, [lastId]);
-
-  return (
-    <ul aria-label="Mensajes" className="grid max-h-[55dvh] min-h-48 content-start gap-2 overflow-y-auto px-4 py-2">
-      {messages.length === 0 ? <li className="text-sm text-muted-foreground">Todavía no hay mensajes en esta conversación.</li> : null}
-      {messages.map((message) => {
-        const outbound = message.direction === 'outbound';
-        const author = message.author_user_id
-          ? (members.find((member) => member.userId === message.author_user_id)?.name ?? 'Ex integrante')
-          : outbound
-            ? 'Desde el teléfono'
-            : null;
-        return (
-          <li key={message.id} className={`flex ${outbound ? 'justify-end' : 'justify-start'}`}>
-            <div className={`grid max-w-[85%] min-w-0 gap-1 rounded-lg px-3 py-2 text-sm ${outbound ? 'bg-primary text-primary-foreground' : 'bg-muted'} ${message.status === 'failed' ? 'ring-2 ring-destructive' : ''}`}>
-              <MessageMedia message={message} />
-              {message.body ? <p className="break-words whitespace-pre-wrap">{message.body}</p> : null}
-              <p className="flex flex-wrap items-center gap-x-2 text-xs opacity-80">
-                {message.kind === 'automated' ? <Badge variant="highlight">Automático</Badge> : null}
-                {author ? <span>{author}</span> : null}
-                <time dateTime={message.sent_at ?? message.created_at}>{formatDateTime(message.sent_at ?? message.created_at)}</time>
-                {outbound && message.status !== 'sent' ? <span>{MESSAGE_STATUS[message.status] ?? ''}</span> : null}
-              </p>
-            </div>
-          </li>
-        );
-      })}
-      <li ref={endRef} aria-hidden="true" />
-    </ul>
-  );
-}
-
-export function Composer({ organizationId, conversationId, disabled }: { organizationId: string; conversationId: string; disabled: boolean }) {
-  const [state, action] = useActionState(sendMessageAction, idle);
-  const [uploadState, setUploadState] = useState<FormState>(idle);
-  const [uploading, setUploading] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
-  const fileRef = useRef<HTMLInputElement>(null);
-  const bodyRef = useRef<HTMLTextAreaElement>(null);
-
-  // Al enviar bien se limpia el texto; si falla, se conserva para no perderlo.
-  useEffect(() => {
-    if (state.status === 'success') formRef.current?.reset();
-  }, [state]);
-
-  async function attach(file: File | undefined) {
-    if (!file) return;
-    const attachment = ATTACHMENT_TYPES[file.type];
-    if (!attachment || file.size > ATTACHMENT_MAX_BYTES) {
-      setUploadState({ status: 'error', message: `"${file.name}": se pueden enviar fotos, audios, videos MP4, PDF, Word y Excel de hasta 16 MB.` });
-      return;
-    }
-    setUploading(true);
-    setUploadState(idle);
-    const path = `${organizationId}/outbound/${crypto.randomUUID()}.${attachment.extension}`;
-    const { error } = await createClient().storage.from(MEDIA_BUCKET).upload(path, file, { contentType: file.type, upsert: false });
-    if (error) {
-      setUploadState({ status: 'error', message: `No pudimos subir "${file.name}". Probá de nuevo.` });
-    } else {
-      const result = await sendAttachmentAction({ conversationId, path, mime: file.type, name: file.name, caption: bodyRef.current?.value ?? '' });
-      setUploadState(result);
-      if (result.status === 'success') formRef.current?.reset();
-    }
-    setUploading(false);
-    if (fileRef.current) fileRef.current.value = '';
-  }
-
-  if (disabled) {
-    return <p className="border-t border-border p-4 text-sm text-muted-foreground">El número de esta conversación no está conectado: no se puede responder hasta reconectarlo.</p>;
-  }
-
-  return (
-    <div className="grid gap-2 border-t border-border p-3">
-      {state.status === 'error' ? <FormMessage state={state} /> : null}
-      {uploadState.status === 'error' ? <FormMessage state={uploadState} /> : null}
-      <form ref={formRef} action={action} className="flex items-end gap-2">
-        <input type="hidden" name="conversationId" value={conversationId} />
-        <label htmlFor="attachment" className="sr-only">
-          Adjuntar archivo
-        </label>
-        <input ref={fileRef} id="attachment" type="file" className="hidden" accept={Object.keys(ATTACHMENT_TYPES).join(',')} disabled={uploading} onChange={(event) => attach(event.currentTarget.files?.[0])} />
-        <Button type="button" variant="outline" size="sm" disabled={uploading} aria-label={uploading ? 'Subiendo archivo' : 'Adjuntar archivo'} onClick={() => fileRef.current?.click()}>
-          <Paperclip className="size-4" aria-hidden="true" />
-        </Button>
-        <label htmlFor="body" className="sr-only">
-          Mensaje
-        </label>
-        <textarea
-          ref={bodyRef}
-          id="body"
-          name="body"
-          rows={2}
-          maxLength={4000}
-          placeholder="Escribí un mensaje"
-          className="flex min-h-10 w-full min-w-0 rounded-md border border-input bg-background px-3 py-2 text-base focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:text-sm"
-          onKeyDown={(event) => {
-            if (event.key === 'Enter' && !event.shiftKey) {
-              event.preventDefault();
-              formRef.current?.requestSubmit();
-            }
-          }}
-        />
-        <SubmitButton size="sm" pendingLabel="Enviando…">
-          Enviar
-        </SubmitButton>
-      </form>
-    </div>
-  );
-}
-
-export function AssignForm({ conversationId, assignedUserId, members }: { conversationId: string; assignedUserId: string | null; members: Member[] }) {
-  const [state, action] = useActionState(assignConversationAction, idle);
-  return (
-    <form action={action} className="flex flex-wrap items-center gap-2">
-      <input type="hidden" name="conversationId" value={conversationId} />
-      <label htmlFor="userId" className="sr-only">
-        Asignada a
-      </label>
-      <Select key={assignedUserId ?? 'none'} id="userId" name="userId" defaultValue={assignedUserId ?? ''} className="w-auto">
-        <option value="">Sin asignar</option>
-        {members.map((member) => (
-          <option key={member.userId} value={member.userId}>
-            {member.name}
-          </option>
-        ))}
-      </Select>
-      <SubmitButton size="sm" variant="outline" pendingLabel="Guardando…">
-        Reasignar
-      </SubmitButton>
-      {state.status === 'error' ? <FormMessage state={state} /> : null}
-    </form>
-  );
 }
 
 export function ConnectForm() {
@@ -327,8 +154,24 @@ export function OfficialApiForm({ disabled }: { disabled: boolean }) {
   );
 }
 
-export function StartConversationButton({ contactId }: { contactId: string }) {
+export function StartConversationButton({ contactId, contactName }: { contactId: string; contactName?: string }) {
   const [state, action] = useActionState(startConversationAction, idle);
+  // Con nombre: versión compacta para listas (ícono con nombre accesible); el error se muestra igual.
+  if (contactName) {
+    return (
+      <form action={action} className="grid justify-items-end gap-1">
+        <input type="hidden" name="contactId" value={contactId} />
+        <SubmitButton size="icon" variant="outline" pendingLabel="…" className="size-10 sm:size-9" aria-label={`Escribir por WhatsApp a ${contactName}`} title="Escribir por WhatsApp">
+          <MessageCircle aria-hidden="true" />
+        </SubmitButton>
+        {state.status === 'error' ? (
+          <p role="alert" className="max-w-48 text-right text-xs text-destructive">
+            {state.message}
+          </p>
+        ) : null}
+      </form>
+    );
+  }
   return (
     <form action={action} className="grid gap-2">
       <input type="hidden" name="contactId" value={contactId} />

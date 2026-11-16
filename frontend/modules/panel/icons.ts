@@ -6,6 +6,7 @@ import {
   CreditCard,
   House,
   MessageCircle,
+  Plug,
   Search,
   Smartphone,
   SquareKanban,
@@ -32,6 +33,7 @@ export const SECTION_ICONS: Record<string, LucideIcon> = {
   configuracion: Store,
   equipo: UsersRound,
   whatsapp: Smartphone,
+  integraciones: Plug,
   plan: CreditCard,
   perfil: UserRound,
 };

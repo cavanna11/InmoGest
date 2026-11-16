@@ -48,6 +48,11 @@ const TEXT_PAIRS: Array<[string, string]> = [
   ['highlight', 'highlight-foreground'],
   ['primary-soft', 'primary-soft-foreground'],
   ['highlight-soft', 'highlight-soft-foreground'],
+  // Menú lateral del panel.
+  ['sidebar', 'sidebar-foreground'],
+  ['sidebar', 'muted-foreground'],
+  ['sidebar-primary', 'sidebar-primary-foreground'],
+  ['sidebar-accent', 'sidebar-accent-foreground'],
 ];
 
 const UI_PAIRS: Array<[string, string]> = [
@@ -55,6 +60,7 @@ const UI_PAIRS: Array<[string, string]> = [
   ['surface', 'input'],
   ['background', 'ring'],
   ['surface', 'ring'],
+  ['sidebar', 'sidebar-ring'],
 ];
 
 describe.each(Object.entries(themes))('tema %s', (_name, tokens) => {

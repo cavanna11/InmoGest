@@ -9,6 +9,7 @@ import { Alert, Card } from '@/components/ui/surfaces.tsx';
 import { requireActiveOrganization } from '@/lib/tenant.ts';
 import { dismissDuplicateAction, mergeContactsAction } from '@/modules/contacts/actions.ts';
 import { getOpenDuplicateReports } from '@/modules/contacts/queries.ts';
+import { PageSkeleton } from '@/components/ui/page-skeleton.tsx';
 
 export const metadata: Metadata = { title: 'Posibles duplicados' };
 
@@ -24,7 +25,7 @@ export default function DuplicatesPage({ searchParams }: PageProps<'/panel/conta
         title="Posibles duplicados"
         description="Compará los dos contactos y elegí cuál queda. El resultado conserva teléfonos, emails, notas e historial de ambos."
       />
-      <Suspense fallback={<p className="text-muted-foreground">Cargando…</p>}>
+      <Suspense fallback={<PageSkeleton variant="list" label="Cargando…" />}>
         <Duplicates searchParams={searchParams} />
       </Suspense>
     </div>

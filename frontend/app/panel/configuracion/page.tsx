@@ -5,12 +5,13 @@ import { requireActiveOrganization } from '@/lib/tenant.ts';
 import { LogoForm, OrganizationSettingsForm } from '@/modules/organization/components.tsx';
 import { getOrganizationDetails, logoUrl } from '@/modules/organization/queries.ts';
 import { PageHeader } from '@/components/ui/page-header.tsx';
+import { PageSkeleton } from '@/components/ui/page-skeleton.tsx';
 
 export const metadata: Metadata = { title: 'Datos de la inmobiliaria' };
 
 export default function OrganizationSettingsPage() {
   return (
-    <Suspense fallback={<p className="text-muted-foreground">Cargando…</p>}>
+    <Suspense fallback={<PageSkeleton variant="form" label="Cargando…" />}>
       <OrganizationSettings />
     </Suspense>
   );
@@ -29,7 +30,7 @@ async function OrganizationSettings() {
 
   return (
     <div className="grid gap-6">
-      <PageHeader section="configuracion" title="Datos de la inmobiliaria" description="Nombre, contacto, moneda y logo." />
+      <PageHeader section="configuracion" title="Datos de la inmobiliaria" description="Nombre, contacto, sitio web, moneda y logo." />
       {disabled ? <Alert variant="warning">La cuenta está en solo lectura: no se pueden hacer cambios.</Alert> : null}
       <Card>
         <CardTitle>Datos generales</CardTitle>
@@ -42,6 +43,7 @@ async function OrganizationSettings() {
               slug: details.slug,
               contactEmail: details.contact_email ?? '',
               contactPhone: details.contact_phone ?? '',
+              websiteUrl: details.website_url ?? '',
               defaultCurrency: details.default_currency,
               agentsCanReassign: details.agents_can_reassign,
               usdRateEnabled: details.usd_ars_rate_enabled,

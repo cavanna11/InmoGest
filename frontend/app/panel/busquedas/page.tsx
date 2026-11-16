@@ -12,6 +12,7 @@ import { getActiveMembers } from '@/modules/contacts/queries.ts';
 import { OPERATION_LABELS, TYPE_LABELS } from '@/modules/properties/labels.ts';
 import { budgetLabel } from '@/modules/searches/format.ts';
 import { getStages, listSearches, PAGE_SIZE } from '@/modules/searches/queries.ts';
+import { PageSkeleton } from '@/components/ui/page-skeleton.tsx';
 
 export const metadata: Metadata = { title: 'Búsquedas' };
 
@@ -20,7 +21,7 @@ export default function SearchesPage({ searchParams }: PageProps<'/panel/busqued
   return (
     <div className="grid grid-cols-1 gap-6">
       <PageHeader section="busquedas" title="Búsquedas" description="Qué busca cada cliente y qué propiedades le sirven, con el motivo de cada coincidencia." />
-      <Suspense fallback={<p className="text-muted-foreground">Cargando búsquedas…</p>}>
+      <Suspense fallback={<PageSkeleton variant="list" label="Cargando búsquedas…" />}>
         <Searches searchParams={searchParams} />
       </Suspense>
     </div>

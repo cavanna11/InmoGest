@@ -7,13 +7,14 @@ import { requireActiveOrganization } from '@/lib/tenant.ts';
 import { ConnectForm, ConnectionQr, OfficialApiForm, RemoveConnectionButton } from '@/modules/whatsapp/components.tsx';
 import { CONNECTION_STATUS } from '@/modules/whatsapp/labels.ts';
 import { getOpenApiRequest, listConnections } from '@/modules/whatsapp/queries.ts';
+import { PageSkeleton } from '@/components/ui/page-skeleton.tsx';
 
-export const metadata: Metadata = { title: 'WhatsApp' };
+export const metadata: Metadata = { title: 'Conectar WhatsApp' };
 
 // Conexión del número por QR (CU-03, F-14, F-15, F-32).
 export default function WhatsAppPage() {
   return (
-    <Suspense fallback={<p className="text-muted-foreground">Cargando…</p>}>
+    <Suspense fallback={<PageSkeleton variant="form" label="Cargando…" />}>
       <WhatsApp />
     </Suspense>
   );
@@ -27,7 +28,7 @@ async function WhatsApp() {
 
   return (
     <div className="grid gap-6">
-      <PageHeader section="whatsapp" title="WhatsApp" description="Conectá el número de la inmobiliaria para recibir y responder desde el panel." />
+      <PageHeader section="whatsapp" title="Conectar WhatsApp" description="Conectá el número de la inmobiliaria para recibir y responder desde el panel." />
 
       {!available ? (
         <Alert variant="warning">La conexión de WhatsApp todavía no está habilitada en esta instalación. Las conversaciones guardadas se pueden seguir consultando.</Alert>

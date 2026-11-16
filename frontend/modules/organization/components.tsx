@@ -12,6 +12,7 @@ export type OrganizationFormValues = {
   slug: string;
   contactEmail: string;
   contactPhone: string;
+  websiteUrl: string;
   defaultCurrency: string;
   agentsCanReassign: boolean;
   usdRateEnabled: boolean;
@@ -55,6 +56,9 @@ export function OrganizationSettingsForm({ values, disabled }: { values: Organiz
         </Field>
         <Field id="contactPhone" label="Teléfono de contacto (opcional)" hint="Con característica, por ejemplo 11 2345-6789." error={e.contactPhone}>
           <Input id="contactPhone" name="contactPhone" type="tel" defaultValue={values.contactPhone} aria-invalid={e.contactPhone ? true : undefined} aria-describedby={describedBy('contactPhone', { hint: true, error: e.contactPhone })} />
+        </Field>
+        <Field id="websiteUrl" label="Sitio web (opcional)" hint="Si tenés web propia, aparece en la página pública de cada propiedad." error={e.websiteUrl}>
+          <Input id="websiteUrl" name="websiteUrl" type="url" inputMode="url" placeholder="https://www.tuinmobiliaria.com.ar" defaultValue={values.websiteUrl} aria-invalid={e.websiteUrl ? true : undefined} aria-describedby={describedBy('websiteUrl', { hint: true, error: e.websiteUrl })} />
         </Field>
         <Field id="defaultCurrency" label="Moneda por defecto" error={e.defaultCurrency}>
           <Select id="defaultCurrency" name="defaultCurrency" defaultValue={values.defaultCurrency}>

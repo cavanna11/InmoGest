@@ -22,6 +22,8 @@ import { err, type Err } from './result.ts';
  *   IG015 número de WhatsApp no conectado
  *   IG016 contacto marcado como "no contactar", sin conversación iniciada por él
  *   IG017 propiedad sin página pública
+ *   IG018 la publicación la gestiona una integración (Mercado Libre por API)
+ *   IG019 Mercado Libre no conectado
  */
 
 export type DbErrorCode =
@@ -46,6 +48,8 @@ export type DbErrorCode =
   | 'whatsapp_not_connected'
   | 'contact_do_not_contact'
   | 'property_not_public'
+  | 'listing_managed'
+  | 'mercadolibre_not_connected'
   | 'unexpected';
 
 const INVITATION_MESSAGES: Record<string, string> = {
@@ -132,6 +136,10 @@ export function translateDbError(error: DbErrorLike | null | undefined): Err<DbE
       return err('contact_do_not_contact', 'Este contacto pidió no recibir mensajes. Solo se le puede responder si escribe.');
     case 'IG017':
       return err('property_not_public', 'Esta propiedad no tiene página pública: publicala antes de enviarla.');
+    case 'IG018':
+      return err('listing_managed', 'Esta publicación la maneja InmoPanel en Mercado Libre: cambiala desde la publicación.');
+    case 'IG019':
+      return err('mercadolibre_not_connected', 'Mercado Libre no está conectado. El dueño lo puede conectar en Integraciones.');
     default:
       return err('unexpected', 'Ocurrió un error inesperado. Intentá de nuevo en unos minutos.');
   }

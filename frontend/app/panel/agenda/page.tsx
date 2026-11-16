@@ -12,6 +12,7 @@ import { AppointmentForm, TaskForm } from '@/modules/agenda/components.tsx';
 import { getAgendaOptions, getAppointments, getPendingTasks } from '@/modules/agenda/queries.ts';
 import { getActiveMembers } from '@/modules/contacts/queries.ts';
 import { getOrganizationDetails } from '@/modules/organization/queries.ts';
+import { PageSkeleton } from '@/components/ui/page-skeleton.tsx';
 
 export const metadata: Metadata = { title: 'Agenda' };
 
@@ -49,7 +50,7 @@ export default function AgendaPage({ searchParams }: PageProps<'/panel/agenda'>)
   return (
     <div className="grid grid-cols-1 gap-6">
       <PageHeader section="agenda" title="Agenda" description="Visitas y tareas del equipo. Te avisamos de las tareas vencidas y de las visitas de las próximas 24 horas." />
-      <Suspense fallback={<p className="text-muted-foreground">Cargando agenda…</p>}>
+      <Suspense fallback={<PageSkeleton variant="split" label="Cargando agenda…" />}>
         <Agenda searchParams={searchParams} />
       </Suspense>
     </div>
@@ -79,6 +80,8 @@ async function Agenda({ searchParams }: { searchParams: Promise<Record<string, s
     currentUserId: user.id,
     canAssignOthers: organization.isOwner || Boolean(details?.agents_can_reassign),
     today,
+    defaultContactId: typeof params.contacto === 'string' ? params.contacto : undefined,
+    defaultPropertyId: typeof params.propiedad === 'string' ? params.propiedad : undefined,
   };
   const byDay = new Map<string, typeof appointments>();
   for (const appointment of appointments) {
@@ -100,7 +103,7 @@ async function Agenda({ searchParams }: { searchParams: Promise<Record<string, s
 
       {canWrite ? (
         <Card className="grid gap-3">
-          <details>
+          <details open={params.agendar === '1'}>
             <summary className="cursor-pointer font-semibold text-primary">+ Agendar una visita</summary>
             <div className="mt-4">
               {formOptions.contacts.length === 0 || formOptions.properties.length === 0 ? (

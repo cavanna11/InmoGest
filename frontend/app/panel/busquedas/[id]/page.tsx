@@ -19,6 +19,7 @@ import { moveStageAction, setMatchStatusAction } from '@/modules/searches/action
 import { SearchForm } from '@/modules/searches/components.tsx';
 import { budgetLabel, matchReason } from '@/modules/searches/format.ts';
 import { getSearch, getSearchMatches, getStageHistory, getStages } from '@/modules/searches/queries.ts';
+import { PageSkeleton } from '@/components/ui/page-skeleton.tsx';
 
 export const metadata: Metadata = { title: 'Búsqueda' };
 
@@ -29,7 +30,7 @@ export default function SearchPage({ params }: PageProps<'/panel/busquedas/[id]'
       <Link href="/panel/busquedas" className="text-sm text-muted-foreground hover:text-foreground">
         ← Búsquedas
       </Link>
-      <Suspense fallback={<p className="text-muted-foreground">Cargando búsqueda…</p>}>
+      <Suspense fallback={<PageSkeleton variant="detail" label="Cargando búsqueda…" />}>
         <Search params={params} />
       </Suspense>
     </div>

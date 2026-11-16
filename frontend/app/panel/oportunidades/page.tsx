@@ -11,6 +11,7 @@ import { getActiveMembers } from '@/modules/contacts/queries.ts';
 import { moveStageAction } from '@/modules/searches/actions.ts';
 import { budgetLabel } from '@/modules/searches/format.ts';
 import { boardSearches, getPipelineMetrics, getStages } from '@/modules/searches/queries.ts';
+import { PageSkeleton } from '@/components/ui/page-skeleton.tsx';
 
 export const metadata: Metadata = { title: 'Oportunidades' };
 
@@ -18,8 +19,8 @@ export const metadata: Metadata = { title: 'Oportunidades' };
 export default function OpportunitiesPage({ searchParams }: PageProps<'/panel/oportunidades'>) {
   return (
     <div className="grid grid-cols-1 gap-6">
-      <PageHeader section="oportunidades" title="Embudo comercial" description="Cada búsqueda avanza por las etapas de venta de la inmobiliaria." />
-      <Suspense fallback={<p className="text-muted-foreground">Cargando embudo…</p>}>
+      <PageHeader section="oportunidades" title="Oportunidades" description="Cada búsqueda de un cliente avanza por las etapas de venta de la inmobiliaria." />
+      <Suspense fallback={<PageSkeleton variant="board" label="Cargando oportunidades…" />}>
         <Board searchParams={searchParams} />
       </Suspense>
     </div>

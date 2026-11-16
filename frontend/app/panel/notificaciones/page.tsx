@@ -7,6 +7,7 @@ import { Card } from '@/components/ui/surfaces.tsx';
 import { requireActiveOrganization } from '@/lib/tenant.ts';
 import { markAllReadAction, markReadAction } from '@/modules/notifications/actions.ts';
 import { listNotifications } from '@/modules/notifications/queries.ts';
+import { PageSkeleton } from '@/components/ui/page-skeleton.tsx';
 
 export const metadata: Metadata = { title: 'Notificaciones' };
 
@@ -15,7 +16,7 @@ export default function NotificationsPage() {
   return (
     <div className="grid grid-cols-1 gap-6">
       <PageHeader section="notificaciones" title="Notificaciones" description="Lo que necesita tu atención, sin salir del panel." />
-      <Suspense fallback={<p className="text-muted-foreground">Cargando…</p>}>
+      <Suspense fallback={<PageSkeleton variant="list" label="Cargando…" />}>
         <Notifications />
       </Suspense>
     </div>

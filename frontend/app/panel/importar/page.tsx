@@ -6,6 +6,7 @@ import { PageHeader } from '@/components/ui/page-header.tsx';
 import { Alert, Card, CardDescription, CardTitle } from '@/components/ui/surfaces.tsx';
 import { requireActiveOrganization } from '@/lib/tenant.ts';
 import { ImportWizard } from '@/modules/import/components.tsx';
+import { PageSkeleton } from '@/components/ui/page-skeleton.tsx';
 
 export const metadata: Metadata = { title: 'Importar y exportar' };
 
@@ -15,7 +16,7 @@ export default function ImportPage() {
   return (
     <div className="grid grid-cols-1 gap-6">
       <PageHeader section="importar" title="Importar y exportar" description="Traé tus planillas actuales y llevate tus datos cuando quieras." />
-      <Suspense fallback={<p className="text-muted-foreground">Cargando…</p>}>
+      <Suspense fallback={<PageSkeleton variant="form" label="Cargando…" />}>
         <ImportExport />
       </Suspense>
     </div>

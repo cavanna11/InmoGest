@@ -85,7 +85,9 @@ Implementado en el incremento 1.7: conexiones, conversaciones, mensajes, cola, e
 | `jobs` | Cola de trabajos: tipo, payload, `idempotency_key`, estado, intentos, `run_after`, lock. |
 | `webhook_events` | Eventos recibidos (fuente + id externo únicos) para idempotencia y diagnóstico. |
 | `import_batches` / `import_rows` | Importaciones CSV: archivo, tipo, estado; filas con datos, errores y duplicados detectados. |
-| `api_tokens` | Tokens del feed de propiedades (P1), guardados como hash. |
+| `api_tokens` | Tokens de la API de propiedades para webs propias (F-33), guardados como hash; solo los ve el dueño. |
+| `property_listings` | Dónde está publicada cada propiedad (F-36): link manual por canal o publicación en Mercado Libre gestionada por API (F-37). |
+| `mercadolibre_connections` | Cuenta de Mercado Libre de la inmobiliaria, con tokens cifrados que ningún usuario lee (ADR 0012). |
 | `audit_logs` | Auditoría de acciones sensibles dentro de la inmobiliaria (miembros, roles, unificaciones, fusiones, configuración de WhatsApp, importaciones). |
 | `rate_limits` | Contadores para limitar abuso (registro, invitaciones, endpoints públicos). |
 

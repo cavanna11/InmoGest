@@ -6,12 +6,13 @@ import { UpdatePasswordForm } from '@/modules/auth/components.tsx';
 import { getOwnProfile } from '@/modules/organization/queries.ts';
 import { ProfileForm } from '@/modules/profile/components.tsx';
 import { PageHeader } from '@/components/ui/page-header.tsx';
+import { PageSkeleton } from '@/components/ui/page-skeleton.tsx';
 
 export const metadata: Metadata = { title: 'Mi perfil' };
 
 export default function ProfilePage() {
   return (
-    <Suspense fallback={<p className="text-muted-foreground">Cargando…</p>}>
+    <Suspense fallback={<PageSkeleton variant="form" label="Cargando…" />}>
       <Profile />
     </Suspense>
   );

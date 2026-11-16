@@ -190,6 +190,8 @@ Prioridad: **P0** imprescindible para el MVP · **P1** deseable en el MVP · **P
 | F-33 | API o feed de propiedades para integrar con las webs propias de las inmobiliarias | P1 |
 | F-34 | Reporte de posibles contactos duplicados por agentes y unificación por el dueño | P0 |
 | F-35 | Recordatorios de agenda por WhatsApp con plantillas, anticipación y horarios configurables (planes Profesional y Empresa) | P1 |
+| F-36 | Dónde está publicada cada propiedad: links a la web propia, Mercado Libre, Zonaprop y Argenprop, y sitio web de la inmobiliaria en su página pública | P1 |
+| F-37 | Publicación y sincronización en Mercado Libre por su API, con la cuenta de la inmobiliaria (ADR 0012) | P1 |
 
 F-33 no bloquea el lanzamiento del MVP. No se desarrollan integraciones particulares por proveedor de web como requisito inicial.
 
@@ -339,7 +341,7 @@ Requisitos:
 - API oficial de WhatsApp configurable desde el sistema (Fase 2).
 - Automatizaciones configurables por la inmobiliaria (Fase 2); en el MVP solo las predefinidas.
 - Bot con IA y descripciones con IA.
-- Integración con portales (Zonaprop, Argenprop, Mercado Libre) y publicación automática en ellos.
+- Publicación automática en Zonaprop y Argenprop (requiere acceso como integrador de Navent). Mercado Libre sí entra (F-37, ADR 0012); las consultas de Mercado Libre no.
 - Administración de alquileres, contratos y cobros.
 - App móvil nativa (el CRM debe usarse bien desde el celular en el navegador).
 - Firma digital, tasaciones automáticas, facturación electrónica AFIP/ARCA.

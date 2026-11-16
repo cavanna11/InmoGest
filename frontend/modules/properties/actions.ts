@@ -2,12 +2,15 @@
 
 import { slugify, translateDbError } from '@inmogest/shared';
 import { revalidatePath } from 'next/cache';
+import { after } from 'next/server';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { done, fail, formValues, zodFieldErrors, type FormState } from '@/lib/action.ts';
 import { createClient } from '@/lib/supabase/server.ts';
 import { resolveActiveOrganization } from '@/lib/tenant.ts';
+import { syncIfManaged } from '@/modules/mercadolibre/service.ts';
 import { IMAGES_BUCKET, MAX_IMAGES } from './images.ts';
+import { STATUS_LABELS, type PropertyStatus } from './labels.ts';
 import { propertySchema, toPropertyRow } from './schemas.ts';
 
 // Acciones de propiedades. La inmobiliaria sale de la sesión; RLS y los triggers validan en la base
@@ -24,6 +27,11 @@ async function writeContext() {
 
 function propertyPath(id: string) {
   return `/panel/propiedades/${id}`;
+}
+
+/** Si la propiedad se publica en Mercado Libre desde InmoPanel, se actualiza después de responder (ADR 0012). */
+function syncPublications(organizationId: string, propertyId: string) {
+  after(() => syncIfManaged(organizationId, propertyId));
 }
 
 function parseProperty(formData: FormData) {
@@ -55,7 +63,8 @@ export async function createPropertyAction(_prev: FormState, formData: FormData)
   if (error || !data) return fail(translateDbError(error).error.message);
 
   revalidatePath('/panel/propiedades');
-  redirect(`${propertyPath(data.id)}?nueva=1`);
+  // Alta en pasos: después de los datos básicos siguen las fotos y dónde publicarla.
+  redirect(`${propertyPath(data.id)}?paso=fotos`);
 }
 
 export async function updatePropertyAction(_prev: FormState, formData: FormData): Promise<FormState> {
@@ -76,9 +85,42 @@ export async function updatePropertyAction(_prev: FormState, formData: FormData)
   if (error) return fail(translateDbError(error).error.message);
   if (!data?.length) return fail('No se pudo guardar: la propiedad no existe o fue fusionada.');
 
+  syncPublications(organization.id, id.data);
   revalidatePath(propertyPath(id.data));
   revalidatePath('/panel/propiedades');
   return done('Propiedad actualizada.');
+}
+
+/**
+ * Cambia solo el estado desde el listado (con "Deshacer"). Aplica la misma regla que el formulario
+ * completo: para publicarla (cualquier estado salvo borrador o pausada) tiene que tener precio.
+ */
+export async function setPropertyStatusAction(propertyId: string, status: string): Promise<FormState> {
+  const { organization, error: contextError } = await writeContext();
+  if (contextError) return fail(contextError);
+  const id = uuid.safeParse(propertyId);
+  const next = z.enum(Object.keys(STATUS_LABELS) as [PropertyStatus]).safeParse(status);
+  if (!id.success || !next.success) return fail('Estado no válido.');
+
+  const supabase = await createClient();
+  const { data: current } = await supabase
+    .from('properties')
+    .select('price')
+    .eq('organization_id', organization.id)
+    .eq('id', id.data)
+    .is('merged_into_id', null)
+    .maybeSingle();
+  if (!current) return fail('La propiedad no existe o fue fusionada.');
+  if (next.data !== 'draft' && next.data !== 'paused' && current.price === null) {
+    return fail('Para publicarla, cargá el precio (o dejala en borrador).');
+  }
+  const { error } = await supabase.from('properties').update({ status: next.data }).eq('organization_id', organization.id).eq('id', id.data);
+  if (error) return fail(translateDbError(error).error.message);
+
+  syncPublications(organization.id, id.data);
+  revalidatePath(propertyPath(id.data));
+  revalidatePath('/panel/propiedades');
+  return done(`Estado: ${STATUS_LABELS[next.data]}.`);
 }
 
 export async function addOwnerAction(formData: FormData): Promise<void> {
@@ -141,6 +183,7 @@ export async function registerImagesAction(propertyId: string, paths: string[]):
     await supabase.storage.from(IMAGES_BUCKET).remove(valid);
     return fail(translateDbError(error).error.message);
   }
+  syncPublications(organization.id, propertyId);
   revalidatePath(propertyPath(propertyId));
   return done(valid.length === 1 ? 'Foto agregada.' : `${valid.length} fotos agregadas.`);
 }
@@ -159,6 +202,7 @@ export async function deleteImageAction(formData: FormData): Promise<void> {
     .select('storage_path');
   const path = data?.[0]?.storage_path;
   if (path) await supabase.storage.from(IMAGES_BUCKET).remove([path]);
+  syncPublications(organization.id, propertyId.data);
   revalidatePath(propertyPath(propertyId.data));
 }
 
@@ -181,6 +225,7 @@ export async function setCoverAction(formData: FormData): Promise<void> {
       supabase.from('property_images').update({ position }).eq('organization_id', organization.id).eq('id', imageId),
     ),
   );
+  syncPublications(organization.id, propertyId.data);
   revalidatePath(propertyPath(propertyId.data));
 }
 

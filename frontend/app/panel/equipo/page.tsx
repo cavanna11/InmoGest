@@ -7,12 +7,13 @@ import { InviteForm, MemberActions, RegenerateInvitationForm, RevokeInvitationBu
 import { ROLE_LABELS } from '@/modules/organization/labels.ts';
 import { getTeam } from '@/modules/organization/queries.ts';
 import { PageHeader } from '@/components/ui/page-header.tsx';
+import { PageSkeleton } from '@/components/ui/page-skeleton.tsx';
 
 export const metadata: Metadata = { title: 'Equipo' };
 
 export default function TeamPage() {
   return (
-    <Suspense fallback={<p className="text-muted-foreground">Cargando…</p>}>
+    <Suspense fallback={<PageSkeleton variant="list" label="Cargando…" />}>
       <Team />
     </Suspense>
   );

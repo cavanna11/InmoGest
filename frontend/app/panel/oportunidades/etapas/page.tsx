@@ -10,6 +10,7 @@ import { requireActiveOrganization } from '@/lib/tenant.ts';
 import { moveStagePositionAction, renameStageAction, toggleStageAction } from '@/modules/searches/actions.ts';
 import { AddStageForm } from '@/modules/searches/components.tsx';
 import { getStages } from '@/modules/searches/queries.ts';
+import { PageSkeleton } from '@/components/ui/page-skeleton.tsx';
 
 export const metadata: Metadata = { title: 'Etapas del embudo' };
 
@@ -27,7 +28,7 @@ export default function StagesPage({ searchParams }: PageProps<'/panel/oportunid
         title="Etapas del embudo"
         description="Las búsquedas de una etapa desactivada siguen ahí hasta que las muevas; no se pueden mover nuevas a esa etapa."
       />
-      <Suspense fallback={<p className="text-muted-foreground">Cargando…</p>}>
+      <Suspense fallback={<PageSkeleton variant="list" label="Cargando…" />}>
         <Stages searchParams={searchParams} />
       </Suspense>
     </div>

@@ -9,6 +9,7 @@ import { PaymentForm } from '@/modules/billing/components.tsx';
 import { PAYMENT_STATUS } from '@/modules/billing/schemas.ts';
 import { getOrganizationDetails } from '@/modules/organization/queries.ts';
 import { whatsappHref } from '@/components/landing/config.ts';
+import { PageSkeleton } from '@/components/ui/page-skeleton.tsx';
 
 export const metadata: Metadata = { title: 'Plan y pago' };
 
@@ -25,7 +26,7 @@ export default function PlanPage() {
   return (
     <div className="grid grid-cols-1 gap-6">
       <PageHeader section="plan" title="Plan y pago" description="Tu plan, cuánto usás de cada límite y el informe de pago." />
-      <Suspense fallback={<p className="text-muted-foreground">Cargando…</p>}>
+      <Suspense fallback={<PageSkeleton variant="form" label="Cargando…" />}>
         <Plan />
       </Suspense>
     </div>

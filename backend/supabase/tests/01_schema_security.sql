@@ -65,7 +65,10 @@ select set_eq(
     'create_whatsapp_connection(uuid,text,boolean)', 'remove_whatsapp_connection(uuid)', 'open_whatsapp_conversation(uuid)',
     'assign_whatsapp_conversation(uuid,uuid)', 'start_whatsapp_conversation(uuid,uuid)',
     'send_whatsapp_message(uuid,text,message_type,text,text,text)', 'send_property_whatsapp(uuid,uuid,text,text[])',
-    'request_whatsapp_official_api(uuid,text)', 'platform_whatsapp_api_requests()', 'platform_resolve_whatsapp_api_request(uuid)'
+    'request_whatsapp_official_api(uuid,text)', 'platform_whatsapp_api_requests()', 'platform_resolve_whatsapp_api_request(uuid)',
+    'set_property_listing_link(uuid,listing_channel,text)', 'remove_mercadolibre_connection(uuid)',
+    'prepare_mercadolibre_listing(uuid,jsonb)', 'unlink_mercadolibre_listing(uuid)',
+    'create_api_token(uuid,text,text,text)', 'revoke_api_token(uuid)'
   ],
   'authenticated solo ejecuta las RPC previstas'
 );

@@ -25,6 +25,30 @@ export function readEvolutionEnv(): { baseUrl: string; apiKey: string } | null {
   return baseUrl && apiKey ? { baseUrl, apiKey } : null;
 }
 
+/**
+ * Aplicación de Mercado Libre (ADR 0012). Null si falta alguna variable: el panel avisa que no está
+ * habilitado. MERCADOLIBRE_API_URL y MERCADOLIBRE_AUTH_URL solo se usan para probar contra un servidor falso.
+ */
+export function readMercadoLibreEnv(): {
+  clientId: string;
+  clientSecret: string;
+  encryptionKey: string;
+  apiUrl: string | undefined;
+  authUrl: string | undefined;
+} | null {
+  const clientId = process.env.MERCADOLIBRE_CLIENT_ID?.trim();
+  const clientSecret = process.env.MERCADOLIBRE_CLIENT_SECRET?.trim();
+  const encryptionKey = process.env.INTEGRATIONS_ENCRYPTION_KEY?.trim();
+  if (!clientId || !clientSecret || !encryptionKey) return null;
+  return {
+    clientId,
+    clientSecret,
+    encryptionKey,
+    apiUrl: process.env.MERCADOLIBRE_API_URL?.trim() || undefined,
+    authUrl: process.env.MERCADOLIBRE_AUTH_URL?.trim() || undefined,
+  };
+}
+
 export function requireServerEnv() {
   const parsed = serverEnvSchema.safeParse({
     supabaseSecretKey: process.env.SUPABASE_SECRET_KEY || undefined,

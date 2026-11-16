@@ -7,4 +7,6 @@ export * from './jobs.ts';
 export * from './slug.ts';
 export * from './whatsapp.ts';
 export * from './evolution.ts';
+export * from './mercadolibre.ts';
+export * from './secret-box.ts';
 export type { Database, Json } from './database.types.ts';

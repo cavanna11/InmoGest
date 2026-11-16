@@ -12,8 +12,17 @@ export type PropertyFilters = {
   operation?: string | undefined;
   type?: string | undefined;
   assigned?: string | undefined;
+  /** 'recientes' (por defecto) | 'precio-asc' | 'precio-desc' | 'codigo' */
+  sort?: string | undefined;
   page?: number | undefined;
 };
+
+export const PROPERTY_SORTS = {
+  recientes: 'Últimas modificadas',
+  'precio-asc': 'Precio: menor a mayor',
+  'precio-desc': 'Precio: mayor a menor',
+  codigo: 'Más nuevas primero',
+} as const;
 
 function likeTerm(value: string): string {
   return `%${value.replace(/[\\%_]/g, (char) => `\\${char}`)}%`;
@@ -24,7 +33,7 @@ export async function listProperties(organizationId: string, userId: string, fil
   let query = supabase
     .from('properties')
     .select(
-      'id, code, title, operation, property_type, status, price, currency, city, neighborhood, rooms, assigned_user_id, updated_at, property_images(storage_path, position)',
+      'id, code, slug, title, operation, property_type, status, price, currency, city, neighborhood, rooms, assigned_user_id, updated_at, property_images(storage_path, position)',
       { count: 'exact' },
     )
     .eq('organization_id', organizationId)
@@ -45,6 +54,10 @@ export async function listProperties(organizationId: string, userId: string, fil
   else if (filters.assigned === 'unassigned') query = query.is('assigned_user_id', null);
 
   const page = Math.max(1, filters.page ?? 1);
+  // El precio se ordena por monto, sin convertir monedas (USD y ARS quedan mezclados).
+  if (filters.sort === 'precio-asc') query = query.order('price', { ascending: true, nullsFirst: false });
+  else if (filters.sort === 'precio-desc') query = query.order('price', { ascending: false, nullsFirst: false });
+  else if (filters.sort === 'codigo') query = query.order('seq', { ascending: false });
   const { data, count } = await query
     .order('updated_at', { ascending: false })
     .order('position', { referencedTable: 'property_images', ascending: true })

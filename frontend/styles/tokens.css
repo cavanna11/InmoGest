@@ -54,6 +54,16 @@
   --input: #6f807d;
   --ring: #0a7468;
 
+  /* Menú lateral del panel: mismo fondo que la página (sin "mundo aparte"), ítem activo con el tinte de marca. */
+  --sidebar: #f6f9f8;
+  --sidebar-foreground: #10201e;
+  --sidebar-primary: #0a7468;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #d8f1ec;
+  --sidebar-accent-foreground: #075049;
+  --sidebar-border: #dfe7e4;
+  --sidebar-ring: #0a7468;
+
   /* Geometría */
   --radius: 0.625rem;
 
@@ -95,4 +105,13 @@
   --border: #243533;
   --input: #6f817e;
   --ring: #5fd8c7;
+
+  --sidebar: #0c1615;
+  --sidebar-foreground: #eef5f3;
+  --sidebar-primary: #5fd8c7;
+  --sidebar-primary-foreground: #04211d;
+  --sidebar-accent: #14302c;
+  --sidebar-accent-foreground: #9ff0e4;
+  --sidebar-border: #243533;
+  --sidebar-ring: #5fd8c7;
 }

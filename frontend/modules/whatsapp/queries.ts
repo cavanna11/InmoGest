@@ -40,6 +40,17 @@ export async function getOpenApiRequest(organizationId: string) {
   return data;
 }
 
+/** Conversaciones con mensajes sin leer (contador del menú). */
+export async function countUnreadConversations(organizationId: string) {
+  const supabase = await createClient();
+  const { count } = await supabase
+    .from('conversations')
+    .select('id', { count: 'exact', head: true })
+    .eq('organization_id', organizationId)
+    .gt('unread_count', 0);
+  return count ?? 0;
+}
+
 export async function listConversations(organizationId: string, userId: string, filter: InboxFilter) {
   const supabase = await createClient();
   let query = supabase
@@ -107,6 +118,20 @@ export async function getSendableContacts(organizationId: string) {
     .order('full_name')
     .limit(500);
   return (data ?? []).map((contact) => ({ id: contact.id, name: contact.full_name }));
+}
+
+/** Propiedades que se pueden mandar por WhatsApp desde una conversación (tienen página pública). */
+export async function getSendableProperties(organizationId: string) {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('properties')
+    .select('id, code, title')
+    .eq('organization_id', organizationId)
+    .is('merged_into_id', null)
+    .in('status', ['available', 'reserved'])
+    .order('updated_at', { ascending: false })
+    .limit(300);
+  return data ?? [];
 }
 
 /** Envíos de esta propiedad, para su historial (CU-08). */

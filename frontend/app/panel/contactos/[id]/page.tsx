@@ -1,5 +1,5 @@
-import { formatDate, formatDateTime, formatPhone } from '@inmogest/shared';
-import { Mail, Phone, X } from 'lucide-react';
+import { formatDate, formatDateTime } from '@inmogest/shared';
+import { CalendarPlus, Phone, SearchCheck } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
@@ -9,13 +9,13 @@ import { Button } from '@/components/ui/button.tsx';
 import { PageHeader } from '@/components/ui/page-header.tsx';
 import { Alert, Badge, Card, CardTitle } from '@/components/ui/surfaces.tsx';
 import { requireActiveOrganization } from '@/lib/tenant.ts';
-import { removeChannelAction } from '@/modules/contacts/actions.ts';
-import { ActivityForm, AddChannelForm, ContactEditForm, ReportDuplicateForm } from '@/modules/contacts/components.tsx';
+import { ActivityForm, AddChannelForm, ChannelList, ContactEditForm, ReportDuplicateForm } from '@/modules/contacts/components.tsx';
 import { getActiveMembers, getActivities, getContact, getSimilarContacts } from '@/modules/contacts/queries.ts';
 import { getOrganizationDetails } from '@/modules/organization/queries.ts';
 import { StartConversationButton } from '@/modules/whatsapp/components.tsx';
 import { budgetLabel } from '@/modules/searches/format.ts';
 import { getStages, listSearches } from '@/modules/searches/queries.ts';
+import { PageSkeleton } from '@/components/ui/page-skeleton.tsx';
 
 export const metadata: Metadata = { title: 'Contacto' };
 
@@ -28,7 +28,7 @@ export default function ContactPage({ params }: PageProps<'/panel/contactos/[id]
       <Link href="/panel/contactos" className="text-sm text-muted-foreground hover:text-foreground">
         ← Contactos
       </Link>
-      <Suspense fallback={<p className="text-muted-foreground">Cargando contacto…</p>}>
+      <Suspense fallback={<PageSkeleton variant="detail" label="Cargando contacto…" />}>
         <Contact params={params} />
       </Suspense>
     </div>
@@ -79,6 +79,8 @@ async function Contact({ params }: { params: Promise<{ id: string }> }) {
   const names = new Map(members.map((member) => [member.userId, member.name]));
   const canWrite = organization.canWrite;
   const canReassign = organization.isOwner || Boolean(details?.agents_can_reassign);
+  const mainPhone = contact.contact_phones[0]?.phone_e164 ?? null;
+  const reachable = !contact.do_not_contact;
 
   return (
     <>
@@ -95,9 +97,33 @@ async function Contact({ params }: { params: Promise<{ id: string }> }) {
         }
       />
       {!canWrite ? <Alert variant="warning">La cuenta está en solo lectura: podés consultar, pero no modificar.</Alert> : null}
-      {canWrite ? (
-        <div className="justify-self-start">
-          <StartConversationButton contactId={contact.id} />
+      {canWrite || mainPhone ? (
+        <div className="flex flex-wrap items-start gap-2">
+          {canWrite && reachable && mainPhone ? <StartConversationButton contactId={contact.id} /> : null}
+          {reachable && mainPhone ? (
+            <Button asChild variant="outline" size="sm">
+              <a href={`tel:${mainPhone}`}>
+                <Phone aria-hidden="true" />
+                Llamar
+              </a>
+            </Button>
+          ) : null}
+          {canWrite ? (
+            <>
+              <Button asChild variant="outline" size="sm">
+                <Link href={`/panel/agenda?agendar=1&contacto=${contact.id}`}>
+                  <CalendarPlus aria-hidden="true" />
+                  Agendar visita
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="sm">
+                <Link href={`/panel/busquedas/nueva?contacto=${contact.id}`}>
+                  <SearchCheck aria-hidden="true" />
+                  Cargar qué busca
+                </Link>
+              </Button>
+            </>
+          ) : null}
         </div>
       ) : null}
 
@@ -119,7 +145,7 @@ async function Contact({ params }: { params: Promise<{ id: string }> }) {
             </div>
           </Card>
 
-          <Card>
+          <Card id="historial" className="scroll-mt-20">
             <CardTitle>Historial</CardTitle>
             {canWrite ? (
               <div className="mt-4">
@@ -175,27 +201,9 @@ async function Contact({ params }: { params: Promise<{ id: string }> }) {
 
           <Card>
             <CardTitle>Teléfonos</CardTitle>
-            <ul className="mt-3 grid gap-2">
-              {contact.contact_phones.length === 0 ? <li className="text-sm text-muted-foreground">Sin teléfonos.</li> : null}
-              {contact.contact_phones.map((phone) => (
-                <li key={phone.id} className="flex items-center justify-between gap-2 rounded-md bg-muted px-3 py-2 text-sm">
-                  <span className="flex items-center gap-2">
-                    <Phone aria-hidden="true" className="size-4 text-primary" />
-                    {formatPhone(phone.phone_e164)}
-                  </span>
-                  {canWrite ? (
-                    <form action={removeChannelAction}>
-                      <input type="hidden" name="channelId" value={phone.id} />
-                      <input type="hidden" name="contactId" value={contact.id} />
-                      <input type="hidden" name="kind" value="phone" />
-                      <Button type="submit" variant="ghost" size="icon" className="size-11 sm:size-8" aria-label={`Quitar ${formatPhone(phone.phone_e164)}`}>
-                        <X aria-hidden="true" />
-                      </Button>
-                    </form>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
+            <div className="mt-3">
+              <ChannelList contactId={contact.id} kind="phone" items={contact.contact_phones.map((phone) => ({ id: phone.id, value: phone.phone_e164 }))} canWrite={canWrite} />
+            </div>
             {canWrite ? (
               <div className="mt-3">
                 <AddChannelForm contactId={contact.id} kind="phone" />
@@ -205,27 +213,9 @@ async function Contact({ params }: { params: Promise<{ id: string }> }) {
 
           <Card>
             <CardTitle>Emails</CardTitle>
-            <ul className="mt-3 grid gap-2">
-              {contact.contact_emails.length === 0 ? <li className="text-sm text-muted-foreground">Sin emails.</li> : null}
-              {contact.contact_emails.map((email) => (
-                <li key={email.id} className="flex items-center justify-between gap-2 rounded-md bg-muted px-3 py-2 text-sm">
-                  <span className="flex min-w-0 items-center gap-2">
-                    <Mail aria-hidden="true" className="size-4 shrink-0 text-primary" />
-                    <span className="truncate">{email.email}</span>
-                  </span>
-                  {canWrite ? (
-                    <form action={removeChannelAction}>
-                      <input type="hidden" name="channelId" value={email.id} />
-                      <input type="hidden" name="contactId" value={contact.id} />
-                      <input type="hidden" name="kind" value="email" />
-                      <Button type="submit" variant="ghost" size="icon" className="size-11 sm:size-8" aria-label={`Quitar ${email.email}`}>
-                        <X aria-hidden="true" />
-                      </Button>
-                    </form>
-                  ) : null}
-                </li>
-              ))}
-            </ul>
+            <div className="mt-3">
+              <ChannelList contactId={contact.id} kind="email" items={contact.contact_emails.map((email) => ({ id: email.id, value: email.email }))} canWrite={canWrite} />
+            </div>
             {canWrite ? (
               <div className="mt-3">
                 <AddChannelForm contactId={contact.id} kind="email" />
@@ -246,6 +236,29 @@ async function Contact({ params }: { params: Promise<{ id: string }> }) {
           ) : null}
         </div>
       </div>
+
+      {canWrite && reachable && mainPhone ? (
+        <>
+          {/* En el celular, escribir, llamar y agendar quedan siempre a mano. */}
+          <div aria-hidden="true" className="h-16 md:hidden" />
+          <nav aria-label="Acciones rápidas del contacto" className="fixed inset-x-0 bottom-[calc(3.5rem+env(safe-area-inset-bottom))] z-20 border-t border-border bg-surface/95 px-3 py-2 backdrop-blur md:hidden">
+            <div className="grid grid-cols-2 gap-2">
+              <Button asChild variant="outline" size="sm" className="h-10">
+                <a href={`tel:${mainPhone}`}>
+                  <Phone aria-hidden="true" />
+                  Llamar
+                </a>
+              </Button>
+              <Button asChild size="sm" className="h-10">
+                <Link href={`/panel/agenda?agendar=1&contacto=${contact.id}`}>
+                  <CalendarPlus aria-hidden="true" />
+                  Agendar visita
+                </Link>
+              </Button>
+            </div>
+          </nav>
+        </>
+      ) : null}
     </>
   );
 }

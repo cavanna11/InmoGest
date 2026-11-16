@@ -48,7 +48,8 @@
 | CSV de importación y exportación | Storage privado | Prefijo `<organization_id>/`; borrado automático tras el proceso **[A CONFIRMAR plazo]**. |
 | Credenciales de usuarios | Supabase Auth | Gestionadas por Supabase; la app nunca ve contraseñas. |
 | Sesiones de WhatsApp | Evolution API (VPS) | Volumen Docker sin exposición pública; acceso solo con API key. |
-| Tokens (invitaciones, feed, secretos de webhook) | Postgres | Guardados como hash SHA-256; se muestran una sola vez. |
+| Tokens (invitaciones, API de propiedades, secretos de webhook) | Postgres | Guardados como hash SHA-256; se muestran una sola vez. |
+| Tokens de Mercado Libre de cada inmobiliaria | Postgres | Cifrados por la app con `INTEGRATIONS_ENCRYPTION_KEY`; ningún usuario puede leer esas columnas. |
 | Fotos de propiedades y logos | Storage público | Solo contenido destinado a publicarse; rutas no adivinables por inmobiliaria. |
 
 La página pública de una propiedad nunca expone propietario, notas internas ni la dirección exacta salvo que la inmobiliaria lo elija. Las coordenadas aproximadas se redondean.
@@ -60,6 +61,8 @@ La página pública de una propiedad nunca expone propietario, notas internas ni
 | `SUPABASE_SECRET_KEY` | Vercel (server), VPS (worker) | En variables `NEXT_PUBLIC_*`, en el navegador, en Git. |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Vercel, navegador | Es pública por diseño; la seguridad depende de RLS. |
 | `EVOLUTION_API_KEY` | Vercel (server), VPS | En el navegador. |
+| `MERCADOLIBRE_CLIENT_SECRET` | Vercel (server) | En el navegador, en logs. |
+| `INTEGRATIONS_ENCRYPTION_KEY` | Vercel (server) | En el navegador, en Git, en la base. Cifra los tokens de Mercado Libre (AES-256-GCM, ADR 0012). |
 | Secretos de webhook por instancia | Generados por la app; hash en la base | Reutilizados entre instancias. |
 | `SUPABASE_DB_URL` | `.env.local` del desarrollador | En producción ni en el repositorio. |
 

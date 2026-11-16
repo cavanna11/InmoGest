@@ -13,6 +13,8 @@ export type ContactFilters = {
   assigned?: string | undefined;
   /** 'prospect' | 'owner' | 'dnc' | undefined */
   kind?: string | undefined;
+  /** 'recientes' (por defecto) | 'nombre' | 'nuevos' */
+  sort?: string | undefined;
   page?: number | undefined;
 };
 
@@ -52,6 +54,8 @@ export async function listContacts(organizationId: string, userId: string, filte
   else if (filters.kind === 'dnc') query = query.eq('do_not_contact', true);
 
   const page = Math.max(1, filters.page ?? 1);
+  if (filters.sort === 'nombre') query = query.order('full_name', { ascending: true });
+  else if (filters.sort === 'nuevos') query = query.order('created_at', { ascending: false });
   const { data, count } = await query
     .order('updated_at', { ascending: false })
     .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);

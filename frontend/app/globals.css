@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 @import '../styles/tokens.css';
+/* Variante dark: de Tailwind sigue el tema elegido (data-theme en <html>), no la clase .dark. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
 /*
  * Mapea los tokens de styles/tokens.css a utilidades de Tailwind (bg-background, text-primary,
@@ -43,6 +45,14 @@
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
 }
 
 @layer base {

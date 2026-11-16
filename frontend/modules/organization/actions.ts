@@ -34,6 +34,7 @@ export async function updateOrganizationAction(_prev: FormState, formData: FormD
       slug: parsed.data.slug,
       contact_email: parsed.data.contactEmail,
       contact_phone: parsed.data.contactPhone,
+      website_url: parsed.data.websiteUrl,
       default_currency: parsed.data.defaultCurrency,
       agents_can_reassign: parsed.data.agentsCanReassign,
       usd_ars_rate_enabled: parsed.data.usdRateEnabled,

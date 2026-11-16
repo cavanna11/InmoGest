@@ -167,7 +167,15 @@ Subida del CSV a Storage privado → job "import.parse" valida fila por fila
 - La web institucional por subdominio o dominio propio (Fase 3) reutiliza estas mismas funciones.
 
 ### 10. Feed de propiedades para webs propias (F-33, P1)
-Endpoint de solo lectura por inmobiliaria, autenticado con un token generado por el dueño, que devuelve las propiedades publicadas en un formato genérico. Formato y alcance **[A CONFIRMAR al diseñar F-33]**.
+Endpoint de solo lectura por inmobiliaria (`GET /api/v1/propiedades`), autenticado con un token generado por el dueño (guardado como hash), que devuelve las propiedades publicadas con los campos de la página pública. Formato en `docs/API-PROPIEDADES.md` (ADR 0012).
+
+### 11. Publicación en Mercado Libre (F-37, ADR 0012)
+```
+Dueño → Conectar Mercado Libre → OAuth (PKCE, state en cookie cifrada) → callback → tokens cifrados (AES-GCM)
+Agente → Publicar → categoría por operación y tipo + atributos obligatorios + ubicación → POST /items
+Editar propiedad o fotos → after() → PUT /items/{id} (y descripción); estado: disponible→activa, reservada/pausada→pausada, vendida/alquilada→finalizada
+```
+Corre en el servidor web, no en el worker. El refresh token es de un solo uso: se renueva con una reserva en la base.
 
 ## Requisitos transversales
 

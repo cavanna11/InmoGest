@@ -11,6 +11,7 @@ import { getOrganizationDetails } from '@/modules/organization/queries.ts';
 import { searchContacts } from '@/modules/properties/queries.ts';
 import { SearchForm } from '@/modules/searches/components.tsx';
 import { findContact } from '@/modules/searches/queries.ts';
+import { PageSkeleton } from '@/components/ui/page-skeleton.tsx';
 
 export const metadata: Metadata = { title: 'Nueva búsqueda' };
 
@@ -20,7 +21,7 @@ export default function NewSearchPage({ searchParams }: PageProps<'/panel/busque
       <Link href="/panel/busquedas" className="text-sm text-muted-foreground hover:text-foreground">
         ← Búsquedas
       </Link>
-      <Suspense fallback={<p className="text-muted-foreground">Cargando…</p>}>
+      <Suspense fallback={<PageSkeleton variant="form" label="Cargando…" />}>
         <NewSearch searchParams={searchParams} />
       </Suspense>
     </div>

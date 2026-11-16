@@ -23,6 +23,23 @@ La conexión por QR, la bandeja y el worker ya están programados y probados con
 - [ ] **Confirmar en Vercel que `NEXT_PUBLIC_APP_URL` tenga la URL pública de la app.** Con esa URL se arman los avisos de Evolution y los links de las fichas.
 - [ ] **Conseguir un número de WhatsApp de prueba** con historial de uso real. La conexión por QR no es oficial y el número puede ser restringido, así que no uses tu número principal para probar.
 
+## Para publicar en Mercado Libre
+
+La conexión, la publicación y la sincronización ya están programadas (ADR 0012). Se probaron contra un servidor falso con el contrato de la documentación oficial, no contra Mercado Libre real.
+
+- [ ] **Aprobar que se aplique la migración `20261115120000_listings_integrations.sql`** al proyecto de desarrollo, que aloja la beta. Sin ella no funcionan los links, el sitio web ni Mercado Libre.
+- [ ] **Crear la aplicación** en `https://developers.mercadolibre.com.ar` → Mis aplicaciones, con tu cuenta.
+  - URL de retorno, exacta: `<URL pública de la app>/api/integraciones/mercadolibre/callback`. Hoy sería `https://inmopanel-beta.vercel.app/api/integraciones/mercadolibre/callback`.
+  - Permisos: lectura y escritura, con acceso sin conexión (`offline_access`) para que se renueve sola. Si la pantalla ofrece PKCE, activalo: InmoPanel ya lo usa.
+- [ ] **Cargar en Vercel** `MERCADOLIBRE_CLIENT_ID`, `MERCADOLIBRE_CLIENT_SECRET` e `INTEGRATIONS_ENCRYPTION_KEY`, sin pasármelas por el chat. Para generar la última, el comando está en `.env.example`. Guardá una copia segura de esa clave: si se pierde, cada inmobiliaria tiene que volver a conectar. Después volvé a desplegar.
+- [ ] **Hacer la primera prueba real** con una cuenta de Mercado Libre habilitada para inmuebles y un paquete de publicación contratado.
+  1. Conectá la cuenta en **Integraciones**.
+  2. Publicá una propiedad disponible y con fotos.
+  3. Cambiale el precio y revisá que se actualice en Mercado Libre.
+  4. Pasala a Reservada, que la pausa, y después a Vendida, que la finaliza.
+- [ ] **Decidir quién publica.** Hoy publica cualquier miembro que puede editar la propiedad, y eso usa el cupo de paquetes de la inmobiliaria. Si preferís que publique solo el dueño, es un cambio chico.
+- [ ] **Pedirle a Navent acceso como integrador** si querés publicar también en Zonaprop y Argenprop. Mientras tanto, se pueden pegar los links a mano.
+
 ## Legal y comercial
 
 - [ ] **Hacer revisar los términos y la privacidad por un profesional.** La versión `beta-1` está publicada, pero nadie con matrícula la revisó.

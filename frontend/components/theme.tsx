@@ -35,6 +35,24 @@ function subscribe(onChange: () => void) {
   };
 }
 
+/** Elección de modo de color guardada en este navegador ("claro" hasta hidratar). */
+export function useThemeChoice(): ThemeChoice {
+  return useSyncExternalStore(subscribe, readChoice, () => 'light' as ThemeChoice);
+}
+
+/** Modo que se ve en pantalla (resuelve "según el sistema"), para componentes que lo necesitan. */
+export function useResolvedTheme(): 'light' | 'dark' {
+  return useSyncExternalStore(
+    subscribe,
+    () => (document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'),
+    () => 'light',
+  );
+}
+
+export function chooseTheme(choice: ThemeChoice) {
+  choose(choice);
+}
+
 function choose(choice: ThemeChoice) {
   try {
     localStorage.setItem(STORAGE_KEY, choice);

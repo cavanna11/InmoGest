@@ -7,6 +7,7 @@ import { requireActiveOrganization } from '@/lib/tenant.ts';
 import { NewContactForm } from '@/modules/contacts/components.tsx';
 import { getActiveMembers } from '@/modules/contacts/queries.ts';
 import { getOrganizationDetails } from '@/modules/organization/queries.ts';
+import { PageSkeleton } from '@/components/ui/page-skeleton.tsx';
 
 export const metadata: Metadata = { title: 'Nuevo contacto' };
 
@@ -17,7 +18,7 @@ export default function NewContactPage() {
         ← Contactos
       </Link>
       <PageHeader section="contactos" title="Nuevo contacto" description="Si el teléfono o el email ya están cargados, te mostramos el contacto existente." />
-      <Suspense fallback={<p className="text-muted-foreground">Cargando…</p>}>
+      <Suspense fallback={<PageSkeleton variant="form" label="Cargando…" />}>
         <NewContact />
       </Suspense>
     </div>

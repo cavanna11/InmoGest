@@ -21,6 +21,9 @@ const buttonVariants = cva(
         sm: 'h-9 px-3',
         lg: 'h-11 px-6',
         icon: 'size-10',
+        // Tamaños que usan componentes de shadcn agregados después (chat, adjuntos).
+        'icon-sm': 'size-8',
+        'icon-xs': 'size-6',
       },
     },
     defaultVariants: { variant: 'default', size: 'default' },

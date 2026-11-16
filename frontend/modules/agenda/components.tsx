@@ -13,6 +13,9 @@ type Options = {
   currentUserId: string;
   canAssignOthers: boolean;
   today: string;
+  /** Preselección al llegar desde la ficha de un contacto o una propiedad. */
+  defaultContactId?: string | undefined;
+  defaultPropertyId?: string | undefined;
 };
 
 function assignable({ members, currentUserId, canAssignOthers }: Options) {
@@ -27,7 +30,7 @@ export function AppointmentForm(options: Options) {
       <FormMessage state={state} />
       <div className="grid gap-4 sm:grid-cols-2">
         <Field id="visit-contact" label="Cliente" error={e.contactId}>
-          <Select id="visit-contact" name="contactId" defaultValue="">
+          <Select id="visit-contact" name="contactId" defaultValue={options.contacts.some((contact) => contact.id === options.defaultContactId) ? options.defaultContactId : ''}>
             <option value="" disabled>
               Elegí un contacto
             </option>
@@ -39,7 +42,7 @@ export function AppointmentForm(options: Options) {
           </Select>
         </Field>
         <Field id="visit-property" label="Propiedad" error={e.propertyId}>
-          <Select id="visit-property" name="propertyId" defaultValue="">
+          <Select id="visit-property" name="propertyId" defaultValue={options.properties.some((property) => property.id === options.defaultPropertyId) ? options.defaultPropertyId : ''}>
             <option value="" disabled>
               Elegí una propiedad
             </option>

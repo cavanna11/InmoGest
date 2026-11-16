@@ -76,6 +76,13 @@ export const organizationSettingsSchema = z
   slug: slugSchema,
   contactEmail: z.union([z.literal(''), emailSchema]).transform((v) => (v === '' ? null : v)),
   contactPhone: optionalPhoneSchema,
+  // Sitio web propio (F-36): se muestra en la página pública de cada propiedad.
+  websiteUrl: z
+    .string()
+    .trim()
+    .max(300, 'La dirección es demasiado larga.')
+    .refine((value) => value === '' || /^https?:\/\/[^\s/$.?#][^\s]*$/i.test(value), 'Escribí la dirección completa, empezando por https://')
+    .transform((value) => (value === '' ? null : value)),
   defaultCurrency: z.enum(['ARS', 'USD'], { message: 'Elegí una moneda.' }),
   agentsCanReassign: z.literal('on').optional().transform((v) => v === 'on'),
   // Cotización manual USD/ARS para comparar búsquedas y propiedades en distinta moneda (F-31).

@@ -32,6 +32,26 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"api_tokens": {
+                  Row: {
+                    "created_at": string,"created_by": string | null,"id": string,"last_used_at": string | null,"name": string,"organization_id": string,"revoked_at": string | null,"token_hash": string,"token_prefix": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"created_by"?: string | null,"id"?: string,"last_used_at"?: string | null,"name": string,"organization_id": string,"revoked_at"?: string | null,"token_hash": string,"token_prefix": string
+                  }
+                  Update: {
+                    "created_at"?: string,"created_by"?: string | null,"id"?: string,"last_used_at"?: string | null,"name"?: string,"organization_id"?: string,"revoked_at"?: string | null,"token_hash"?: string,"token_prefix"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "api_tokens_organization_id_fkey"
+      columns: ["organization_id"]
+isOneToOne: false
+      referencedRelation: "organizations"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"appointments": {
                   Row: {
                     "assigned_user_id": string | null,"contact_id": string,"created_at": string,"created_by": string | null,"duration_minutes": number,"id": string,"notes": string,"organization_id": string,"property_id": string,"starts_at": string,"status": Database["public"]['Enums']["appointment_status"],"updated_at": string
@@ -440,6 +460,26 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"mercadolibre_connections": {
+                  Row: {
+                    "access_token_enc": string,"connected_at": string,"connected_by": string | null,"created_at": string,"expires_at": string,"id": string,"ml_user_id": number,"nickname": string,"organization_id": string,"refresh_lock_until": string | null,"refresh_token_enc": string,"status": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "access_token_enc": string,"connected_at"?: string,"connected_by"?: string | null,"created_at"?: string,"expires_at": string,"id"?: string,"ml_user_id": number,"nickname"?: string,"organization_id": string,"refresh_lock_until"?: string | null,"refresh_token_enc": string,"status"?: string,"updated_at"?: string
+                  }
+                  Update: {
+                    "access_token_enc"?: string,"connected_at"?: string,"connected_by"?: string | null,"created_at"?: string,"expires_at"?: string,"id"?: string,"ml_user_id"?: number,"nickname"?: string,"organization_id"?: string,"refresh_lock_until"?: string | null,"refresh_token_enc"?: string,"status"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "mercadolibre_connections_organization_id_fkey"
+      columns: ["organization_id"]
+isOneToOne: true
+      referencedRelation: "organizations"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"messages": {
                   Row: {
                     "author_user_id": string | null,"body": string,"connection_id": string,"conversation_id": string,"created_at": string,"direction": Database["public"]['Enums']["message_direction"],"error_code": string | null,"external_id": string | null,"id": string,"kind": Database["public"]['Enums']["message_kind"],"media_mime": string | null,"media_name": string | null,"media_path": string | null,"media_status": Database["public"]['Enums']["message_media_status"],"media_url": string | null,"organization_id": string,"sent_at": string | null,"status": Database["public"]['Enums']["message_status"],"type": Database["public"]['Enums']["message_type"],"updated_at": string
@@ -534,14 +574,14 @@ isOneToOne: false
                   ]
                 },"organizations": {
                   Row: {
-                    "agents_can_reassign": boolean,"contact_email": string | null,"contact_phone": string | null,"created_at": string,"created_by": string | null,"default_currency": string,"deleted_at": string | null,"id": string,"logo_path": string | null,"name": string,"paid_until": string | null,"plan_code": string,"slug": string,"suspended_at": string | null,"trial_ends_at": string,"updated_at": string,"usd_ars_rate": number | null,"usd_ars_rate_enabled": boolean
+                    "agents_can_reassign": boolean,"contact_email": string | null,"contact_phone": string | null,"created_at": string,"created_by": string | null,"default_currency": string,"deleted_at": string | null,"id": string,"logo_path": string | null,"name": string,"paid_until": string | null,"plan_code": string,"slug": string,"suspended_at": string | null,"trial_ends_at": string,"updated_at": string,"usd_ars_rate": number | null,"usd_ars_rate_enabled": boolean,"website_url": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "agents_can_reassign"?: boolean,"contact_email"?: string | null,"contact_phone"?: string | null,"created_at"?: string,"created_by"?: string | null,"default_currency"?: string,"deleted_at"?: string | null,"id"?: string,"logo_path"?: string | null,"name": string,"paid_until"?: string | null,"plan_code": string,"slug": string,"suspended_at"?: string | null,"trial_ends_at": string,"updated_at"?: string,"usd_ars_rate"?: number | null,"usd_ars_rate_enabled"?: boolean
+                    "agents_can_reassign"?: boolean,"contact_email"?: string | null,"contact_phone"?: string | null,"created_at"?: string,"created_by"?: string | null,"default_currency"?: string,"deleted_at"?: string | null,"id"?: string,"logo_path"?: string | null,"name": string,"paid_until"?: string | null,"plan_code": string,"slug": string,"suspended_at"?: string | null,"trial_ends_at": string,"updated_at"?: string,"usd_ars_rate"?: number | null,"usd_ars_rate_enabled"?: boolean,"website_url"?: string | null
                   }
                   Update: {
-                    "agents_can_reassign"?: boolean,"contact_email"?: string | null,"contact_phone"?: string | null,"created_at"?: string,"created_by"?: string | null,"default_currency"?: string,"deleted_at"?: string | null,"id"?: string,"logo_path"?: string | null,"name"?: string,"paid_until"?: string | null,"plan_code"?: string,"slug"?: string,"suspended_at"?: string | null,"trial_ends_at"?: string,"updated_at"?: string,"usd_ars_rate"?: number | null,"usd_ars_rate_enabled"?: boolean
+                    "agents_can_reassign"?: boolean,"contact_email"?: string | null,"contact_phone"?: string | null,"created_at"?: string,"created_by"?: string | null,"default_currency"?: string,"deleted_at"?: string | null,"id"?: string,"logo_path"?: string | null,"name"?: string,"paid_until"?: string | null,"plan_code"?: string,"slug"?: string,"suspended_at"?: string | null,"trial_ends_at"?: string,"updated_at"?: string,"usd_ars_rate"?: number | null,"usd_ars_rate_enabled"?: boolean,"website_url"?: string | null
                   }
                   Relationships: [
                     {
@@ -750,6 +790,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     },{
       foreignKeyName: "property_images_organization_id_property_id_fkey"
+      columns: ["organization_id","property_id"]
+isOneToOne: false
+      referencedRelation: "properties"
+      referencedColumns: ["organization_id","id"]
+    }
+                  ]
+                },"property_listings": {
+                  Row: {
+                    "channel": Database["public"]['Enums']["listing_channel"],"created_at": string,"created_by": string | null,"external_id": string | null,"id": string,"last_error": string | null,"managed": boolean,"organization_id": string,"property_id": string,"settings": NonNullable<Json>,"sync_status": Database["public"]['Enums']["listing_sync_status"],"synced_at": string | null,"updated_at": string,"url": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "channel": Database["public"]['Enums']["listing_channel"],"created_at"?: string,"created_by"?: string | null,"external_id"?: string | null,"id"?: string,"last_error"?: string | null,"managed"?: boolean,"organization_id": string,"property_id": string,"settings"?: NonNullable<Json>,"sync_status"?: Database["public"]['Enums']["listing_sync_status"],"synced_at"?: string | null,"updated_at"?: string,"url"?: string | null
+                  }
+                  Update: {
+                    "channel"?: Database["public"]['Enums']["listing_channel"],"created_at"?: string,"created_by"?: string | null,"external_id"?: string | null,"id"?: string,"last_error"?: string | null,"managed"?: boolean,"organization_id"?: string,"property_id"?: string,"settings"?: NonNullable<Json>,"sync_status"?: Database["public"]['Enums']["listing_sync_status"],"synced_at"?: string | null,"updated_at"?: string,"url"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "property_listings_organization_id_fkey"
+      columns: ["organization_id"]
+isOneToOne: false
+      referencedRelation: "organizations"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "property_listings_organization_id_property_id_fkey"
       columns: ["organization_id","property_id"]
 isOneToOne: false
       referencedRelation: "properties"
@@ -999,6 +1065,9 @@ isOneToOne: false
             "accept_invitation":
 { Args: { "p_token": string }; Returns: string
                            },
+"api_feed_properties":
+{ Args: { "p_limit"?: number,"p_offset"?: number,"p_since"?: string,"p_token_hash": string }; Returns: Json
+                           },
 "approve_payment":
 { Args: { "p_note"?: string,"p_report_id": string }; Returns: undefined
                            },
@@ -1020,6 +1089,9 @@ isOneToOne: false
                            },
 "complete_whatsapp_outbox":
 { Args: { "p_external_id": string,"p_id": string }; Returns: undefined
+                           },
+"create_api_token":
+{ Args: { "p_name": string,"p_organization_id": string,"p_token_hash": string,"p_token_prefix": string }; Returns: string
                            },
 "create_contact":
 { Args: { "p_assigned_user_id"?: string,"p_emails"?: (string)[],"p_full_name": string,"p_is_owner"?: boolean,"p_is_prospect"?: boolean,"p_notes"?: string,"p_organization_id": string,"p_phones"?: (string)[],"p_source"?: Database["public"]['Enums']["contact_source"] }; Returns: string
@@ -1060,6 +1132,23 @@ isOneToOne: false
                            },
 "log_import":
 { Args: { "p_imported": number,"p_kind": string,"p_organization_id": string,"p_rejected": number }; Returns: undefined
+                           },
+"mercadolibre_listing_result":
+{ Args: { "p_error"?: string,"p_external_id"?: string,"p_listing_id": string,"p_status": Database["public"]['Enums']["listing_sync_status"],"p_url"?: string }; Returns: undefined
+                           },
+"mercadolibre_mark_reauth":
+{ Args: { "p_organization_id": string }; Returns: undefined
+                           },
+"mercadolibre_save_connection":
+{ Args: { "p_access_token_enc": string,"p_connected_by": string,"p_expires_at": string,"p_ml_user_id": number,"p_nickname": string,"p_organization_id": string,"p_refresh_token_enc": string }; Returns: undefined
+                           },
+"mercadolibre_save_tokens":
+{ Args: { "p_access_token_enc": string,"p_expires_at": string,"p_organization_id": string,"p_refresh_token_enc": string }; Returns: undefined
+                           },
+"mercadolibre_token_lease":
+{ Args: { "p_organization_id": string }; Returns: {
+              "access_token_enc": string,"expires_at": string,"leased": boolean,"ml_user_id": number,"needs_refresh": boolean,"refresh_token_enc": string
+            }[]
                            },
 "merge_contacts":
 { Args: { "p_keep_id": string,"p_merge_id": string }; Returns: string
@@ -1144,6 +1233,9 @@ isOneToOne: false
               "created_at": string,"id": string,"notes": string,"organization_id": string,"organization_name": string
             }[]
                            },
+"prepare_mercadolibre_listing":
+{ Args: { "p_property_id": string,"p_settings"?: Json }; Returns: string
+                           },
 "property_duplicate_candidates":
 { Args: { "p_address": string,"p_exclude_id"?: string,"p_operation": Database["public"]['Enums']["property_operation"],"p_organization_id": string,"p_owner_ids"?: (string)[],"p_property_type": Database["public"]['Enums']["property_type"] }; Returns: {
               "code": string,"id": string,"reason": string,"title": string
@@ -1151,7 +1243,7 @@ isOneToOne: false
                            },
 "public_property":
 { Args: { "p_organization_slug": string,"p_property_slug": string }; Returns: {
-              "address": string,"bathrooms": number,"bedrooms": number,"city": string,"code": string,"covered_area_m2": number,"currency": string,"description": string,"expenses": number,"expenses_currency": string,"features": (string)[],"images": (string)[],"neighborhood": string,"operation": Database["public"]['Enums']["property_operation"],"organization_email": string,"organization_logo_path": string,"organization_name": string,"organization_phone": string,"price": number,"property_type": Database["public"]['Enums']["property_type"],"province": string,"rooms": number,"status": Database["public"]['Enums']["property_status"],"title": string,"total_area_m2": number
+              "address": string,"bathrooms": number,"bedrooms": number,"city": string,"code": string,"covered_area_m2": number,"currency": string,"description": string,"expenses": number,"expenses_currency": string,"features": (string)[],"images": (string)[],"neighborhood": string,"operation": Database["public"]['Enums']["property_operation"],"organization_email": string,"organization_logo_path": string,"organization_name": string,"organization_phone": string,"organization_website": string,"price": number,"property_type": Database["public"]['Enums']["property_type"],"province": string,"rooms": number,"status": Database["public"]['Enums']["property_status"],"title": string,"total_area_m2": number
             }[]
                            },
 "registration_legal_documents":
@@ -1162,6 +1254,9 @@ isOneToOne: false
 "reject_payment":
 { Args: { "p_note"?: string,"p_report_id": string }; Returns: undefined
                            },
+"remove_mercadolibre_connection":
+{ Args: { "p_organization_id": string }; Returns: undefined
+                           },
 "remove_whatsapp_connection":
 { Args: { "p_connection_id": string }; Returns: undefined
                            },
@@ -1170,6 +1265,9 @@ isOneToOne: false
                            },
 "resolve_organization_slug":
 { Args: { "p_slug": string }; Returns: string
+                           },
+"revoke_api_token":
+{ Args: { "p_token_id": string }; Returns: undefined
                            },
 "save_client_search":
 { Args: { "p_assigned_user_id": string,"p_budget_max": number,"p_budget_min": number,"p_budget_tolerance_pct": number,"p_contact_id": string,"p_currency": string,"p_desired_features": (string)[],"p_id": string,"p_locations": (string)[],"p_min_bedrooms": number,"p_min_rooms": number,"p_notes": string,"p_operation": Database["public"]['Enums']["property_operation"],"p_organization_id": string,"p_property_types": (Database["public"]['Enums']["property_type"])[],"p_required_features": (string)[] }; Returns: string
@@ -1180,6 +1278,9 @@ isOneToOne: false
 "send_whatsapp_message":
 { Args: { "p_body": string,"p_conversation_id": string,"p_media_mime"?: string,"p_media_name"?: string,"p_media_path"?: string,"p_type"?: Database["public"]['Enums']["message_type"] }; Returns: string
                            },
+"set_property_listing_link":
+{ Args: { "p_channel": Database["public"]['Enums']["listing_channel"],"p_property_id": string,"p_url": string }; Returns: undefined
+                           },
 "start_support_session":
 { Args: { "p_organization_id": string }; Returns: string
                            },
@@ -1188,6 +1289,9 @@ isOneToOne: false
                            },
 "sync_my_reminders":
 { Args: { "p_organization_id": string }; Returns: undefined
+                           },
+"unlink_mercadolibre_listing":
+{ Args: { "p_property_id": string }; Returns: undefined
                            },
 "whatsapp_ingest_message":
 { Args: { "p_body": string,"p_connection_id": string,"p_external_id": string,"p_from_me": boolean,"p_media_mime": string,"p_media_name": string,"p_phone_e164": string,"p_push_name": string,"p_sent_at": string,"p_type": Database["public"]['Enums']["message_type"] }; Returns: Json
@@ -1200,7 +1304,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "account_state": "trial"|"active"|"read_only"|"blocked"|"pending_deletion","appointment_status": "scheduled"|"done"|"cancelled"|"no_show","audit_scope": "organization"|"platform","contact_source": "manual"|"whatsapp"|"import","duplicate_report_status": "open"|"merged"|"dismissed","job_status": "pending"|"running"|"succeeded"|"failed"|"cancelled","legal_document_kind": "terms"|"privacy","match_status": "new"|"seen"|"sent"|"dismissed","member_role": "owner"|"agent"|"admin"|"supervisor"|"staff","membership_status": "active"|"deactivated","message_direction": "inbound"|"outbound","message_kind": "human"|"automated"|"system","message_media_status": "none"|"pending"|"ready"|"failed","message_status": "received"|"queued"|"sending"|"sent"|"failed"|"cancelled","message_type": "text"|"image"|"audio"|"document"|"video"|"other","payment_report_status": "pending"|"approved"|"rejected","property_operation": "sale"|"rent"|"temporary_rent","property_status": "draft"|"available"|"reserved"|"sold"|"rented"|"paused","property_type": "apartment"|"house"|"ph"|"land"|"office"|"commercial"|"garage"|"warehouse"|"farm","stage_kind": "open"|"won"|"lost","task_priority": "low"|"normal"|"high","task_status": "pending"|"done"|"cancelled","whatsapp_connection_status": "connecting"|"connected"|"disconnected"|"needs_qr","whatsapp_outbox_status": "queued"|"sending"|"sent"|"failed"|"cancelled"
+            "account_state": "trial"|"active"|"read_only"|"blocked"|"pending_deletion","appointment_status": "scheduled"|"done"|"cancelled"|"no_show","audit_scope": "organization"|"platform","contact_source": "manual"|"whatsapp"|"import","duplicate_report_status": "open"|"merged"|"dismissed","job_status": "pending"|"running"|"succeeded"|"failed"|"cancelled","legal_document_kind": "terms"|"privacy","listing_channel": "website"|"mercadolibre"|"zonaprop"|"argenprop","listing_sync_status": "manual"|"publishing"|"active"|"paused"|"closed"|"error","match_status": "new"|"seen"|"sent"|"dismissed","member_role": "owner"|"agent"|"admin"|"supervisor"|"staff","membership_status": "active"|"deactivated","message_direction": "inbound"|"outbound","message_kind": "human"|"automated"|"system","message_media_status": "none"|"pending"|"ready"|"failed","message_status": "received"|"queued"|"sending"|"sent"|"failed"|"cancelled","message_type": "text"|"image"|"audio"|"document"|"video"|"other","payment_report_status": "pending"|"approved"|"rejected","property_operation": "sale"|"rent"|"temporary_rent","property_status": "draft"|"available"|"reserved"|"sold"|"rented"|"paused","property_type": "apartment"|"house"|"ph"|"land"|"office"|"commercial"|"garage"|"warehouse"|"farm","stage_kind": "open"|"won"|"lost","task_priority": "low"|"normal"|"high","task_status": "pending"|"done"|"cancelled","whatsapp_connection_status": "connecting"|"connected"|"disconnected"|"needs_qr","whatsapp_outbox_status": "queued"|"sending"|"sent"|"failed"|"cancelled"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -1316,7 +1420,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "account_state": ["trial", "active", "read_only", "blocked", "pending_deletion"],"appointment_status": ["scheduled", "done", "cancelled", "no_show"],"audit_scope": ["organization", "platform"],"contact_source": ["manual", "whatsapp", "import"],"duplicate_report_status": ["open", "merged", "dismissed"],"job_status": ["pending", "running", "succeeded", "failed", "cancelled"],"legal_document_kind": ["terms", "privacy"],"match_status": ["new", "seen", "sent", "dismissed"],"member_role": ["owner", "agent", "admin", "supervisor", "staff"],"membership_status": ["active", "deactivated"],"message_direction": ["inbound", "outbound"],"message_kind": ["human", "automated", "system"],"message_media_status": ["none", "pending", "ready", "failed"],"message_status": ["received", "queued", "sending", "sent", "failed", "cancelled"],"message_type": ["text", "image", "audio", "document", "video", "other"],"payment_report_status": ["pending", "approved", "rejected"],"property_operation": ["sale", "rent", "temporary_rent"],"property_status": ["draft", "available", "reserved", "sold", "rented", "paused"],"property_type": ["apartment", "house", "ph", "land", "office", "commercial", "garage", "warehouse", "farm"],"stage_kind": ["open", "won", "lost"],"task_priority": ["low", "normal", "high"],"task_status": ["pending", "done", "cancelled"],"whatsapp_connection_status": ["connecting", "connected", "disconnected", "needs_qr"],"whatsapp_outbox_status": ["queued", "sending", "sent", "failed", "cancelled"]
+            "account_state": ["trial", "active", "read_only", "blocked", "pending_deletion"],"appointment_status": ["scheduled", "done", "cancelled", "no_show"],"audit_scope": ["organization", "platform"],"contact_source": ["manual", "whatsapp", "import"],"duplicate_report_status": ["open", "merged", "dismissed"],"job_status": ["pending", "running", "succeeded", "failed", "cancelled"],"legal_document_kind": ["terms", "privacy"],"listing_channel": ["website", "mercadolibre", "zonaprop", "argenprop"],"listing_sync_status": ["manual", "publishing", "active", "paused", "closed", "error"],"match_status": ["new", "seen", "sent", "dismissed"],"member_role": ["owner", "agent", "admin", "supervisor", "staff"],"membership_status": ["active", "deactivated"],"message_direction": ["inbound", "outbound"],"message_kind": ["human", "automated", "system"],"message_media_status": ["none", "pending", "ready", "failed"],"message_status": ["received", "queued", "sending", "sent", "failed", "cancelled"],"message_type": ["text", "image", "audio", "document", "video", "other"],"payment_report_status": ["pending", "approved", "rejected"],"property_operation": ["sale", "rent", "temporary_rent"],"property_status": ["draft", "available", "reserved", "sold", "rented", "paused"],"property_type": ["apartment", "house", "ph", "land", "office", "commercial", "garage", "warehouse", "farm"],"stage_kind": ["open", "won", "lost"],"task_priority": ["low", "normal", "high"],"task_status": ["pending", "done", "cancelled"],"whatsapp_connection_status": ["connecting", "connected", "disconnected", "needs_qr"],"whatsapp_outbox_status": ["queued", "sending", "sent", "failed", "cancelled"]
           }
         }
 } as const

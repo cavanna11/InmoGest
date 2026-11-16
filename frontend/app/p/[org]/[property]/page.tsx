@@ -1,5 +1,5 @@
 import { formatPhone } from '@inmogest/shared';
-import { BedDouble, Bath, Mail, MapPin, MessageCircle, Ruler, SquareStack } from 'lucide-react';
+import { BedDouble, Bath, ExternalLink, Mail, MapPin, MessageCircle, Ruler, SquareStack } from 'lucide-react';
 import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { cache, Suspense } from 'react';
@@ -83,6 +83,16 @@ async function PublicProperty({ params }: { params: Params }) {
           {/* eslint-disable-next-line @next/next/no-img-element -- logo de Storage */}
           {logo ? <img src={logo} alt="" className="size-10 rounded-md object-contain" /> : null}
           <p className="font-semibold">{data.organization_name}</p>
+          {data.organization_website ? (
+            <a
+              href={data.organization_website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-auto inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-primary underline underline-offset-4"
+            >
+              Ver más propiedades <ExternalLink aria-hidden="true" className="size-3.5" />
+            </a>
+          ) : null}
         </div>
       </header>
 
